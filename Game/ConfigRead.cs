@@ -8,13 +8,13 @@
 
     public static class ConfigRead
     {
-        // Determine what kind of Key mapping to use ..
-        static Enums.KeyType KeyType = Enums.KeyType.WindowsForms
-            ;
-        static readonly KeyboardMap KeyMap = new KeyboardMap(KeyType);
+        // Preset Key Map Enumeration to use ..
+        static Enums.KeyType KeyType = Enums.KeyType.WindowsForms;
 
-        // Initialise Dictionary ..
+        // Initialise ..
+        static readonly KeyboardMap KeyMap = new KeyboardMap(KeyType);
         static DataTable KeyBindingsTable = new DataTable();
+        const string D = "+";
 
         /// <summary>
         /// Constructor initialises DataTable structure ..
@@ -66,14 +66,18 @@
         private static void DefineKeyBindingsTableStructure(DataTable KeyBindings)
         {
             KeyBindings.TableName = "KeyBindings";
+
+            // Define table structure ..
             KeyBindings.Columns.Add("Context", typeof(string));
-            KeyBindings.Columns.Add("KeyMappingType", typeof(string));
+            KeyBindings.Columns.Add("KeyEnumerationType", typeof(string));
             KeyBindings.Columns.Add("KeyFunction", typeof(string));
             KeyBindings.Columns.Add("Priority", typeof(string));
             KeyBindings.Columns.Add("KeyValue", typeof(string));
-            KeyBindings.Columns.Add("KeyModifier", typeof(string));
             KeyBindings.Columns.Add("KeyCode", typeof(string));
-            KeyBindings.Columns.Add("Id", typeof(string));
+            KeyBindings.Columns.Add("KeyId", typeof(string));
+            KeyBindings.Columns.Add("ModifierKeyValue", typeof(string));
+            KeyBindings.Columns.Add("ModifierKeyCode", typeof(string));
+            KeyBindings.Columns.Add("ModifierKeyId", typeof(string));
         }
 
         /// <summary>
@@ -115,16 +119,19 @@
             foreach (var keyBinding in keyBindings)
             {
                 KeyBindingsTable.LoadDataRow(new object[] 
-                                                {KeyBindingContext,
-                                                 KeyMap.KeyType.ToString(),
-                                                 keyBinding.Commandstring,
-                                                 "N/A",
-                                                 KeyMap.GetKeyValue(Int32.Parse(keyBinding.KeyCode)),
-                                                 "Modifier:UNKNOWN",
-                                                 keyBinding.KeyCode,
-                                                 keyBinding.Id}
+                                                {
+                                                 KeyBindingContext, //Context
+                                                 KeyMap.KeyType.ToString(), //KeyMappingType
+                                                 keyBinding.Commandstring, //KeyFunction
+                                                 "N/A", //Priority
+                                                 KeyMap.GetKeyValue(Int32.Parse(keyBinding.KeyCode)), //KeyValue
+                                                 keyBinding.KeyCode, //KeyCode
+                                                 keyBinding.Id, //KeyId
+                                                 "N/A", //ModifierKeyValue
+                                                 "N/A", //ModifierKeyCode
+                                                 "N/A" //ModifierId
+                                                }
                                              , false);
-
             }
 
             // return Datatable ..
@@ -168,13 +175,10 @@
         {
             // Initialise ..
             const string KeyBindingContext = "EliteDangerous";
-
             const string EDKeyBoardInteraction = "Keyboard";
             const string XMLKey = "Key";
             const string XMLDevice = "Device";
             const string XMLModifier = "Modifier";
-
-
             string DevicePriority = devicepriority.ToString();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
@@ -218,23 +222,38 @@
 
                     foreach (var keyBinding in keyBindings)
                     {
-                        string CustomId = childNode.Name + "." +
-                                          keyBinding.xmlNode_DevicePriority + "." +
-                                          keyBinding.xmlNode_Device + "." +
-                                          keyBinding.DeviceType + "." +
-                                          keyBinding.xmlNode_Key + "." +
-                                          keyBinding.KeyValueFull;
+                        string CustomKeyId = childNode.Name + D +
+                                             keyBinding.xmlNode_DevicePriority + D +
+                                             keyBinding.xmlNode_Device + D +
+                                             keyBinding.DeviceType + D +
+                                             keyBinding.xmlNode_Key + D +
+                                             keyBinding.KeyValueFull;
+
+                        string CustomModifierKeyId = string.Empty;
+                        if (keyBinding.xmlNode_Modifier != string.Empty)
+                        {
+                            CustomModifierKeyId = childNode.Name + D +
+                                                  keyBinding.xmlNode_DevicePriority + D +
+                                                  keyBinding.xmlNode_Modifier + D +
+                                                  keyBinding.xmlNode_ModifierDevice + D +
+                                                  keyBinding.ModifierDeviceType + D +
+                                                  keyBinding.xmlNode_ModifierKey + D +
+                                                  keyBinding.ModifierKeyValueFull;
+                        }
 
                         KeyBindingsTable.LoadDataRow(new object[] 
-                                                        {KeyBindingContext,
-                                                         KeyMap.KeyType.ToString(),
-                                                         childNode.Name,
-                                                         keyBinding.xmlNode_DevicePriority,
-                                                         keyBinding.KeyValue,
-                                                   //      "Modifier:UNKNOWN",
-                                                         keyBinding.ModifierKeyValueFull + " " + keyBinding.ModifierKeyValue,
-                                                         KeyMap.GetKeyCode((keyBinding.KeyValue)),
-                                                         CustomId}
+                                                        {
+                                                         KeyBindingContext, //Context
+                                                         KeyMap.KeyType.ToString(), //KeyMappingType
+                                                         childNode.Name, //KeyFunction
+                                                         keyBinding.xmlNode_DevicePriority, //Priority 
+                                                         keyBinding.KeyValue, //KeyValue
+                                                         KeyMap.GetKeyCode(keyBinding.KeyValue), //KeyCode
+                                                         CustomKeyId, //KeyId
+                                                         keyBinding.ModifierKeyValue, //ModifierKeyValue
+                                                         KeyMap.GetKeyCode(keyBinding.ModifierKeyValue),//ModifierKeyCode
+                                                         CustomModifierKeyId //ModifierId
+                                                        }
                                                      , false);
                     }
                 }

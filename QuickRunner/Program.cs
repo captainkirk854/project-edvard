@@ -1,6 +1,4 @@
-﻿
-
-namespace DummyTester
+﻿namespace QuickRunner
 {
     using System;
     using System.Collections.Generic;
@@ -18,7 +16,7 @@ namespace DummyTester
             // Consts to point to test cfg files ..
             const string EDCfg = "C:\\Users\\Dad\\Desktop\\Elite Dangerous\\data\\ED\\GoodKeys.1.8.binds";
             const string VACfg = "C:\\Users\\Dad\\Desktop\\Elite Dangerous\\data\\VA\\My Elite Dangerous-Profile.vap";
-            const int KeyBindingsColumnWidth = 25;
+            const int KeyBindingsColumnWidth = 20;
 
             // Initialise ..
             DataTable KeyBindingsTable = new DataTable();
@@ -35,7 +33,11 @@ namespace DummyTester
             Console.WriteLine("Press a key");
             Console.ReadKey();
 
-            Data.DisplayDataTable(KeyBindingsTable, KeyBindingsColumnWidth + 60, "Id");
+            Data.DisplayDataTable(KeyBindingsTable, KeyBindingsColumnWidth + 60, "KeyId");
+            Console.WriteLine("Press a key");
+            Console.ReadKey();
+
+            Data.DisplayDataTable(KeyBindingsTable, KeyBindingsColumnWidth + 60, "ModifierKeyId");
             Console.WriteLine("Press a key");
             Console.ReadKey();
         }

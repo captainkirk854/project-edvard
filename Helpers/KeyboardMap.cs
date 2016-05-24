@@ -86,12 +86,19 @@
                     if (KeyValue == "Backspace") KeyValue = "Back";
                 }
 
-                return KeyMap[KeyValue];
+                return this.KeyMap[KeyValue];
             }
             catch
             {
-                Console.WriteLine("*** No CODE for key VALUE:[{0}] ***", KeyValue);
-                return -999;
+                if (KeyValue == string.Empty)
+                {
+                    return -1;
+                }
+                else
+                {
+                    Console.WriteLine("*** No CODE for key VALUE:[{0}] ***", KeyValue);
+                    return -999;
+                }
             }
         }
 
