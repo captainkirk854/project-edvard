@@ -46,6 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Sample\ED01.binds" />
+    <None Include="Sample\ED02.binds" />
+    <None Include="Sample\VA01.vap" />
+    <None Include="Sample\VA02.vap" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Game\Game.csproj">
@@ -57,6 +61,7 @@
       <Name>Helpers</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

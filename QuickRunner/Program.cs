@@ -1,43 +1,60 @@
 ﻿namespace QuickRunner
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Helpers;
-    using Game;
     using System.Data;
 
     class Program
     {
         static void Main(string[] args)
         {
-            // Consts to point to test cfg files ..
-            const string EDCfg = "C:\\Users\\Dad\\Desktop\\Elite Dangerous\\data\\ED\\GoodKeys.1.8.binds";
-            const string VACfg = "C:\\Users\\Dad\\Desktop\\Elite Dangerous\\data\\VA\\My Elite Dangerous-Profile.vap";
+            // Point to project sample (not a resource as such) data ..
+            string EDCfg = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
+            string VACfg = GetProjectDirectory() + "\\Sample" + "\\VA01.vap";
             const int KeyBindingsColumnWidth = 20;
 
             // Initialise ..
             DataTable KeyBindingsTable = new DataTable();
 
             // Read Elite Dangerous and Voice Attack configuration(s) to get key bindings ..
-            KeyBindingsTable = Game.ConfigRead.EliteDangerous(EDCfg);
-            KeyBindingsTable.Merge(Game.ConfigRead.VoiceAttack(VACfg));
-            Console.WriteLine("Config Read");
-            Console.WriteLine("Press a key");
-            Console.ReadKey();
+            try
+            {
+                KeyBindingsTable = Game.ConfigRead.EliteDangerous(EDCfg);
+                KeyBindingsTable.Merge(Game.ConfigRead.VoiceAttack(VACfg));
+                Console.WriteLine("Config Read");
+                PressIt();
 
-            // Display DataTable Contents ..
-            Data.DisplayDataTable(KeyBindingsTable, KeyBindingsColumnWidth, string.Empty);
-            Console.WriteLine("Press a key");
-            Console.ReadKey();
+                // Display DataTable Contents ..
+                Data.DisplayDataTable(KeyBindingsTable, KeyBindingsColumnWidth, string.Empty);
+                PressIt();
 
-            Data.DisplayDataTable(KeyBindingsTable, KeyBindingsColumnWidth + 60, "KeyId");
-            Console.WriteLine("Press a key");
-            Console.ReadKey();
+                Data.DisplayDataTable(KeyBindingsTable, KeyBindingsColumnWidth + 60, "KeyId");
+                PressIt();
 
-            Data.DisplayDataTable(KeyBindingsTable, KeyBindingsColumnWidth + 60, "ModifierKeyId");
+                Data.DisplayDataTable(KeyBindingsTable, KeyBindingsColumnWidth + 60, "ModifierKeyId");
+                PressIt();
+            }
+            catch
+            {
+                Console.WriteLine("Something went wrong ... we cry");
+                PressIt();
+            }
+        }
+
+        /// <summary>
+        /// Crude way of getting current project directory
+        /// </summary>
+        /// <returns></returns>
+        private static string GetProjectDirectory()
+        {
+            return (AppDomain.CurrentDomain.BaseDirectory).Replace("Debug", string.Empty).Replace("bin", string.Empty).Replace("\\\\\\", string.Empty);
+        }
+
+        /// <summary>
+        /// We laughed, we cried ..
+        /// </summary>
+        private static void PressIt()
+        {
             Console.WriteLine("Press a key");
             Console.ReadKey();
         }
