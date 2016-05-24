@@ -147,14 +147,20 @@
         ///                  |_<Secondary/>
         ///               |_ <things/>
         ///                  |_<Primary/>
+        ///                     |_<Modifier/>
+        ///                  |_<Secondary/>
+        ///                     |_<Modifier/>
+        ///               |_ <things/>
+        ///                  |_<Primary/>
         ///                  |_<Secondary/>
         ///                  |_<ToggleOn/>
         ///                  
         /// Selected Keys: Use actual Key value (as opposed to key code)
         ///                e.g. 
-        ///                     SystemMapOpen : B
-        ///                     GalaxyMapOpen : M
-        ///                   FocusRightPanel : 4
+        ///                     SystemMapOpen : Key_B
+        ///                     GalaxyMapOpen : Key_M
+        ///                   FocusRightPanel : Key_4
+        ///                       SetSpeedZero: Key_0 + Key_RightShift (modifier)
         ///                
         /// </summary>
         /// <param name="xdoc"></param>
@@ -164,6 +170,11 @@
             const string KeyBindingContext = "EliteDangerous";
 
             const string EDKeyBoardInteraction = "Keyboard";
+            const string XMLKey = "Key";
+            const string XMLDevice = "Device";
+            const string XMLModifier = "Modifier";
+
+
             string DevicePriority = devicepriority.ToString();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
@@ -175,35 +186,53 @@
                 {
                     var keyBindings = from item in xdoc.Descendants(childNode.Name)
                                      where
-                                           item.Element(DevicePriority).SafeAttributeValue("Device") == EDKeyBoardInteraction &&
-                                           item.Element(DevicePriority).Attribute("Key").Value.Contains("Key_") == true
+                                           item.Element(DevicePriority).SafeAttributeValue(XMLDevice) == EDKeyBoardInteraction &&
+                                           item.Element(DevicePriority).Attribute(XMLKey).Value.Contains("Key_") == true
                                      select
                                         new // create anonymous type for every key code ..
                                           {
-                                            DevicePriority = item.Element(DevicePriority).Attribute("Key").Parent.Name,
-                                            Device = item.Element(DevicePriority).Attribute("Device").Name,
-                                            DeviceType = item.Element(DevicePriority).SafeAttributeValue("Device"),
-                                            Key = item.Element(DevicePriority).Attribute("Key").Name,
-                                            KeyValueFull = (item.Element(DevicePriority).SafeAttributeValue("Key")),
-                                            KeyValue = (item.Element(DevicePriority).SafeAttributeValue("Key")).Substring(4)
+                                              //---------------------------------------------------------------------------------
+                                              // Priority ..
+                                              //---------------------------------------------------------------------------------
+                                              xmlNode_DevicePriority = item.Element(DevicePriority).Attribute(XMLKey).Parent.Name,
+                                            
+                                              //---------------------------------------------------------------------------------
+                                              // Main Key Binding ..
+                                              //---------------------------------------------------------------------------------
+                                              xmlNode_Device = item.Element(DevicePriority).SafeAttributeName(XMLDevice),
+                                              xmlNode_Key = item.Element(DevicePriority).SafeAttributeName(XMLKey),
+                                              DeviceType = item.Element(DevicePriority).SafeAttributeValue(XMLDevice),
+                                              KeyValueFull = item.Element(DevicePriority).SafeAttributeValue(XMLKey),
+                                              KeyValue = item.Element(DevicePriority).SafeAttributeValue(XMLKey) != string.Empty ? item.Element(DevicePriority).SafeAttributeValue(XMLKey).Substring(4) : string.Empty,
+
+                                              //---------------------------------------------------------------------------------
+                                              // Modifier Key Binding (should it exist) ..
+                                              //---------------------------------------------------------------------------------
+                                              xmlNode_Modifier = item.Element(DevicePriority).Element(XMLModifier).SafeElementName(),
+                                              xmlNode_ModifierDevice = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeName(XMLDevice),
+                                              xmlNode_ModifierKey = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeName(XMLKey),
+                                              ModifierDeviceType = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeValue(XMLDevice),
+                                              ModifierKeyValueFull = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey),
+                                              ModifierKeyValue = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey) != string.Empty ? item.Element(DevicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey).Substring(4) : string.Empty
                                           };
 
                     foreach (var keyBinding in keyBindings)
                     {
                         string CustomId = childNode.Name + "." +
-                                          keyBinding.DevicePriority + "." +
-                                          keyBinding.Device + "." +
+                                          keyBinding.xmlNode_DevicePriority + "." +
+                                          keyBinding.xmlNode_Device + "." +
                                           keyBinding.DeviceType + "." +
-                                          keyBinding.Key + "." +
+                                          keyBinding.xmlNode_Key + "." +
                                           keyBinding.KeyValueFull;
 
                         KeyBindingsTable.LoadDataRow(new object[] 
                                                         {KeyBindingContext,
                                                          KeyMap.KeyType.ToString(),
                                                          childNode.Name,
-                                                         keyBinding.DevicePriority,
+                                                         keyBinding.xmlNode_DevicePriority,
                                                          keyBinding.KeyValue,
-                                                         "Modifier:UNKNOWN",
+                                                   //      "Modifier:UNKNOWN",
+                                                         keyBinding.ModifierKeyValueFull + " " + keyBinding.ModifierKeyValue,
                                                          KeyMap.GetKeyCode((keyBinding.KeyValue)),
                                                          CustomId}
                                                      , false);

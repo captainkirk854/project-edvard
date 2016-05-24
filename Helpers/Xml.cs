@@ -5,7 +5,26 @@
     public static class Xml
     {
         /// <summary>
-        /// Extension method to handle missing XML element
+        /// Extension method to provide XML element name 
+        /// - Avoids throwing a NullReference exception when XML element does not exist
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static string SafeElementName(this XElement element)
+        {
+            if (element != null)
+            {
+                return element.Name.ToString();
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Extension method to provide XML element value 
+        /// - Avoids throwing a NullReference exception when XML element does not exist
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
@@ -22,7 +41,27 @@
         }
 
         /// <summary>
-        /// Extension method to handle missing XML attribute
+        /// Extension method to provide XML attribute name
+        /// - Avoids throwing a NullReference exception when XML attribute does not exist
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="attributeName"></param>
+        /// <returns></returns>
+        public static string SafeAttributeName(this XElement element, string attributeName)
+        {
+            if (element == null)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return attributeName;
+            }
+        }
+
+        /// <summary>
+        /// Extension method to provide XML attribute value
+        /// - Avoids throwing a NullReference exception when XML attribute does not exist
         /// </summary>
         /// <param name="element"></param>
         /// <param name="attributeName"></param>
