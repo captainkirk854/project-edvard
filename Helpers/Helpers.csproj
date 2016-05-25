@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="Data.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="KeyboardMap.cs" />
+    <Compile Include="KeyCodes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml.cs" />
   </ItemGroup>

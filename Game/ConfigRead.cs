@@ -12,7 +12,7 @@
         static Enums.KeyType KeyType = Enums.KeyType.WindowsForms;
 
         // Initialise ..
-        static readonly KeyboardMap KeyMap = new KeyboardMap(KeyType);
+        static readonly KeyCodes KeyMap = new KeyCodes(KeyType);
         static DataTable KeyBindingsTable = new DataTable();
         const string D = "+";
 

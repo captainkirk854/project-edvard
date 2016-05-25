@@ -8,7 +8,7 @@
     /// <summary>
     /// Implement Key Value/Code lookup dictionary ..
     /// </summary>
-    public sealed class KeyboardMap
+    public sealed class KeyCodes
     {
         // Initialise class-wide scope variables ..
         private Dictionary<string, int> KeyMap = new Dictionary<string, int>();
@@ -17,7 +17,7 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public KeyboardMap(Enums.KeyType keytype)
+        public KeyCodes(Enums.KeyType keytype)
         {
             switch (keytype)
             {
