@@ -8,7 +8,7 @@
     /// <summary>
     /// Implement Key Value/Code lookup dictionary ..
     /// </summary>
-    public sealed class KeyCodes
+    public sealed class KeyMapper
     {
         // Initialise class-wide scope variables ..
         private Dictionary<string, int> KeyMap = new Dictionary<string, int>();
@@ -17,7 +17,7 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public KeyCodes(Enums.KeyType keytype)
+        public KeyMapper(Enums.KeyType keytype)
         {
             switch (keytype)
             {
@@ -40,7 +40,7 @@
         /// </summary>
         /// <param name="KeyCode"></param>
         /// <returns></returns>
-        public string GetKeyValue(int KeyCode)
+        public string GetValue(int KeyCode)
         {
             string KeyValue = string.Empty;
 
@@ -67,7 +67,7 @@
         /// </summary>
         /// <param name="KeyValue"></param>
         /// <returns></returns>
-        public int GetKeyCode(string KeyValue)
+        public int GetCode(string KeyValue)
         {
             try
             {

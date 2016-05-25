@@ -19,8 +19,8 @@
             // Read Elite Dangerous and Voice Attack configuration(s) to get key bindings ..
             try
             {
-                KeyBindingsTable = Game.ConfigRead.EliteDangerous(EDCfg);
-                KeyBindingsTable.Merge(Game.ConfigRead.VoiceAttack(VACfg));
+                KeyBindingsTable = Game.KeyBindingsConfigReader.EliteDangerous(EDCfg);
+                KeyBindingsTable.Merge(Game.KeyBindingsConfigReader.VoiceAttack(VACfg));
                 Console.WriteLine("Config Read");
                 PressIt();
 

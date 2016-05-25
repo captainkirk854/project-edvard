@@ -6,20 +6,23 @@
     using System.Data;
     using Helpers;
 
-    public static class ConfigRead
+    /// <summary>
+    /// Reads and process Key Binding Configuration Files
+    /// </summary>
+    public static class KeyBindingsConfigReader
     {
         // Preset Key Map Enumeration to use ..
         static Enums.KeyType KeyType = Enums.KeyType.WindowsForms;
 
         // Initialise ..
-        static readonly KeyCodes KeyMap = new KeyCodes(KeyType);
+        static readonly KeyMapper KeyMap = new KeyMapper(KeyType);
         static DataTable KeyBindingsTable = new DataTable();
         const string D = "+";
 
         /// <summary>
         /// Constructor initialises DataTable structure ..
         /// </summary>
-        static ConfigRead()
+        static KeyBindingsConfigReader()
         {
             DefineKeyBindingsTableStructure(KeyBindingsTable);
         }
@@ -60,7 +63,7 @@
         }
 
         /// <summary>
-        /// Define KeyBindings DataTable Structure
+        /// Define Key Bindings DataTable Structure
         /// </summary>
         /// <param name="KeyBindings"></param>
         private static void DefineKeyBindingsTableStructure(DataTable KeyBindings)
@@ -124,7 +127,7 @@
                                                  KeyMap.KeyType.ToString(), //KeyMappingType
                                                  keyBinding.Commandstring, //KeyFunction
                                                  "N/A", //Priority
-                                                 KeyMap.GetKeyValue(Int32.Parse(keyBinding.KeyCode)), //KeyValue
+                                                 KeyMap.GetValue(Int32.Parse(keyBinding.KeyCode)), //KeyValue
                                                  keyBinding.KeyCode, //KeyCode
                                                  keyBinding.Id, //KeyId
                                                  "N/A", //ModifierKeyValue
@@ -248,10 +251,10 @@
                                                          childNode.Name, //KeyFunction
                                                          keyBinding.xmlNode_DevicePriority, //Priority 
                                                          keyBinding.KeyValue, //KeyValue
-                                                         KeyMap.GetKeyCode(keyBinding.KeyValue), //KeyCode
+                                                         KeyMap.GetCode(keyBinding.KeyValue), //KeyCode
                                                          CustomKeyId, //KeyId
                                                          keyBinding.ModifierKeyValue, //ModifierKeyValue
-                                                         KeyMap.GetKeyCode(keyBinding.ModifierKeyValue),//ModifierKeyCode
+                                                         KeyMap.GetCode(keyBinding.ModifierKeyValue),//ModifierKeyCode
                                                          CustomModifierKeyId //ModifierId
                                                         }
                                                      , false);
