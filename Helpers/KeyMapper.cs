@@ -11,33 +11,36 @@
     public sealed class KeyMapper
     {
         // Initialise class-wide scope variables ..
+        public Enums.KeyEnumType KeyType;
         private Dictionary<string, int> KeyMap = new Dictionary<string, int>();
-        public Enums.KeyType KeyType;
+        private KeyExchange EDKeyXChg = new KeyExchange();
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public KeyMapper(Enums.KeyType keytype)
+        public KeyMapper(Enums.KeyEnumType keytype)
         {
             switch (keytype)
             {
-                case Enums.KeyType.WindowsForms:
-                    KeyMap = InitialiseKeyValueCodeMap_WindowsForms();
+                case Enums.KeyEnumType.WindowsForms:
+                    InitialiseKeyMap_WindowsForms();
                     break;
-                case Enums.KeyType.Console:
-                    KeyMap = InitialiseKeyValueCodeMap_Console();
+                case Enums.KeyEnumType.Console:
+                    InitialiseKeyMap_Console();
                     break;
                 default:
-                    KeyMap = InitialiseKeyValueCodeMap_Console();
+                    InitialiseKeyMap_Console();
                     break;
             }
 
+            EDKeyXChg.Initialise(keytype);
             this.KeyType = keytype;
         }
 
         /// <summary>
         /// Get Key Value from Key Code ..
         /// </summary>
+        /// {Dictionary Key}
         /// <param name="KeyCode"></param>
         /// <returns></returns>
         public string GetValue(int KeyCode)
@@ -65,9 +68,10 @@
         /// <summary>
         /// Get Key Code from Key Value
         /// </summary>
+        /// {Dictionary Value}
         /// <param name="KeyValue"></param>
         /// <returns></returns>
-        public int GetCode(string KeyValue)
+        public int GetKey(string KeyValue)
         {
             try
             {
@@ -80,7 +84,7 @@
                 }
 
                 // Handle misc ..
-                if (this.KeyType == Enums.KeyType.WindowsForms)
+                if (this.KeyType == Enums.KeyEnumType.WindowsForms)
                 {
                     if (KeyValue == "Enter") KeyValue = "Return";
                     if (KeyValue == "Backspace") KeyValue = "Back";
@@ -96,8 +100,29 @@
                 }
                 else
                 {
-                    Console.WriteLine("*** No CODE for key VALUE:[{0}] ***", KeyValue);
-                    return -999;
+                    // Test to see if KeyValue can be found in Exchange dictionary ...
+                    try
+                    {
+                        // Examine key at Exchange ..
+                        string XKeyValue = EDKeyXChg.GetValue(KeyValue);
+
+                        // If value from Exchange is different, something must have been found ..
+                        if (XKeyValue != KeyValue) 
+                        {
+                            // Perform recursive check and see if a code can be found using Exchange key value ..
+                            return GetKey(XKeyValue);
+                        }
+                        else
+                        {
+                            return -999;
+                        }
+                    }
+                    catch
+                    {
+                        // Nothing found to map to using Exchange value ..
+                        Console.WriteLine("*** No CODE for key VALUE:[{0}] ***", KeyValue);
+                        return -999;
+                    }
                 }
             }
         }
@@ -128,7 +153,7 @@
         /// ref: http://stackoverflow.com/questions/4850/c-sharp-and-arrow-keys/2033811#2033811
         /// </summary>
         /// <returns></returns>
-        private Dictionary<string, int> InitialiseKeyValueCodeMap_WindowsForms()
+        private void InitialiseKeyMap_WindowsForms()
         {
             // Initialise lists of key names and codes ..
             var keyEnums = Enum.GetValues(typeof(Keys)).Cast<Keys>().Distinct();
@@ -136,13 +161,10 @@
             var keyCodes = keyEnums.Cast<int>().ToList();
 
             // Add key names and codes to dictionary ..
-            Dictionary<string, int> keymap = new Dictionary<string, int>();
             for (int i = 0; i < keyNames.Count; i++)
             {
-                keymap.Add(keyNames[i].ToString(), keyCodes[i]);
+                KeyMap.Add(keyNames[i].ToString(), keyCodes[i]);
             }
-
-            return keymap;
         }
 
         /// <summary>
@@ -151,7 +173,7 @@
         /// ref: http://www.theasciicode.com.ar/
         /// </summary>
         /// <returns></returns>
-        private Dictionary<string, int> InitialiseKeyValueCodeMap_Console()
+        private void InitialiseKeyMap_Console()
         {
             // Initialise lists of key names and codes ..
             var keyEnums = Enum.GetValues(typeof(ConsoleKey)).Cast<ConsoleKey>().Distinct();
@@ -159,13 +181,10 @@
             var keyCodes = keyEnums.Cast<int>().ToList();
 
             // Add key names and codes to dictionary ..
-            Dictionary<string, int> keymap = new Dictionary<string, int>();
             for (int i = 0; i < keyNames.Count; i++)
             {
-                keymap.Add(keyNames[i].ToString(), keyCodes[i]);
+                KeyMap.Add(keyNames[i].ToString(), keyCodes[i]);
             }
-
-            return keymap;
         }
     }
 }

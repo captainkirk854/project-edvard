@@ -12,7 +12,7 @@
     public static class KeyBindingsConfigReader
     {
         // Preset Key Map Enumeration to use ..
-        static Enums.KeyType KeyType = Enums.KeyType.WindowsForms;
+        static Enums.KeyEnumType KeyType = Enums.KeyEnumType.WindowsForms;
 
         // Initialise ..
         static readonly KeyMapper KeyMap = new KeyMapper(KeyType);
@@ -251,10 +251,10 @@
                                                          childNode.Name, //KeyFunction
                                                          keyBinding.xmlNode_DevicePriority, //Priority 
                                                          keyBinding.KeyValue, //KeyValue
-                                                         KeyMap.GetCode(keyBinding.KeyValue), //KeyCode
+                                                         KeyMap.GetKey(keyBinding.KeyValue), //KeyCode
                                                          CustomKeyId, //KeyId
                                                          keyBinding.ModifierKeyValue, //ModifierKeyValue
-                                                         KeyMap.GetCode(keyBinding.ModifierKeyValue),//ModifierKeyCode
+                                                         KeyMap.GetKey(keyBinding.ModifierKeyValue),//ModifierKeyCode
                                                          CustomModifierKeyId //ModifierId
                                                         }
                                                      , false);
