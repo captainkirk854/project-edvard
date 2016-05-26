@@ -13,7 +13,7 @@
         // Initialise class-wide scope variables ..
         public Enums.KeyEnumType KeyType;
         private Dictionary<string, int> KeyMap = new Dictionary<string, int>();
-        private KeyExchange EDKeyXChg = new KeyExchange();
+        private KeyExchange Exchange = new KeyExchange();
 
         /// <summary>
         /// Constructor
@@ -33,7 +33,7 @@
                     break;
             }
 
-            EDKeyXChg.Initialise(keytype);
+            Exchange.Initialise(keytype);
             this.KeyType = keytype;
         }
 
@@ -104,7 +104,7 @@
                     try
                     {
                         // Examine key at Exchange ..
-                        string XKeyValue = EDKeyXChg.GetValue(KeyValue);
+                        string XKeyValue = Exchange.GetValue(KeyValue);
 
                         // If value from Exchange is different, something must have been found ..
                         if (XKeyValue != KeyValue) 
@@ -114,7 +114,8 @@
                         }
                         else
                         {
-                            return -999;
+                            Console.WriteLine("*** No CODE for key VALUE [{0}] at the Exchange ***", KeyValue);
+                            return -998;
                         }
                     }
                     catch

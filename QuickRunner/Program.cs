@@ -21,7 +21,7 @@
             {
                 KeyBindingsTable = Game.KeyBindingsConfigReader.EliteDangerous(EDCfg);
                 KeyBindingsTable.Merge(Game.KeyBindingsConfigReader.VoiceAttack(VACfg));
-                Console.WriteLine("Config Read");
+                Console.WriteLine("Config(s) Read");
                 PressIt();
 
                 // Display DataTable Contents ..
