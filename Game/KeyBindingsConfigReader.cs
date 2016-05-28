@@ -18,6 +18,7 @@
         static readonly KeyMapper KeyMap = new KeyMapper(KeyType);
         const string D = "+";
         const string NA = "-";
+        const int iNA = -2;
         const string FilePath = "FilePath";
 
         /// <summary>
@@ -78,10 +79,10 @@
             KeyBindings.Columns.Add("KeyFunction", typeof(string));
             KeyBindings.Columns.Add("Priority", typeof(string));
             KeyBindings.Columns.Add("KeyValue", typeof(string));
-            KeyBindings.Columns.Add("KeyCode", typeof(string));
+            KeyBindings.Columns.Add("KeyCode", typeof(int));
             KeyBindings.Columns.Add("KeyId", typeof(string));
             KeyBindings.Columns.Add("ModifierKeyValue", typeof(string));
-            KeyBindings.Columns.Add("ModifierKeyCode", typeof(string));
+            KeyBindings.Columns.Add("ModifierKeyCode", typeof(int));
             KeyBindings.Columns.Add("ModifierKeyId", typeof(string));
         }
 
@@ -138,7 +139,7 @@
                                                  keyBinding.KeyCode, //KeyCode
                                                  keyBinding.Id, //KeyId
                                                  NA, //ModifierKeyValue
-                                                 NA, //ModifierKeyCode
+                                                 iNA, //ModifierKeyCode
                                                  NA //ModifierId
                                                 }
                                              , false);

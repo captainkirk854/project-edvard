@@ -11,7 +11,7 @@
             // Initialise ..
             DataTable KeyBindingsTable = new DataTable();
 
-            const int KeyBindingsColumnWidth = 20;
+           // const int KeyBindingsColumnWidth = 20;
             const string CSVFileName = "EDVA_Consolidated_KeyBindings.csv";
 
             // Point to project sample (not a resource as such) data ..
@@ -30,10 +30,19 @@
                 KeyBindingsTable = Game.KeyBindingsConfigReader.EliteDangerous(EDCfg);
                 KeyBindingsTable.Merge(Game.KeyBindingsConfigReader.VoiceAttack(VACfg));
                 Console.WriteLine("Config(s) Read");
-                PressIt();
+                // PressIt();
 
                 // Debug DataTable Contents ..
-                KeyBindingsTable.Display(KeyBindingsColumnWidth, string.Empty);
+                // KeyBindingsTable.Display(KeyBindingsColumnWidth, string.Empty);
+                // PressIt();
+
+                // Experimental: update ..
+                string junkSetClause = "Context = EliteDangerous ,KeyValue = A";
+                string junkWhereClause = "Context = EliteDangerous, KeyValue = A, KeyCode = 65";
+                KeyBindingsTable.Update(junkSetClause, junkWhereClause);
+                
+                // Experimental: sort ..
+                KeyBindingsTable = KeyBindingsTable.Sort("KeyCode desc, ModifierKeyCode asc");
                 KeyBindingsTable.CreateCSV(DataTableDebugCSV);
                 PressIt();
             }
