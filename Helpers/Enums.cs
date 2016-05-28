@@ -33,6 +33,15 @@
         }
 
         /// <summary>
+        /// Enumeration of Application Indicator of Keyboard-interaction 
+        /// </summary>
+        public enum Interaction
+        {
+            Keyboard, //ED
+            PressKey  //VA
+        }
+
+        /// <summary>
         /// Enumeration of Elite Dangerous Keys
         /// </summary>
         public enum EliteDangerousKey

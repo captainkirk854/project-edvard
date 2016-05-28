@@ -16,16 +16,9 @@
 
         // Initialise ..
         static readonly KeyMapper KeyMap = new KeyMapper(KeyType);
-        static DataTable KeyBindingsTable = new DataTable();
         const string D = "+";
-
-        /// <summary>
-        /// Constructor initialises DataTable structure ..
-        /// </summary>
-        static KeyBindingsConfigReader()
-        {
-            DefineKeyBindingsTableStructure(KeyBindingsTable);
-        }
+        const string NA = "-";
+        const string FilePath = "FilePath";
 
         /// <summary>
         /// Parse Elite Dangerous Key Bindings into DataTable
@@ -34,15 +27,18 @@
         /// <returns></returns>
         public static DataTable EliteDangerous(string cfgFilePath)
         {
-            // Load configuration file as xml object ..
+            // Load configuration file as xml document object ..
             var EDCfg = Xml.ReadXDoc(cfgFilePath);
 
-            // Read configuration xml and convert to DataTable ..
-            DataTable primary = ExtractKeyBindings_EliteDangerous(EDCfg, Enums.EliteDangerousDevicePriority.Primary);
+            // Read bindings and tabulate ..
+            DataTable primary = ExtractKeyBindings_EliteDangerous(EDCfg, Enums.EliteDangerousDevicePriority.Primary);            
             DataTable secondary = ExtractKeyBindings_EliteDangerous(EDCfg, Enums.EliteDangerousDevicePriority.Secondary);
 
             // Merge ..
             primary.Merge(secondary);
+
+            // Modify ..
+            primary.AddDefaultColumn(FilePath, cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
@@ -55,18 +51,24 @@
         /// <returns></returns>
         public static DataTable VoiceAttack(string cfgFilePath)
         {
-            // Load configuration file as xml object .. 
+            // Load configuration file as xml document object .. 
             var VACfg = Xml.ReadXDoc(cfgFilePath);
 
-            // Return as DataTable  ..
-            return ExtractKeyBindings_VoiceAttack(VACfg);
+            // Read bindings and tabulate ..
+            DataTable primary = ExtractKeyBindings_VoiceAttack(VACfg);
+
+            // Modify ..
+            primary.AddDefaultColumn(FilePath, cfgFilePath);
+
+            // return Datatable ..
+            return primary;
         }
 
         /// <summary>
         /// Define Key Bindings DataTable Structure
         /// </summary>
         /// <param name="KeyBindings"></param>
-        private static void DefineKeyBindingsTableStructure(DataTable KeyBindings)
+        private static void DefineStructure(this DataTable KeyBindings)
         {
             KeyBindings.TableName = "KeyBindings";
 
@@ -103,42 +105,47 @@
         private static DataTable ExtractKeyBindings_VoiceAttack(XDocument xdoc)
         {
             // Initialise ..
-            const string VAKeyBoardInteraction = "PressKey";
-            const string KeyBindingContext = "VoiceAttack";
+            const string XMLCommand = "Command";
+            const string XMLActionSequence = "ActionSequence";
+            const string XMLCommandAction = "CommandAction";
+ 
+            // Datatable to hold tabulated XML contents ..
+            DataTable keybinder = new DataTable();
+            keybinder.DefineStructure();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
-            var keyBindings = from item in xdoc.Descendants("Command")
-                             where item.Element("ActionSequence").Element("CommandAction") != null &&
-                                   item.Element("ActionSequence").Element("CommandAction").Element("ActionType").Value == VAKeyBoardInteraction
+            var keyBindings = from item in xdoc.Descendants(XMLCommand)
+                              where item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
+                                   item.Element(XMLActionSequence).Element(XMLCommandAction).Element("ActionType").Value == Enums.Interaction.PressKey.ToString()
                             select 
                                new // create anonymous type for every key code ..
                                  {
                                     Commandstring = item.Element("CommandString").SafeElementValue(),
-                                    Id = item.Element("ActionSequence").Element("CommandAction").Element("Id").SafeElementValue(),
-                                    KeyCode = item.Element("ActionSequence").Element("CommandAction").Element("KeyCodes").Element("unsignedShort").SafeElementValue()
+                                    Id = item.Element(XMLActionSequence).Element(XMLCommandAction).Element("Id").SafeElementValue(),
+                                    KeyCode = item.Element(XMLActionSequence).Element(XMLCommandAction).Element("KeyCodes").Element("unsignedShort").SafeElementValue()
                                  };
 
             // insert anonymous type row data (with some additional values) into DataTable ..
             foreach (var keyBinding in keyBindings)
             {
-                KeyBindingsTable.LoadDataRow(new object[] 
+                keybinder.LoadDataRow(new object[] 
                                                 {
-                                                 KeyBindingContext, //Context
+                                                 Enums.Game.VoiceAttack.ToString(), //Context
                                                  KeyMap.KeyType.ToString(), //KeyMappingType
                                                  keyBinding.Commandstring, //KeyFunction
-                                                 "N/A", //Priority
+                                                 NA, //Priority
                                                  KeyMap.GetValue(Int32.Parse(keyBinding.KeyCode)), //KeyValue
                                                  keyBinding.KeyCode, //KeyCode
                                                  keyBinding.Id, //KeyId
-                                                 "N/A", //ModifierKeyValue
-                                                 "N/A", //ModifierKeyCode
-                                                 "N/A" //ModifierId
+                                                 NA, //ModifierKeyValue
+                                                 NA, //ModifierKeyCode
+                                                 NA //ModifierId
                                                 }
                                              , false);
             }
 
             // return Datatable ..
-            return KeyBindingsTable;
+            return keybinder;
         }
 
         /// <summary>
@@ -177,12 +184,14 @@
         private static DataTable ExtractKeyBindings_EliteDangerous(XDocument xdoc, Enums.EliteDangerousDevicePriority devicepriority)
         {
             // Initialise ..
-            const string KeyBindingContext = "EliteDangerous";
-            const string EDKeyBoardInteraction = "Keyboard";
             const string XMLKey = "Key";
             const string XMLDevice = "Device";
             const string XMLModifier = "Modifier";
             string DevicePriority = devicepriority.ToString();
+
+            // Datatable to hold tabulated XML contents ..
+            DataTable keybinder = new DataTable();
+            keybinder.DefineStructure();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             // Scan all child nodes from top-level node ..
@@ -193,7 +202,7 @@
                 {
                     var keyBindings = from item in xdoc.Descendants(childNode.Name)
                                      where
-                                           item.Element(DevicePriority).SafeAttributeValue(XMLDevice) == EDKeyBoardInteraction &&
+                                           item.Element(DevicePriority).SafeAttributeValue(XMLDevice) == Enums.Interaction.Keyboard.ToString() &&
                                            item.Element(DevicePriority).Attribute(XMLKey).Value.Contains("Key_") == true
                                      select
                                         new // create anonymous type for every key code ..
@@ -244,9 +253,9 @@
                                                   keyBinding.ModifierKeyValueFull;
                         }
 
-                        KeyBindingsTable.LoadDataRow(new object[] 
+                        keybinder.LoadDataRow(new object[] 
                                                         {
-                                                         KeyBindingContext, //Context
+                                                         Enums.Game.EliteDangerous.ToString(), //Context
                                                          KeyMap.KeyType.ToString(), //KeyMappingType
                                                          childNode.Name, //KeyFunction
                                                          keyBinding.xmlNode_DevicePriority, //Priority 
@@ -263,7 +272,7 @@
             }
 
             // return Datatable ..
-            return KeyBindingsTable;
+            return keybinder;
         }     
     }
 }

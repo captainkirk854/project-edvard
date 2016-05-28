@@ -8,6 +8,26 @@
 
     public static class Data
     {
+
+        /// <summary>
+        /// Add a default column
+        /// </summary>
+        /// <param name="iTable"></param>
+        /// <param name="ColumnName"></param>
+        /// <param name="ColumnDefaultValue"></param>
+        public static void AddDefaultColumn(this DataTable iTable, string ColumnName, string ColumnDefaultValue)
+        {
+            // Define column ..
+            DataColumn newColumn = new DataColumn(ColumnName, typeof(string));
+            newColumn.DefaultValue = ColumnDefaultValue;
+            
+            // Stick it ..
+            if(!iTable.Columns.Contains(ColumnName))
+            {
+                iTable.Columns.Add(newColumn);
+            }
+        }
+
         /// <summary>
         /// Display contents of a DataTable type
         /// </summary>
