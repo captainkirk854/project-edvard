@@ -1,25 +1,24 @@
 ﻿namespace Game
 {
-    using System;
+    using Helpers;
+    using System.Data;
     using System.Linq;
     using System.Xml.Linq;
-    using System.Data;
-    using Helpers;
 
     /// <summary>
     /// Reads and process Key Binding Configuration Files
     /// </summary>
     public static class KeyBindingsConfigReader
     {
-        // Preset Key Map Enumeration to use ..
-        static Enums.KeyEnumType KeyType = Enums.KeyEnumType.WindowsForms;
-
         // Initialise ..
-        static readonly KeyMapper KeyMap = new KeyMapper(KeyType);
-        const string D = "+";
-        const string NA = "-";
-        const int iNA = -2;
-        const string FilePath = "FilePath";
+        private const string D = "+";
+        private const string NA = "-";
+        private const int INA = -2;
+        private const string FilePath = "FilePath";
+        private static readonly KeyMapper KeyMap = new KeyMapper(keyType);
+
+        // Preset Key Map Enumeration to use ..
+        private static Enums.KeyEnumType keyType = Enums.KeyEnumType.WindowsForms;
 
         /// <summary>
         /// Parse Elite Dangerous Key Bindings into DataTable
@@ -29,11 +28,11 @@
         public static DataTable EliteDangerous(string cfgFilePath)
         {
             // Load configuration file as xml document object ..
-            var EDCfg = Xml.ReadXDoc(cfgFilePath);
+            var cfgED = Xml.ReadXDoc(cfgFilePath);
 
             // Read bindings and tabulate ..
-            DataTable primary = ExtractKeyBindings_EliteDangerous(EDCfg, Enums.EliteDangerousDevicePriority.Primary);            
-            DataTable secondary = ExtractKeyBindings_EliteDangerous(EDCfg, Enums.EliteDangerousDevicePriority.Secondary);
+            DataTable primary = ExtractKeyBindings_EliteDangerous(cfgED, Enums.EliteDangerousDevicePriority.Primary);            
+            DataTable secondary = ExtractKeyBindings_EliteDangerous(cfgED, Enums.EliteDangerousDevicePriority.Secondary);
 
             // Merge ..
             primary.Merge(secondary);
@@ -53,10 +52,10 @@
         public static DataTable VoiceAttack(string cfgFilePath)
         {
             // Load configuration file as xml document object .. 
-            var VACfg = Xml.ReadXDoc(cfgFilePath);
+            var cfgVA = Xml.ReadXDoc(cfgFilePath);
 
             // Read bindings and tabulate ..
-            DataTable primary = ExtractKeyBindings_VoiceAttack(VACfg);
+            DataTable primary = ExtractKeyBindings_VoiceAttack(cfgVA);
 
             // Modify ..
             primary.AddDefaultColumn(FilePath, cfgFilePath);
@@ -68,22 +67,22 @@
         /// <summary>
         /// Define Key Bindings DataTable Structure
         /// </summary>
-        /// <param name="KeyBindings"></param>
-        private static void DefineStructure(this DataTable KeyBindings)
+        /// <param name="keyBindings"></param>
+        private static void DefineStructure(this DataTable keyBindings)
         {
-            KeyBindings.TableName = "KeyBindings";
+            keyBindings.TableName = "KeyBindings";
 
             // Define table structure ..
-            KeyBindings.Columns.Add("Context", typeof(string));
-            KeyBindings.Columns.Add("KeyEnumerationType", typeof(string));
-            KeyBindings.Columns.Add("KeyFunction", typeof(string));
-            KeyBindings.Columns.Add("Priority", typeof(string));
-            KeyBindings.Columns.Add("KeyValue", typeof(string));
-            KeyBindings.Columns.Add("KeyCode", typeof(int));
-            KeyBindings.Columns.Add("KeyId", typeof(string));
-            KeyBindings.Columns.Add("ModifierKeyValue", typeof(string));
-            KeyBindings.Columns.Add("ModifierKeyCode", typeof(int));
-            KeyBindings.Columns.Add("ModifierKeyId", typeof(string));
+            keyBindings.Columns.Add("Context", typeof(string));
+            keyBindings.Columns.Add("KeyEnumerationType", typeof(string));
+            keyBindings.Columns.Add("KeyFunction", typeof(string));
+            keyBindings.Columns.Add("Priority", typeof(string));
+            keyBindings.Columns.Add("KeyValue", typeof(string));
+            keyBindings.Columns.Add("KeyCode", typeof(int));
+            keyBindings.Columns.Add("KeyId", typeof(string));
+            keyBindings.Columns.Add("ModifierKeyValue", typeof(string));
+            keyBindings.Columns.Add("ModifierKeyCode", typeof(int));
+            keyBindings.Columns.Add("ModifierKeyId", typeof(string));
         }
 
         /// <summary>
@@ -103,6 +102,7 @@
         ///                   ((Flight Assist)) : 90 (= Z)
         /// </summary>
         /// <param name="xdoc"></param>
+        /// <returns></returns>
         private static DataTable ExtractKeyBindings_VoiceAttack(XDocument xdoc)
         {
             // Initialise ..
@@ -135,14 +135,14 @@
                                                  KeyMap.KeyType.ToString(), //KeyMappingType
                                                  keyBinding.Commandstring, //KeyFunction
                                                  NA, //Priority
-                                                 KeyMap.GetValue(Int32.Parse(keyBinding.KeyCode)), //KeyValue
+                                                 KeyMap.GetValue(int.Parse(keyBinding.KeyCode)), //KeyValue
                                                  keyBinding.KeyCode, //KeyCode
                                                  keyBinding.Id, //KeyId
                                                  NA, //ModifierKeyValue
-                                                 iNA, //ModifierKeyCode
+                                                 INA, //ModifierKeyCode
                                                  NA //ModifierId
-                                                }
-                                             , false);
+                                                },
+                                       false);
             }
 
             // return Datatable ..
@@ -182,13 +182,15 @@
         ///                
         /// </summary>
         /// <param name="xdoc"></param>
+        /// <param name="devicepriority"></param>
+        /// <returns></returns>
         private static DataTable ExtractKeyBindings_EliteDangerous(XDocument xdoc, Enums.EliteDangerousDevicePriority devicepriority)
         {
             // Initialise ..
             const string XMLKey = "Key";
             const string XMLDevice = "Device";
             const string XMLModifier = "Modifier";
-            string DevicePriority = devicepriority.ToString();
+            string devicePriority = devicepriority.ToString();
 
             // Datatable to hold tabulated XML contents ..
             DataTable keybinder = new DataTable();
@@ -203,49 +205,49 @@
                 {
                     var keyBindings = from item in xdoc.Descendants(childNode.Name)
                                      where
-                                           item.Element(DevicePriority).SafeAttributeValue(XMLDevice) == Enums.Interaction.Keyboard.ToString() &&
-                                           item.Element(DevicePriority).Attribute(XMLKey).Value.Contains("Key_") == true
+                                           item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Enums.Interaction.Keyboard.ToString() &&
+                                           item.Element(devicePriority).Attribute(XMLKey).Value.Contains("Key_") == true
                                      select
                                         new // create anonymous type for every key code ..
                                           {
                                               //---------------------------------------------------------------------------------
                                               // Priority ..
                                               //---------------------------------------------------------------------------------
-                                              xmlNode_DevicePriority = item.Element(DevicePriority).Attribute(XMLKey).Parent.Name,
+                                              xmlNode_DevicePriority = item.Element(devicePriority).Attribute(XMLKey).Parent.Name,
                                             
                                               //---------------------------------------------------------------------------------
                                               // Main Key Binding ..
                                               //---------------------------------------------------------------------------------
-                                              xmlNode_Device = item.Element(DevicePriority).SafeAttributeName(XMLDevice),
-                                              xmlNode_Key = item.Element(DevicePriority).SafeAttributeName(XMLKey),
-                                              DeviceType = item.Element(DevicePriority).SafeAttributeValue(XMLDevice),
-                                              KeyValueFull = item.Element(DevicePriority).SafeAttributeValue(XMLKey),
-                                              KeyValue = item.Element(DevicePriority).SafeAttributeValue(XMLKey) != string.Empty ? item.Element(DevicePriority).SafeAttributeValue(XMLKey).Substring(4) : string.Empty,
+                                              xmlNode_Device = item.Element(devicePriority).SafeAttributeName(XMLDevice),
+                                              xmlNode_Key = item.Element(devicePriority).SafeAttributeName(XMLKey),
+                                              DeviceType = item.Element(devicePriority).SafeAttributeValue(XMLDevice),
+                                              KeyValueFull = item.Element(devicePriority).SafeAttributeValue(XMLKey),
+                                              KeyValue = item.Element(devicePriority).SafeAttributeValue(XMLKey) != string.Empty ? item.Element(devicePriority).SafeAttributeValue(XMLKey).Substring(4) : string.Empty,
 
                                               //---------------------------------------------------------------------------------
                                               // Modifier Key Binding (should it exist) ..
                                               //---------------------------------------------------------------------------------
-                                              xmlNode_Modifier = item.Element(DevicePriority).Element(XMLModifier).SafeElementName(),
-                                              xmlNode_ModifierDevice = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeName(XMLDevice),
-                                              xmlNode_ModifierKey = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeName(XMLKey),
-                                              ModifierDeviceType = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeValue(XMLDevice),
-                                              ModifierKeyValueFull = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey),
-                                              ModifierKeyValue = item.Element(DevicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey) != string.Empty ? item.Element(DevicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey).Substring(4) : string.Empty
+                                              xmlNode_Modifier = item.Element(devicePriority).Element(XMLModifier).SafeElementName(),
+                                              xmlNode_ModifierDevice = item.Element(devicePriority).Element(XMLModifier).SafeAttributeName(XMLDevice),
+                                              xmlNode_ModifierKey = item.Element(devicePriority).Element(XMLModifier).SafeAttributeName(XMLKey),
+                                              ModifierDeviceType = item.Element(devicePriority).Element(XMLModifier).SafeAttributeValue(XMLDevice),
+                                              ModifierKeyValueFull = item.Element(devicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey),
+                                              ModifierKeyValue = item.Element(devicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey) != string.Empty ? item.Element(devicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey).Substring(4) : string.Empty
                                           };
 
                     foreach (var keyBinding in keyBindings)
                     {
-                        string CustomKeyId = childNode.Name + D +
+                        string customKeyId = childNode.Name + D +
                                              keyBinding.xmlNode_DevicePriority + D +
                                              keyBinding.xmlNode_Device + D +
                                              keyBinding.DeviceType + D +
                                              keyBinding.xmlNode_Key + D +
                                              keyBinding.KeyValueFull;
 
-                        string CustomModifierKeyId = string.Empty;
+                        string customModifierKeyId = string.Empty;
                         if (keyBinding.xmlNode_Modifier != string.Empty)
                         {
-                            CustomModifierKeyId = childNode.Name + D +
+                            customModifierKeyId = childNode.Name + D +
                                                   keyBinding.xmlNode_DevicePriority + D +
                                                   keyBinding.xmlNode_Modifier + D +
                                                   keyBinding.xmlNode_ModifierDevice + D +
@@ -262,12 +264,12 @@
                                                          keyBinding.xmlNode_DevicePriority, //Priority 
                                                          keyBinding.KeyValue, //KeyValue
                                                          KeyMap.GetKey(keyBinding.KeyValue), //KeyCode
-                                                         CustomKeyId, //KeyId
+                                                         customKeyId, //KeyId
                                                          keyBinding.ModifierKeyValue, //ModifierKeyValue
-                                                         KeyMap.GetKey(keyBinding.ModifierKeyValue),//ModifierKeyCode
-                                                         CustomModifierKeyId //ModifierId
-                                                        }
-                                                     , false);
+                                                         KeyMap.GetKey(keyBinding.ModifierKeyValue), //ModifierKeyCode
+                                                         customModifierKeyId //ModifierId
+                                                        },
+                                               false);
                     }
                 }
             }

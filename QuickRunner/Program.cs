@@ -4,32 +4,33 @@
     using Helpers;
     using System.Data;
 
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             // Initialise ..
-            DataTable KeyBindingsTable = new DataTable();
+            DataTable keyBindingsTable = new DataTable();
 
            // const int KeyBindingsColumnWidth = 20;
             const string CSVFileName = "EDVA_Consolidated_KeyBindings.csv";
 
             // Point to project sample (not a resource as such) data ..
-            string EDCfg = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
-            string VACfg = GetProjectDirectory() + "\\Sample" + "\\VA01.vap";
+            string cfgED = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
+            string cfgVA = GetProjectDirectory() + "\\Sample" + "\\VA01.vap";
 
             // Path for DataTable Debug Csv ..
-            string DataTableDebugCSV = Environment.ExpandEnvironmentVariables("%UserProfile%");
-            DataTableDebugCSV += "\\Desktop";
-            DataTableDebugCSV += "\\" + CSVFileName;
+            string dataTableDebugCSV = Environment.ExpandEnvironmentVariables("%UserProfile%");
+            dataTableDebugCSV += "\\Desktop";
+            dataTableDebugCSV += "\\" + CSVFileName;
 
             // Read EliteDangerous and Voice Attack configuration(s) to get key bindings ..
             try
             {
                 // Combine DataTables from both applications ..
-                KeyBindingsTable = Game.KeyBindingsConfigReader.EliteDangerous(EDCfg);
-                KeyBindingsTable.Merge(Game.KeyBindingsConfigReader.VoiceAttack(VACfg));
+                keyBindingsTable = Game.KeyBindingsConfigReader.EliteDangerous(cfgED);
+                keyBindingsTable.Merge(Game.KeyBindingsConfigReader.VoiceAttack(cfgVA));
                 Console.WriteLine("Config(s) Read");
+
                 // PressIt();
 
                 // Debug DataTable Contents ..
@@ -39,11 +40,11 @@
                 // Experimental: update ..
                 string junkSetClause = "Context = EliteDangerous ,KeyValue = A";
                 string junkWhereClause = "Context = EliteDangerous, KeyValue = A, KeyCode = 65";
-                KeyBindingsTable.Update(junkSetClause, junkWhereClause);
+                keyBindingsTable.Update(junkSetClause, junkWhereClause);
                 
                 // Experimental: sort ..
-                KeyBindingsTable = KeyBindingsTable.Sort("KeyCode desc, ModifierKeyCode asc");
-                KeyBindingsTable.CreateCSV(DataTableDebugCSV);
+                keyBindingsTable = keyBindingsTable.Sort("KeyCode desc, ModifierKeyCode asc");
+                keyBindingsTable.CreateCSV(dataTableDebugCSV);
                 PressIt();
             }
             catch
@@ -60,7 +61,7 @@
         /// <returns></returns>
         private static string GetProjectDirectory()
         {
-            return (AppDomain.CurrentDomain.BaseDirectory).Replace("Debug", string.Empty).Replace("bin", string.Empty).Replace("\\\\\\", string.Empty);
+            return AppDomain.CurrentDomain.BaseDirectory.Replace("Debug", string.Empty).Replace("bin", string.Empty).Replace("\\\\\\", string.Empty);
         }
 
         /// <summary>

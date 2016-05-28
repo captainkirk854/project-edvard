@@ -11,90 +11,92 @@
     public sealed class KeyMapper
     {
         // Initialise class-wide scope variables ..
-        public Enums.KeyEnumType KeyType;
-        private Dictionary<string, int> KeyMap = new Dictionary<string, int>();
-        private KeyExchange Exchange = new KeyExchange();
+        private Dictionary<string, int> keyMap = new Dictionary<string, int>();
+        private KeyExchange exchange = new KeyExchange();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="KeyMapper"/> class
         /// </summary>
+        /// <param name="keytype"></param>
         public KeyMapper(Enums.KeyEnumType keytype)
         {
             switch (keytype)
             {
                 case Enums.KeyEnumType.WindowsForms:
-                    InitialiseKeyMap_WindowsForms();
+                    this.InitialiseKeyMap_WindowsForms();
                     break;
                 case Enums.KeyEnumType.Console:
-                    InitialiseKeyMap_Console();
+                    this.InitialiseKeyMap_Console();
                     break;
                 default:
-                    InitialiseKeyMap_Console();
+                    this.InitialiseKeyMap_Console();
                     break;
             }
 
-            Exchange.Initialise(keytype);
+            this.exchange.Initialise(keytype);
             this.KeyType = keytype;
         }
+
+        public Enums.KeyEnumType KeyType { get; set; }
 
         /// <summary>
         /// Get Key Value from Key Code ..
         /// </summary>
         /// {Dictionary Key}
-        /// <param name="KeyCode"></param>
+        /// <param name="keyCode"></param>
         /// <returns></returns>
-        public string GetValue(int KeyCode)
+        public string GetValue(int keyCode)
         {
-            string KeyValue = string.Empty;
+            string keyValue = string.Empty;
 
             try
             {
                 // Attempt to pull out value from dictionary for KeyCode index ..
-                KeyValue = KeyMap.FirstOrDefault(x => x.Value == KeyCode).Key;
+                keyValue = this.keyMap.FirstOrDefault(x => x.Value == keyCode).Key;
 
                 // Force a throw null reference exception for unknown key-code ..
-                if (KeyValue.Trim() == string.Empty || KeyValue.Trim() == null){}
+                if (keyValue.Trim() == string.Empty || keyValue.Trim() == null) { }
             }
             catch
             {
-                Console.WriteLine("*** No VALUE for key CODE:[{0}] ***", KeyCode.ToString());
-                KeyValue = "*** " + KeyCode.ToString() + ":UNKNOWN ***"; 
+                Console.WriteLine("*** No VALUE for key CODE:[{0}] ***", keyCode.ToString());
+                keyValue = "*** " + keyCode.ToString() + ":UNKNOWN ***"; 
             }
 
             // Return ..
-            return KeyValue;
+            return keyValue;
         }
 
         /// <summary>
         /// Get Key Code from Key Value
         /// </summary>
         /// {Dictionary Value}
-        /// <param name="KeyValue"></param>
+        /// <param name="keyValue"></param>
         /// <returns></returns>
-        public int GetKey(string KeyValue)
+        public int GetKey(string keyValue)
         {
             try
             {
                 // Handle numerics which require prefixing with either 'D' or 'NumPad' ..
-                int iJunk;
-                if (Int32.TryParse(KeyValue, out iJunk))
+                int junk;
+                if (int.TryParse(keyValue, out junk))
                 {
                    // KeyValue = "NumPad" + KeyValue;
-                    KeyValue = "D" + KeyValue;
+                    keyValue = "D" + keyValue;
                 }
 
                 // Handle misc ..
                 if (this.KeyType == Enums.KeyEnumType.WindowsForms)
                 {
-                    if (KeyValue == "Enter") KeyValue = "Return";
-                    if (KeyValue == "Backspace") KeyValue = "Back";
+                    if (keyValue == "Enter") { keyValue = "Return"; }
+                    if (keyValue == "Backspace") { keyValue = "Back"; }
                 }
 
-                return this.KeyMap[KeyValue];
+                return this.keyMap[keyValue];
             }
             catch
             {
-                if (KeyValue == string.Empty)
+                if (keyValue == string.Empty)
                 {
                     return -1;
                 }
@@ -104,24 +106,24 @@
                     try
                     {
                         // Examine key at Exchange ..
-                        string XKeyValue = Exchange.GetValue(KeyValue);
+                        string xkeyValue = this.exchange.GetValue(keyValue);
 
                         // If value from Exchange is different, something must have been found ..
-                        if (XKeyValue != KeyValue) 
+                        if (xkeyValue != keyValue) 
                         {
                             // Perform recursive check and see if a code can be found using Exchange key value ..
-                            return GetKey(XKeyValue);
+                            return this.GetKey(xkeyValue);
                         }
                         else
                         {
-                            Console.WriteLine("*** No CODE for key VALUE [{0}] at the Exchange ***", KeyValue);
+                            Console.WriteLine("*** No CODE for key VALUE [{0}] at the Exchange ***", keyValue);
                             return -998;
                         }
                     }
                     catch
                     {
                         // Nothing found to map to using Exchange value ..
-                        Console.WriteLine("*** No CODE for key VALUE:[{0}] ***", KeyValue);
+                        Console.WriteLine("*** No CODE for key VALUE:[{0}] ***", keyValue);
                         return -999;
                     }
                 }
@@ -133,7 +135,7 @@
         /// </summary>
         public void DisplayKeyMap()
         {
-            foreach (KeyValuePair<string, int> kvp in KeyMap)
+            foreach (KeyValuePair<string, int> kvp in this.keyMap)
             {
                 Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
             }
@@ -141,6 +143,8 @@
 
         /// <summary>
         /// Use Keys Enum to create a lookup dictionary for windows form keys and their codes ..
+        /// </summary>
+        /// <remarks>
         /// ref: https://msdn.microsoft.com/en-us/library/system.windows.forms.keys(v=vs.110).aspx
         /// ref: http://www.theasciicode.com.ar/
         ///
@@ -152,8 +156,7 @@
         ///     if (IsBitSet(keyData, Keys.Alt)) {...}
         ///
         /// ref: http://stackoverflow.com/questions/4850/c-sharp-and-arrow-keys/2033811#2033811
-        /// </summary>
-        /// <returns></returns>
+        /// </remarks>
         private void InitialiseKeyMap_WindowsForms()
         {
             // Initialise lists of key names and codes ..
@@ -164,7 +167,7 @@
             // Add key names and codes to dictionary ..
             for (int i = 0; i < keyNames.Count; i++)
             {
-                KeyMap.Add(keyNames[i].ToString(), keyCodes[i]);
+                this.keyMap.Add(keyNames[i].ToString(), keyCodes[i]);
             }
         }
 
@@ -173,7 +176,6 @@
         /// ref: https://msdn.microsoft.com/en-us/library/system.consolekey(v=vs.100).aspx
         /// ref: http://www.theasciicode.com.ar/
         /// </summary>
-        /// <returns></returns>
         private void InitialiseKeyMap_Console()
         {
             // Initialise lists of key names and codes ..
@@ -184,7 +186,7 @@
             // Add key names and codes to dictionary ..
             for (int i = 0; i < keyNames.Count; i++)
             {
-                KeyMap.Add(keyNames[i].ToString(), keyCodes[i]);
+                this.keyMap.Add(keyNames[i].ToString(), keyCodes[i]);
             }
         }
     }
