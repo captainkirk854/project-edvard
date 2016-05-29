@@ -89,16 +89,26 @@
         /// Format: XML
         ///             o <Profile/>
         ///               |_ <Commands/>
-        ///                  |_<ActionSequences/>
-        ///                     !_[some] <CommandActions/>
-        ///                              |_<ActionType/>
+        ///                  |_ <Command/>
+        ///                      |_<Id/>
+        ///                      !_<CommandString/>
+        ///                      |_<ActionSequences/>
+        ///                        !_[some] <CommandActions/>
+        ///                                 |_<ActionType/>
+        ///                                  |_<KeyCodes/>
         ///                             
-        /// Selected Keys: Use actual Key code (as opposed to key value)
+        /// Keys Bindings: 
+        ///                VA uses actual key codes (as opposed to key value). Actions directly mappable to Elite Dangerous
+        ///                are defined by CommandString values which are pre- and post-fixed using '((' and '))'
         ///                e.g. 
         ///                   ((Shield Cell)) : 222 (= Oem7 Numpad?7)
         ///                   ((Power To Weapons)) : 39  (= Right arrow)
         ///                   ((Select Target Ahead)) : 84 (= T)
         ///                   ((Flight Assist)) : 90 (= Z)
+        ///                   
+        ///                Note 
+        ///                There are other commands that also use key codes which are part of the multi-command suite.
+        ///                These are currently ignored
         /// </summary>
         /// <param name="xdoc"></param>
         /// <returns></returns>
@@ -106,8 +116,14 @@
         {
             // Initialise ..
             const string XMLCommand = "Command";
+            const string XMLCommandString = "CommandString";
             const string XMLActionSequence = "ActionSequence";
             const string XMLCommandAction = "CommandAction";
+            const string XMLActionType = "ActionType";
+            const string XMLActionId = "Id";
+            const string XMLKeyCodes = "KeyCodes";
+            const string XMLunsignedShort = "unsignedShort";
+            string[] keybindingIndicator = { "((", "))" };
  
             // Datatable to hold tabulated XML contents ..
             DataTable keybinder = new DataTable();
@@ -115,14 +131,16 @@
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var keyBindings = from item in xdoc.Descendants(XMLCommand)
-                              where item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
-                                   item.Element(XMLActionSequence).Element(XMLCommandAction).Element("ActionType").Value == Enums.GameInteraction.PressKey.ToString()
+                             where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicator[0]) &&
+                                   item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicator[1]) &&
+                                   item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
+                                   item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.GameInteraction.PressKey.ToString()
                             select 
                                new // create anonymous type for every key code ..
                                  {
-                                    Commandstring = item.Element("CommandString").SafeElementValue(),
-                                    Id = item.Element(XMLActionSequence).Element(XMLCommandAction).Element("Id").SafeElementValue(),
-                                    KeyCode = item.Element(XMLActionSequence).Element(XMLCommandAction).Element("KeyCodes").Element("unsignedShort").SafeElementValue()
+                                     Commandstring = item.Element(XMLCommandString).SafeElementValue(),
+                                     Id = item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionId).SafeElementValue(),
+                                     KeyCode = item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLKeyCodes).Element(XMLunsignedShort).SafeElementValue()
                                  };
 
             // insert anonymous type row data (with some additional values) into DataTable ..
@@ -150,7 +168,7 @@
 
         /// <summary>
         /// Process Elite Dangerous Config File
-        /// Keys can be in assigned with Primary or Secondary priorities
+        /// Keys can be in assigned with Primary or Secondary Priorities
         /// Format: XML
         ///             o <Root/>
         ///               |_ <KeyboardLayout/>
@@ -161,18 +179,26 @@
         ///                  |_<Deadzone/>
         ///               |_ <things/>
         ///                  |_<Primary/>
+        ///                     |_<Device/>
+        ///                     |_<Key/>
         ///                  |_<Secondary/>
+        ///                     |_<Device/>
+        ///                     |_<Key/>
         ///               |_ <things/>
         ///                  |_<Primary/>
         ///                     |_<Modifier/>
+        ///                         |_<Device/>
+        ///                         |_<Key/>
         ///                  |_<Secondary/>
         ///                     |_<Modifier/>
+        ///                         |_<Device/>
+        ///                         |_<Key/>
         ///               |_ <things/>
         ///                  |_<Primary/>
         ///                  |_<Secondary/>
         ///                  |_<ToggleOn/>
         ///                  
-        /// Selected Keys: Use actual Key value (as opposed to key code)
+        /// Selected Keys: Use an esoteric key value (as opposed to key code)
         ///                e.g. 
         ///                     SystemMapOpen : Key_B
         ///                     GalaxyMapOpen : Key_M
@@ -186,9 +212,11 @@
         private static DataTable ExtractKeyBindings_EliteDangerous(XDocument xdoc, Enums.EliteDangerousDevicePriority devicepriority)
         {
             // Initialise ..
+            const string XMLRoot = "Root";
             const string XMLKey = "Key";
             const string XMLDevice = "Device";
             const string XMLModifier = "Modifier";
+            string[] keybindingIndicator = { "Key_" };
             string devicePriority = devicepriority.ToString();
 
             // Datatable to hold tabulated XML contents ..
@@ -197,7 +225,7 @@
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             // Scan all child nodes from top-level node ..
-            foreach (var childNode in xdoc.Element("Root").Elements())
+            foreach (var childNode in xdoc.Element(XMLRoot).Elements())
             {
                 // can only process if child node itself has children ..
                 if (childNode.DescendantNodes().Any())
@@ -205,7 +233,7 @@
                     var keyBindings = from item in xdoc.Descendants(childNode.Name)
                                      where
                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Enums.GameInteraction.Keyboard.ToString() &&
-                                           item.Element(devicePriority).Attribute(XMLKey).Value.Contains("Key_") == true
+                                           item.Element(devicePriority).Attribute(XMLKey).Value.Contains(keybindingIndicator[0]) == true
                                      select
                                         new // create anonymous type for every key code ..
                                           {
