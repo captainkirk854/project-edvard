@@ -6,21 +6,21 @@
     public class Enums
     {
         /// <summary>
-        /// Enumeration of System Keyboard Types
-        /// </summary>
-        public enum KeyEnumType
-        {
-            WindowsForms,
-            Console
-        }
-
-        /// <summary>
         /// Enumeration of Game Names 
         /// </summary>
-        public enum Game
+        public enum GameName
         {
             EliteDangerous,
             VoiceAttack
+        }
+
+        /// <summary>
+        /// Enumeration of Application Indicator of Keyboard-interaction 
+        /// </summary>
+        public enum GameInteraction
+        {
+            Keyboard, //ED
+            PressKey  //VA
         }
 
         /// <summary>
@@ -30,15 +30,6 @@
         {   
             Primary,
             Secondary
-        }
-
-        /// <summary>
-        /// Enumeration of Application Indicator of Keyboard-interaction 
-        /// </summary>
-        public enum Interaction
-        {
-            Keyboard, //ED
-            PressKey  //VA
         }
 
         /// <summary>
@@ -79,6 +70,18 @@
             Equals //?
         }
 
+        /// <summary>
+        /// Enumeration of System Keyboard Types
+        /// </summary>
+        public enum KeyEnumType
+        {
+            WindowsForms,
+            Console
+        }
+
+        /// <summary>
+        /// Enumeration of Windows Forms Keys
+        /// </summary>
         public enum WindowsFormKey
         {
             Grave,
@@ -111,6 +114,24 @@
             Up,
             Right,
             Down
+        }
+
+        /// <summary>
+        /// Enumeration of DataTableColumns
+        /// </summary>
+        public enum Column
+        {
+            Context,
+            KeyEnumerationType,
+            KeyFunction,
+            Priority,
+            KeyValue,
+            KeyCode,
+            KeyId,
+            ModifierKeyValue,
+            ModifierKeyCode,
+            ModifierKeyId,
+            FilePath
         }
     }
 }

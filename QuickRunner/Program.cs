@@ -43,7 +43,7 @@
                 keyBindingsTable.Update(junkSetClause, junkWhereClause);
                 
                 // Experimental: sort ..
-                keyBindingsTable = keyBindingsTable.Sort("KeyCode desc, ModifierKeyCode asc");
+                keyBindingsTable = keyBindingsTable.Sort(Enums.Column.KeyCode.ToString() + " desc," + Enums.Column.ModifierKeyCode.ToString() + " asc");
                 keyBindingsTable.CreateCSV(dataTableDebugCSV);
                 PressIt();
             }

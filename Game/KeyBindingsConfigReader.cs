@@ -14,7 +14,6 @@
         private const string D = "+";
         private const string NA = "-";
         private const int INA = -2;
-        private const string FilePath = "FilePath";
         private static readonly KeyMapper KeyMap = new KeyMapper(keyType);
 
         // Preset Key Map Enumeration to use ..
@@ -37,8 +36,8 @@
             // Merge ..
             primary.Merge(secondary);
 
-            // Modify ..
-            primary.AddDefaultColumn(FilePath, cfgFilePath);
+            // Add column ..
+            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
@@ -58,7 +57,7 @@
             DataTable primary = ExtractKeyBindings_VoiceAttack(cfgVA);
 
             // Modify ..
-            primary.AddDefaultColumn(FilePath, cfgFilePath);
+            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), cfgFilePath);
 
             // return Datatable ..
             return primary;
@@ -73,16 +72,16 @@
             keyBindings.TableName = "KeyBindings";
 
             // Define table structure ..
-            keyBindings.Columns.Add("Context", typeof(string));
-            keyBindings.Columns.Add("KeyEnumerationType", typeof(string));
-            keyBindings.Columns.Add("KeyFunction", typeof(string));
-            keyBindings.Columns.Add("Priority", typeof(string));
-            keyBindings.Columns.Add("KeyValue", typeof(string));
-            keyBindings.Columns.Add("KeyCode", typeof(int));
-            keyBindings.Columns.Add("KeyId", typeof(string));
-            keyBindings.Columns.Add("ModifierKeyValue", typeof(string));
-            keyBindings.Columns.Add("ModifierKeyCode", typeof(int));
-            keyBindings.Columns.Add("ModifierKeyId", typeof(string));
+            keyBindings.Columns.Add(Enums.Column.Context.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.KeyEnumerationType.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.KeyFunction.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.Priority.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.KeyValue.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.KeyCode.ToString(), typeof(int));
+            keyBindings.Columns.Add(Enums.Column.KeyId.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.ModifierKeyValue.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.ModifierKeyCode.ToString(), typeof(int));
+            keyBindings.Columns.Add(Enums.Column.ModifierKeyId.ToString(), typeof(string));
         }
 
         /// <summary>
@@ -117,7 +116,7 @@
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var keyBindings = from item in xdoc.Descendants(XMLCommand)
                               where item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
-                                   item.Element(XMLActionSequence).Element(XMLCommandAction).Element("ActionType").Value == Enums.Interaction.PressKey.ToString()
+                                   item.Element(XMLActionSequence).Element(XMLCommandAction).Element("ActionType").Value == Enums.GameInteraction.PressKey.ToString()
                             select 
                                new // create anonymous type for every key code ..
                                  {
@@ -131,7 +130,7 @@
             {
                 keybinder.LoadDataRow(new object[] 
                                                 {
-                                                 Enums.Game.VoiceAttack.ToString(), //Context
+                                                 Enums.GameName.VoiceAttack.ToString(), //Context
                                                  KeyMap.KeyType.ToString(), //KeyMappingType
                                                  keyBinding.Commandstring, //KeyFunction
                                                  NA, //Priority
@@ -205,7 +204,7 @@
                 {
                     var keyBindings = from item in xdoc.Descendants(childNode.Name)
                                      where
-                                           item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Enums.Interaction.Keyboard.ToString() &&
+                                           item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Enums.GameInteraction.Keyboard.ToString() &&
                                            item.Element(devicePriority).Attribute(XMLKey).Value.Contains("Key_") == true
                                      select
                                         new // create anonymous type for every key code ..
@@ -258,7 +257,7 @@
 
                         keybinder.LoadDataRow(new object[] 
                                                         {
-                                                         Enums.Game.EliteDangerous.ToString(), //Context
+                                                         Enums.GameName.EliteDangerous.ToString(), //Context
                                                          KeyMap.KeyType.ToString(), //KeyMappingType
                                                          childNode.Name, //KeyFunction
                                                          keyBinding.xmlNode_DevicePriority, //Priority 
