@@ -13,6 +13,22 @@
         private Dictionary<string, string> map = new Dictionary<string, string>();
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="KeyExchange"/> class
+        /// </summary>
+        public KeyExchange()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyExchange"/> class
+        /// </summary>
+        /// <param name="keyType"></param>
+        public KeyExchange(Enums.KeyEnumType keyType)
+        {
+            this.Initialise(keyType);
+        }
+
+        /// <summary>
         /// Initialise Mapping Dictionary to map Game Keys to Form Keys
         /// </summary>
         /// <param name="keyType"></param>
@@ -50,6 +66,8 @@
                 this.map.Add(Enums.EliteDangerousKey.UpArrow.ToString(), Enums.WindowsFormKey.Up.ToString());
                 this.map.Add(Enums.EliteDangerousKey.RightArrow.ToString(), Enums.WindowsFormKey.Right.ToString());
                 this.map.Add(Enums.EliteDangerousKey.DownArrow.ToString(), Enums.WindowsFormKey.Down.ToString());
+                this.map.Add(Enums.EliteDangerousKey.Enter.ToString(), Enums.WindowsFormKey.Return.ToString());
+                this.map.Add(Enums.EliteDangerousKey.Backspace.ToString(), Enums.WindowsFormKey.Back.ToString());
             }
         }
 
@@ -61,7 +79,14 @@
         /// <returns></returns>
         public string GetValue(string keyName)
         {
-            return this.map[keyName];
+            try
+            {
+                return this.map[keyName];
+            }
+            catch
+            {
+                return keyName;
+            }
         }
 
         /// <summary>

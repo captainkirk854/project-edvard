@@ -12,12 +12,13 @@
     {
         // Initialise ..
         private const string D = "+";
-        private const string NA = "-";
+        private const string NA = "n/a";
         private const int INA = -2;
         private static readonly KeyMapper KeyMap = new KeyMapper(keyType);
 
         // Preset Key Map Enumeration to use ..
         private static Enums.KeyEnumType keyType = Enums.KeyEnumType.WindowsForms;
+        private static KeyExchange exchange = new KeyExchange(keyType);
 
         /// <summary>
         /// Parse Elite Dangerous Key Bindings into DataTable
@@ -73,14 +74,16 @@
 
             // Define table structure ..
             keyBindings.Columns.Add(Enums.Column.Context.ToString(), typeof(string));
-            keyBindings.Columns.Add(Enums.Column.KeyEnumerationType.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.KeyEnumeration.ToString(), typeof(string));
             keyBindings.Columns.Add(Enums.Column.KeyFunction.ToString(), typeof(string));
             keyBindings.Columns.Add(Enums.Column.Priority.ToString(), typeof(string));
-            keyBindings.Columns.Add(Enums.Column.KeyValue.ToString(), typeof(string));
-            keyBindings.Columns.Add(Enums.Column.KeyCode.ToString(), typeof(int));
+            keyBindings.Columns.Add(Enums.Column.KeyGameValue.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.KeyEnumerationValue.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.KeyEnumerationCode.ToString(), typeof(int));
             keyBindings.Columns.Add(Enums.Column.KeyId.ToString(), typeof(string));
-            keyBindings.Columns.Add(Enums.Column.ModifierKeyValue.ToString(), typeof(string));
-            keyBindings.Columns.Add(Enums.Column.ModifierKeyCode.ToString(), typeof(int));
+            keyBindings.Columns.Add(Enums.Column.ModifierKeyGameValue.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.ModifierKeyEnumerationValue.ToString(), typeof(string));
+            keyBindings.Columns.Add(Enums.Column.ModifierKeyEnumerationCode.ToString(), typeof(int));
             keyBindings.Columns.Add(Enums.Column.ModifierKeyId.ToString(), typeof(string));
         }
 
@@ -149,14 +152,16 @@
                 keybinder.LoadDataRow(new object[] 
                                                 {
                                                  Enums.GameName.VoiceAttack.ToString(), //Context
-                                                 KeyMap.KeyType.ToString(), //KeyMappingType
+                                                 KeyMap.KeyType.ToString(), //KeyEnumerationType
                                                  keyBinding.Commandstring, //KeyFunction
                                                  NA, //Priority
-                                                 KeyMap.GetValue(int.Parse(keyBinding.KeyCode)), //KeyValue
-                                                 keyBinding.KeyCode, //KeyCode
+                                                 NA, //KeyGameValue
+                                                 KeyMap.GetValue(int.Parse(keyBinding.KeyCode)), //KeyEnumerationValue
+                                                 keyBinding.KeyCode, //KeyEnumerationCode
                                                  keyBinding.Id, //KeyId
-                                                 NA, //ModifierKeyValue
-                                                 INA, //ModifierKeyCode
+                                                 NA, //ModifierKeyGameValue
+                                                 NA, //ModifierKeyEnumerationValue
+                                                 INA, //ModifierKeyEnumerationCode
                                                  NA //ModifierId
                                                 },
                                        false);
@@ -286,14 +291,16 @@
                         keybinder.LoadDataRow(new object[] 
                                                         {
                                                          Enums.GameName.EliteDangerous.ToString(), //Context
-                                                         KeyMap.KeyType.ToString(), //KeyMappingType
+                                                         KeyMap.KeyType.ToString(), //KeyEnumerationType
                                                          childNode.Name, //KeyFunction
                                                          keyBinding.xmlNode_DevicePriority, //Priority 
-                                                         keyBinding.KeyValue, //KeyValue
-                                                         KeyMap.GetKey(keyBinding.KeyValue), //KeyCode
+                                                         keyBinding.KeyValue, //KeyGameValue
+                                                         exchange.GetValue(keyBinding.KeyValue), //KeyEnumerationValue
+                                                         KeyMap.GetKey(keyBinding.KeyValue), //KeyEnumerationCode
                                                          customKeyId, //KeyId
-                                                         keyBinding.ModifierKeyValue, //ModifierKeyValue
-                                                         KeyMap.GetKey(keyBinding.ModifierKeyValue), //ModifierKeyCode
+                                                         keyBinding.ModifierKeyValue, //ModifierKeyGameValue
+                                                         exchange.GetValue(keyBinding.ModifierKeyValue), //ModifierKeyEnumerationValue
+                                                         KeyMap.GetKey(keyBinding.ModifierKeyValue), //ModifierKeyEnumerationCode
                                                          customModifierKeyId //ModifierId
                                                         },
                                                false);

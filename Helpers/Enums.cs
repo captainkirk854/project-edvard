@@ -67,7 +67,9 @@
             UpArrow,
             RightArrow,
             DownArrow,
-            Equals //?
+            Equals, //?
+            Enter,
+            Backspace
         }
 
         /// <summary>
@@ -113,7 +115,9 @@
             Left,
             Up,
             Right,
-            Down
+            Down,
+            Return,
+            Back
         }
 
         /// <summary>
@@ -122,14 +126,16 @@
         public enum Column
         {
             Context,
-            KeyEnumerationType,
+            KeyEnumeration,
             KeyFunction,
             Priority,
-            KeyValue,
-            KeyCode,
+            KeyGameValue,
+            KeyEnumerationValue,
+            KeyEnumerationCode,
             KeyId,
-            ModifierKeyValue,
-            ModifierKeyCode,
+            ModifierKeyGameValue,
+            ModifierKeyEnumerationValue,
+            ModifierKeyEnumerationCode,
             ModifierKeyId,
             FilePath
         }

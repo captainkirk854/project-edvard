@@ -77,19 +77,15 @@
         {
             try
             {
-                // Handle numerics which require prefixing with either 'D' or 'NumPad' ..
-                int junk;
-                if (int.TryParse(keyValue, out junk))
-                {
-                   // KeyValue = "NumPad" + KeyValue;
-                    keyValue = "D" + keyValue;
-                }
-
-                // Handle misc ..
+                // Handle numerics which cannot be enumerated ..
                 if (this.KeyType == Enums.KeyEnumType.WindowsForms)
                 {
-                    if (keyValue == "Enter") { keyValue = "Return"; }
-                    if (keyValue == "Backspace") { keyValue = "Back"; }
+                    // Handle numerics which require prefixing with 'D' ..
+                    int junk;
+                    if (int.TryParse(keyValue, out junk))
+                    {
+                        keyValue = "D" + keyValue;
+                    }
                 }
 
                 return this.keyMap[keyValue];
