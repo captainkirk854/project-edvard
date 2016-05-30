@@ -1,7 +1,8 @@
 ﻿namespace QuickRunner
 {
-    using System;
+    using Application;
     using Helpers;
+    using System;
     using System.Data;
 
     public class Program
@@ -11,11 +12,11 @@
             // Initialise ..
             // Point to project sample (not a resource as such) data ..
             string cfgED = GetProjectDirectory() + "\\Sample" + "\\ED02.binds";
-            string cfgVA = GetProjectDirectory() + "\\Sample" + "\\VA01.vap";
+            string cfgVA = GetProjectDirectory() + "\\Sample" + "\\VA02.vap";
 
             // Path for serialised DataTable output ..
             const string KeyActionsFile = "EDVA_Binding_Actions.csv";
-            const string KeyBindingsFile = "EDVA_Consolidated_KeyBindings.csv";
+            const string KeyBindingsFile = "EDVA_Combined_KeyBindings.csv";
             string outputDirectory = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
             string keyActionsCSV = outputDirectory + "\\" + KeyActionsFile;
             string keyBindingsCSV = outputDirectory + "\\" + KeyBindingsFile;
@@ -27,12 +28,12 @@
             // Read EliteDangerous and Voice Attack configuration(s) to get key bindings ..
             try
             {
-                keyActions = Game.BindingsReader.EliteDangerousBindings(cfgED);
-                keyActions.Merge(Game.BindingsReader.VoiceAttackBindings(cfgVA));
+                keyActions = BindingsReader.EliteDangerousBindings(cfgED);
+                keyActions.Merge(BindingsReader.VoiceAttackBindings(cfgVA));
 
                 // Combine DataTables from both applications ..
-                keyBindings = Game.BindingsReader.EliteDangerousKeyBindings(cfgED);
-                keyBindings.Merge(Game.BindingsReader.VoiceAttackKeyBindings(cfgVA));
+                keyBindings = BindingsReader.EliteDangerousKeyBindings(cfgED);
+                keyBindings.Merge(BindingsReader.VoiceAttackKeyBindings(cfgVA));
                 Console.WriteLine("Config(s) Read");
 
                 // Experimental: update ..

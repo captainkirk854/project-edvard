@@ -1,4 +1,4 @@
-﻿namespace Game
+﻿namespace Application
 {
     using Helpers;
     using System.Data;
@@ -15,7 +15,7 @@
         private const string XMLKey = "Key";
         private const string XMLDevice = "Device";
         private const string XMLModifier = "Modifier";
-        private static KeyExchange exchange = new KeyExchange(keyType);
+        private static KeyMapperExchangeEliteDangerous exchange = new KeyMapperExchangeEliteDangerous(keyType);
         private static string[] keybindingIndicatorED = { "Key_" };
 
         /// <summary>
@@ -130,7 +130,7 @@
                 {
                     var xmlExtracts = from item in xdoc.Descendants(childNode.Name)
                                       where
-                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Enums.GameInteraction.Keyboard.ToString() &&
+                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Enums.KeyboardInteraction.Keyboard.ToString() &&
                                             item.Element(devicePriority).Attribute(XMLKey).Value.Contains(keybindingIndicatorED[0]) == true
                                       select
                                          new // create anonymous type for every key code ..
@@ -184,7 +184,7 @@
 
                         keyactionbinder.LoadDataRow(new object[] 
                                                         {
-                                                         Enums.GameName.EliteDangerous.ToString(), //Context
+                                                         Enums.Game.EliteDangerous.ToString(), //Context
                                                          KeyMapper.KeyType.ToString(), //KeyEnumerationType
                                                          childNode.Name, //BindingAction
                                                          xmlExtract.xmlNode_DevicePriority, //Priority 
@@ -257,7 +257,7 @@
                     {
                         bindableactions.LoadDataRow(new object[] 
                                                         {
-                                                         Enums.GameName.EliteDangerous.ToString(), //Context
+                                                         Enums.Game.EliteDangerous.ToString(), //Context
                                                          xmlExtract.BindingAction, //BindingAction
                                                          xmlExtract.Priority, // Device priority
                                                          xmlExtract.DeviceType // Device binding applied to

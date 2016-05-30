@@ -11,21 +11,21 @@
     public sealed class KeyMapper
     {
         // Initialise class-wide scope variables ..
-        private Dictionary<string, int> keyMap = new Dictionary<string, int>();
-        private KeyExchange exchange = new KeyExchange();
+        private Dictionary<string, int> relationship = new Dictionary<string, int>();
+        private KeyMapperExchangeEliteDangerous exchange = new KeyMapperExchangeEliteDangerous();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyMapper"/> class
         /// </summary>
         /// <param name="keytype"></param>
-        public KeyMapper(Enums.KeyEnumType keytype)
+        public KeyMapper(Enums.KeyboardEnumType keytype)
         {
             switch (keytype)
             {
-                case Enums.KeyEnumType.WindowsForms:
+                case Enums.KeyboardEnumType.WindowsForms:
                     this.InitialiseKeyMap_WindowsForms();
                     break;
-                case Enums.KeyEnumType.Console:
+                case Enums.KeyboardEnumType.Console:
                     this.InitialiseKeyMap_Console();
                     break;
                 default:
@@ -37,7 +37,7 @@
             this.KeyType = keytype;
         }
 
-        public Enums.KeyEnumType KeyType { get; set; }
+        public Enums.KeyboardEnumType KeyType { get; set; }
 
         /// <summary>
         /// Get Key Value from Key Code ..
@@ -52,7 +52,7 @@
             try
             {
                 // Attempt to pull out value from dictionary for KeyCode index ..
-                keyValue = this.keyMap.FirstOrDefault(x => x.Value == keyCode).Key;
+                keyValue = this.relationship.FirstOrDefault(x => x.Value == keyCode).Key;
 
                 // Force a throw null reference exception for unknown key-code ..
                 if (keyValue.Trim() == string.Empty || keyValue.Trim() == null) { }
@@ -78,7 +78,7 @@
             try
             {
                 // Handle numerics which cannot be enumerated ..
-                if (this.KeyType == Enums.KeyEnumType.WindowsForms)
+                if (this.KeyType == Enums.KeyboardEnumType.WindowsForms)
                 {
                     // Handle numerics which require prefixing with 'D' ..
                     int junk;
@@ -88,7 +88,7 @@
                     }
                 }
 
-                return this.keyMap[keyValue];
+                return this.relationship[keyValue];
             }
             catch
             {
@@ -102,13 +102,13 @@
                     try
                     {
                         // Examine key at Exchange ..
-                        string xkeyValue = this.exchange.GetValue(keyValue);
+                        string exchangekeyValue = this.exchange.GetValue(keyValue);
 
                         // If value from Exchange is different, something must have been found ..
-                        if (xkeyValue != keyValue) 
+                        if (exchangekeyValue != keyValue) 
                         {
                             // Perform recursive check and see if a code can be found using Exchange key value ..
-                            return this.GetKey(xkeyValue);
+                            return this.GetKey(exchangekeyValue);
                         }
                         else
                         {
@@ -131,7 +131,7 @@
         /// </summary>
         public void DisplayKeyMap()
         {
-            foreach (KeyValuePair<string, int> kvp in this.keyMap)
+            foreach (KeyValuePair<string, int> kvp in this.relationship)
             {
                 Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
             }
@@ -163,7 +163,7 @@
             // Add key names and codes to dictionary ..
             for (int i = 0; i < keyNames.Count; i++)
             {
-                this.keyMap.Add(keyNames[i].ToString(), keyCodes[i]);
+                this.relationship.Add(keyNames[i].ToString(), keyCodes[i]);
             }
         }
 
@@ -182,7 +182,7 @@
             // Add key names and codes to dictionary ..
             for (int i = 0; i < keyNames.Count; i++)
             {
-                this.keyMap.Add(keyNames[i].ToString(), keyCodes[i]);
+                this.relationship.Add(keyNames[i].ToString(), keyCodes[i]);
             }
         }
     }

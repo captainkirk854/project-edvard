@@ -1,4 +1,4 @@
-﻿namespace Game
+﻿namespace Application
 {
     using Helpers;
     using System.Data;
@@ -15,7 +15,7 @@
         private const string NA = "n/a";
         private const int INA = -2;
         private static readonly KeyMapper KeyMapper = new KeyMapper(keyType);
-        private static Enums.KeyEnumType keyType = Enums.KeyEnumType.WindowsForms;
+        private static Enums.KeyboardEnumType keyType = Enums.KeyboardEnumType.WindowsForms;
 
         /// <summary>
         /// Define Binding Actions DataTable Structure

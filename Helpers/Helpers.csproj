@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -42,7 +43,10 @@
   <ItemGroup>
     <Compile Include="Data.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="KeyExchange.cs" />
+    <Compile Include="EnumsEliteDangerous.cs" />
+    <Compile Include="EnumsVoiceAttack.cs" />
+    <Compile Include="ActionExchange.cs" />
+    <Compile Include="KeyMapperExchangeEliteDangerous.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml.cs" />

@@ -1,4 +1,4 @@
-﻿namespace Game
+﻿namespace Application
 {
     using Helpers;
     using System.Data;
@@ -100,7 +100,7 @@
                               where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[0]) &&
                                     item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[1]) &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
-                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.GameInteraction.PressKey.ToString()
+                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.KeyboardInteraction.PressKey.ToString()
                               select
                                  new // create anonymous type for every key code ..
                                  {
@@ -114,7 +114,7 @@
             {
                 keyactionbinder.LoadDataRow(new object[] 
                                                 {
-                                                 Enums.GameName.VoiceAttack.ToString(), //Context
+                                                 Enums.Game.VoiceAttack.ToString(), //Context
                                                  KeyMapper.KeyType.ToString(), //KeyEnumerationType
                                                  xmlExtract.Commandstring, //BindingAction
                                                  NA, //Priority
@@ -150,7 +150,7 @@
                               where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[0]) &&
                                     item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[1]) &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
-                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.GameInteraction.PressKey.ToString()
+                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.KeyboardInteraction.PressKey.ToString()
                               select
                                  new
                                  {
@@ -162,10 +162,10 @@
             {
                 bindableactions.LoadDataRow(new object[] 
                                                 {
-                                                 Enums.GameName.VoiceAttack.ToString(), //Context
+                                                 Enums.Game.VoiceAttack.ToString(), //Context
                                                  xmlExtract.Commandstring, //BindingAction
                                                  NA, // Device priority
-                                                 Enums.GameInteraction.Keyboard.ToString() // Device binding applied to
+                                                 Enums.KeyboardInteraction.Keyboard.ToString() // Device binding applied to
                                                 },
                                        false);
             }
