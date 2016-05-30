@@ -121,14 +121,14 @@
         }
 
         /// <summary>
-        /// Enumeration of DataTableColumns
+        /// Enumeration of DataTable Columns
         /// </summary>
         public enum Column
         {
             Context,
             KeyEnumeration,
-            KeyFunction,
-            Priority,
+            KeyAction,
+            DevicePriority,
             KeyGameValue,
             KeyEnumerationValue,
             KeyEnumerationCode,
@@ -137,7 +137,8 @@
             ModifierKeyEnumerationValue,
             ModifierKeyEnumerationCode,
             ModifierKeyId,
-            FilePath
+            FilePath,
+            DeviceType
         }
     }
 }
