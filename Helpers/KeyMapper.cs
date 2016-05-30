@@ -12,7 +12,7 @@
     {
         // Initialise class-wide scope variables ..
         private Dictionary<string, int> relationship = new Dictionary<string, int>();
-        private KeyMapperExchangeEliteDangerous exchange = new KeyMapperExchangeEliteDangerous();
+        private KeyMapperExchange exchange = new KeyMapperExchange();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyMapper"/> class
@@ -33,7 +33,7 @@
                     break;
             }
 
-            this.exchange.Initialise(keytype);
+            this.exchange.Initialise(keytype, Enums.Game.EliteDangerous);
             this.KeyType = keytype;
         }
 

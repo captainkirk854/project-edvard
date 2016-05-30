@@ -11,7 +11,7 @@
         {
             // Initialise ..
             // Point to project sample (not a resource as such) data ..
-            string cfgED = GetProjectDirectory() + "\\Sample" + "\\ED02.binds";
+            string cfgED = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
             string cfgVA = GetProjectDirectory() + "\\Sample" + "\\VA02.vap";
 
             // Path for serialised DataTable output ..
