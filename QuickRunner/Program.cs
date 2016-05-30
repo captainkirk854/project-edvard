@@ -42,16 +42,16 @@
                 Console.WriteLine("Config(s) Read");
 
                 // Consolidate Voice Attack action bindings with Elite Dangerous bindings ..
-                keyBindingsConsolidated = Actions.Consolidate(keyBindingsVA, keyBindingsED);
+                keyBindingsConsolidated = ActionBinding.Consolidate(keyBindingsVA, keyBindingsED);
                 keyBindingsConsolidated.AddDefaultColumn(Enums.Column.FilePath.ToString(), cfgVA);
                 keyBindingsConsolidated = keyBindingsConsolidated.Sort(Enums.Column.EliteDangerousAction.ToString() + " asc");
                 Console.WriteLine("Config(s) Consolidated");
 
                 // Combine DataTables  ..
-                keyBindingsCSV = keyBindingsED.Clone();
+                keyBindingsCSV = keyBindingsED;
                 keyBindingsCSV.Merge(keyBindingsVA);
 
-                // Write file(s) ..
+                // Create CSV file(s) ..
                 keyActions.CreateCSV(fileKeyActionsCSV);
                 keyBindingsCSV.CreateCSV(fileKeyBindingsCSV);
                 keyBindingsConsolidated.CreateCSV(fileKeyConsolidatedBindingsCSV);

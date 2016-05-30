@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions.cs" />
+    <Compile Include="ActionBinding.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="EnumsEliteDangerous.cs" />

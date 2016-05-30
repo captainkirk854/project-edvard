@@ -3,7 +3,7 @@
     using System;
     using System.Data;
 
-    public static class Actions
+    public static class ActionBinding
     {
         private const string NA = "n/a";
 
