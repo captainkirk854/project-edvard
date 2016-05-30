@@ -15,8 +15,7 @@
         /// <summary>
         /// Map Elite Dangerous Action Term to Voice Attack Action Term
         /// </summary>
-        /// <param name="keyType"></param>
-        public void Initialise(Enums.KeyboardEnumType keyType)
+        public void Initialise()
         {
             this.relationship.Add("BackwardKey", VAActionUndefined);
             this.relationship.Add("BackwardThrustButton", VAActionUndefined);
@@ -85,9 +84,7 @@
             this.relationship.Add("PrimaryFire", VAActionUndefined);
             this.relationship.Add("QuickCommsPanel", VAActionUndefined);
             this.relationship.Add("RadarDecreaseRange", "((Decrease Sensor Range))");
-            this.relationship.Add("RadarDecreaseRange", "((Decrease Sensor Range Max))");
             this.relationship.Add("RadarIncreaseRange", "((Increase Sensor range))");
-            this.relationship.Add("RadarIncreaseRange", "((Increase Sensor Range Max))");
             this.relationship.Add("ResetPowerDistribution", "((Balance Power))");
             this.relationship.Add("RightThrustButton", VAActionUndefined);
             this.relationship.Add("RightThrustButton_Landing", VAActionUndefined);
@@ -142,17 +139,17 @@
         /// Get VA Action
         /// </summary>
         /// {Dictionary Value}
-        /// <param name="keyName"></param>
+        /// <param name="actionED"></param>
         /// <returns></returns>
-        public string GetValue(string keyName)
+        public string GetVA(string actionED)
         {
             try
             {
-                return this.relationship[keyName];
+                return this.relationship[actionED];
             }
             catch
             {
-                return keyName;
+                return VAActionUndefined;
             }
         }
 
@@ -160,11 +157,17 @@
         /// Get ED Action
         /// </summary>
         /// {Dictionary Key}
-        /// <param name="keyName"></param>
+        /// <param name="actionVA"></param>
         /// <returns></returns>
-        public string GetKey(string keyName)
+        public string GetED(string actionVA)
         {
-            return this.relationship.FirstOrDefault(x => x.Value == keyName).Key;
+            // Special for these Voice Attack commands ...
+            if (actionVA == "((Decrease Sensor Range Max))" || actionVA == "((Decrease Sensor Range Max))")
+            {
+                return "RadarDecreaseRange";
+            }
+
+            return this.relationship.FirstOrDefault(x => x.Value == actionVA).Key;
         }
     }
 }

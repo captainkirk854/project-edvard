@@ -17,13 +17,18 @@
             // Path for serialised DataTable output ..
             const string KeyActionsFile = "EDVA_Binding_Actions.csv";
             const string KeyBindingsFile = "EDVA_Combined_KeyBindings.csv";
+            const string KeyConsolidatedFile = "EDVA_Consolidated_KeyBindings.csv";
             string outputDirectory = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
-            string keyActionsCSV = outputDirectory + "\\" + KeyActionsFile;
-            string keyBindingsCSV = outputDirectory + "\\" + KeyBindingsFile;
+            string fileKeyActionsCSV = outputDirectory + "\\" + KeyActionsFile;
+            string fileKeyBindingsCSV = outputDirectory + "\\" + KeyBindingsFile;
+            string fileKeyConsolidatedBindingsCSV = outputDirectory + "\\" + KeyConsolidatedFile;
 
             // DataTable receptacles ..
             DataTable keyActions = new DataTable();
-            DataTable keyBindings = new DataTable();
+            DataTable keyBindingsED = new DataTable();
+            DataTable keyBindingsVA = new DataTable();
+            DataTable keyBindingsConsolidated = new DataTable();
+            DataTable keyBindingsCSV = new DataTable();
 
             // Read EliteDangerous and Voice Attack configuration(s) to get key bindings ..
             try
@@ -31,22 +36,25 @@
                 keyActions = BindingsReader.EliteDangerousBindings(cfgED);
                 keyActions.Merge(BindingsReader.VoiceAttackBindings(cfgVA));
 
-                // Combine DataTables from both applications ..
-                keyBindings = BindingsReader.EliteDangerousKeyBindings(cfgED);
-                keyBindings.Merge(BindingsReader.VoiceAttackKeyBindings(cfgVA));
+                // Populate individual DataTables from both application bindings ..
+                keyBindingsED = BindingsReader.EliteDangerousKeyBindings(cfgED);
+                keyBindingsVA = BindingsReader.VoiceAttackKeyBindings(cfgVA);
                 Console.WriteLine("Config(s) Read");
 
-                // Experimental: update ..
-                string junkSetClause = "Context = EliteDangerous ,KeyValue = A";
-                string junkWhereClause = "Context = EliteDangerous, KeyValue = A, KeyCode = 65";
-                keyBindings.Update(junkSetClause, junkWhereClause);
-                
-                // Experimental: sort ..
-                keyBindings = keyBindings.Sort(Enums.Column.Context.ToString() + " asc," + Enums.Column.KeyEnumerationCode.ToString() + " desc," + Enums.Column.ModifierKeyEnumerationCode.ToString() + " asc");
-                
+                // Consolidate Voice Attack action bindings with Elite Dangerous bindings ..
+                keyBindingsConsolidated = Actions.Consolidate(keyBindingsVA, keyBindingsED);
+                keyBindingsConsolidated.AddDefaultColumn(Enums.Column.FilePath.ToString(), cfgVA);
+                keyBindingsConsolidated = keyBindingsConsolidated.Sort(Enums.Column.EliteDangerousAction.ToString() + " asc");
+                Console.WriteLine("Config(s) Consolidated");
+
+                // Combine DataTables  ..
+                keyBindingsCSV = keyBindingsED.Clone();
+                keyBindingsCSV.Merge(keyBindingsVA);
+
                 // Write file(s) ..
-                keyActions.CreateCSV(keyActionsCSV);
-                keyBindings.CreateCSV(keyBindingsCSV);
+                keyActions.CreateCSV(fileKeyActionsCSV);
+                keyBindingsCSV.CreateCSV(fileKeyBindingsCSV);
+                keyBindingsConsolidated.CreateCSV(fileKeyConsolidatedBindingsCSV);
                 PressIt();
             }
             catch

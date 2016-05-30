@@ -14,8 +14,13 @@
         private const string D = "+";
         private const string NA = "n/a";
         private const int INA = -2;
-        private static readonly KeyMapper KeyMapper = new KeyMapper(keyType);
-        private static Enums.KeyboardEnumType keyType = Enums.KeyboardEnumType.WindowsForms;
+        private static readonly KeyMapper KeyMapper = new KeyMapper(KeyType);
+        
+        // Property currently hard-coded ...
+        public static Enums.KeyboardEnumType KeyType
+        {
+            get { return Enums.KeyboardEnumType.WindowsForms; }
+        }
 
         /// <summary>
         /// Define Binding Actions DataTable Structure

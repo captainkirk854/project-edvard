@@ -50,7 +50,15 @@
             ModifierKeyEnumerationCode,
             ModifierKeyId,
             FilePath,
-            DeviceType
+            DeviceType,
+            VoiceAttackAction,
+            VoiceAttackKeyValue,
+            VoiceAttackKeyCode,
+            VoiceAttackKeyId,
+            EliteDangerousAction,
+            EliteDangerousKeyValue,
+            EliteDangerousKeyCode,
+            OperationRequired
         }
     }
 }

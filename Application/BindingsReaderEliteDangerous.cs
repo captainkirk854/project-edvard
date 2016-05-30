@@ -15,7 +15,7 @@
         private const string XMLKey = "Key";
         private const string XMLDevice = "Device";
         private const string XMLModifier = "Modifier";
-        private static KeyMapperExchange exchange = new KeyMapperExchange(keyType, Enums.Game.EliteDangerous);
+        private static KeyMapperExchange exchange = new KeyMapperExchange(KeyType, Enums.Game.EliteDangerous);
         private static string[] keybindingIndicatorED = { "Key_" };
 
         /// <summary>
