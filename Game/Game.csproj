@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingsReader.cs" />
+    <Compile Include="BindingsReaderEliteDangerous.cs" />
+    <Compile Include="BindingsReaderVoiceAttack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
