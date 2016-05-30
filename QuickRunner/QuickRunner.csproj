@@ -52,7 +52,7 @@
     <None Include="Sample\VA02.vap" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Game\Application.csproj">
+    <ProjectReference Include="..\Application\Application.csproj">
       <Project>{08f8cc4b-45c2-4661-9f10-07094dcae843}</Project>
       <Name>Application</Name>
     </ProjectReference>
