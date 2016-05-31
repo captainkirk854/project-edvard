@@ -161,10 +161,14 @@
         /// <returns></returns>
         public string GetED(string actionVA)
         {
-            // Special for these Voice Attack commands ...
-            if (actionVA == "((Decrease Sensor Range Max))" || actionVA == "((Decrease Sensor Range Max))")
+            // Specials for these Voice Attack commands ...
+            if (actionVA == "((Decrease Sensor Range Max))")
             {
                 return "RadarDecreaseRange";
+            }
+            if (actionVA == "((Increase Sensor Range Max))")
+            {
+                return "RadarIncreaseRange";
             }
 
             return this.relationship.FirstOrDefault(x => x.Value == actionVA).Key;
