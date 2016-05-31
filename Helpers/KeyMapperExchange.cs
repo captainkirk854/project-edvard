@@ -59,7 +59,9 @@
                     this.relationship.Add("Numpad_Enter", "NumPad_Enter");
                     this.relationship.Add("Numpad_Multiply", "Multiply");
                     this.relationship.Add("Numpad_Plus", "Add");
+                    this.relationship.Add("Numpad_Add", "Add");
                     this.relationship.Add("Numpad_Minus", "Subtract");
+                    this.relationship.Add("Numpad_Subtract", "Subtract");
                     this.relationship.Add("Numpad_Divide", "Divide");
                     this.relationship.Add("PageUp", "PageUp");
                     this.relationship.Add("PageDown", "PageDown");
@@ -69,6 +71,8 @@
                     this.relationship.Add("DownArrow", "Down");
                     this.relationship.Add("Enter", "Return");
                     this.relationship.Add("Backspace", "Back");
+                    this.relationship.Add("Period", "OemPeriod");
+                    this.relationship.Add("Comma", "Oemcomma");
                 }
             }
         }

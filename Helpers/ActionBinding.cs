@@ -39,7 +39,7 @@
             foreach (var voiceattackBinding in voiceattackBindings)
             {
                 bool definedInED = false;
-                string operationConclusion = "No Action possible";
+                string operationConclusion = "No action possible";
 
                 var elitedangerousBindings = from ed in keyBindingsED.AsEnumerable()
                                  where ed.Field<string>(Enums.Column.KeyAction.ToString()) == voiceattackBinding.EDAction
@@ -47,21 +47,22 @@
                                     new
                                     {
                                         EDAction = ed.Field<string>(Enums.Column.KeyAction.ToString()),
-                                        EDKeyValue = ed.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
-                                        EDKeyCode = ed.Field<int>(Enums.Column.KeyEnumerationCode.ToString())
+                                        EDKeyGameValue = ed.Field<string>(Enums.Column.KeyGameValue.ToString()),
+                                        EDKeyEnumerationValue = ed.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
+                                        EDKeyEnumerationCode = ed.Field<int>(Enums.Column.KeyEnumerationCode.ToString())
                                     };
 
                 // Compare matching action bindings with their assigned key value/code ..
                 foreach (var elitedangerousBinding in elitedangerousBindings)
                 {
                     definedInED = true;
-                    if (elitedangerousBinding.EDKeyCode == voiceattackBinding.VAKeyCode)
+                    if (elitedangerousBinding.EDKeyEnumerationCode == voiceattackBinding.VAKeyCode)
                     {
-                        operationConclusion = "No Action required - Key Code matches in both systems";
+                        operationConclusion = "No action required: key code is aligned";
                     }
                     else
                     {
-                        operationConclusion = string.Format("Voice Attack profile requires change in Key Code from {0} to {1}", voiceattackBinding.VAKeyCode, elitedangerousBinding.EDKeyCode);
+                        operationConclusion = string.Format("Voice Attack Profile requires change in key code from {0} to {1}", voiceattackBinding.VAKeyCode, elitedangerousBinding.EDKeyEnumerationCode);
                     }
 
                     // Append to DataTable ..
@@ -70,9 +71,9 @@
                                                  voiceattackBinding.VAAction, //VoiceAttackAction
                                                  voiceattackBinding.EDAction, //EliteDangerousAction
                                                  voiceattackBinding.VAKeyValue, //VoiceAttackKeyValue
-                                                 elitedangerousBinding.EDKeyValue, //EliteDangerousKeyValue
+                                                 elitedangerousBinding.EDKeyGameValue, //EliteDangerousKeyValue
                                                  voiceattackBinding.VAKeyCode, //VoiceAttackKeyCode
-                                                 elitedangerousBinding.EDKeyCode, //EliteDangerousKeyCode
+                                                 elitedangerousBinding.EDKeyEnumerationCode, //EliteDangerousKeyCode
                                                  voiceattackBinding.VAKeyID, //VoiceAttackKeyId
                                                  operationConclusion //OperationRequired
                                                 },
@@ -82,7 +83,8 @@
                 // If not defined in Elite Dangerous binding file ..
                 if (!definedInED)
                 {
-                    // Append to DataTable 
+                    // Append to DataTable
+                    operationConclusion += string.Format(": [{0}] has not been bound to a key", voiceattackBinding.EDAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
                                                  voiceattackBinding.VAAction, //VoiceAttackAction

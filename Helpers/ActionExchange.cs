@@ -149,7 +149,7 @@
             }
             catch
             {
-                return VAActionUndefined;
+                return EDActionUndefined;
             }
         }
 
@@ -171,7 +171,11 @@
                 return "RadarIncreaseRange";
             }
 
-            return this.relationship.FirstOrDefault(x => x.Value == actionVA).Key;
+            // Find value from key ..
+            string keyValue = this.relationship.FirstOrDefault(x => x.Value == actionVA).Key;
+            
+            // return with key value or default if null
+            return keyValue != null ? keyValue : VAActionUndefined;
         }
     }
 }
