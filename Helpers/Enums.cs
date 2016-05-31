@@ -60,7 +60,8 @@
             EliteDangerousAction,
             EliteDangerousKeyValue,
             EliteDangerousKeyCode,
-            OperationRequired
+            ReMapRequired,
+            Rationale
         }
     }
 }

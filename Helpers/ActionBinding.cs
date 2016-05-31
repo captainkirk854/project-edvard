@@ -39,7 +39,8 @@
             foreach (var voiceattackBinding in voiceattackBindings)
             {
                 bool definedInED = false;
-                string operationConclusion = "No action possible";
+                string remapRequired = "unknown";
+                string rationale = "unknown";
 
                 var elitedangerousBindings = from ed in keyBindingsED.AsEnumerable()
                                  where ed.Field<string>(Enums.Column.KeyAction.ToString()) == voiceattackBinding.EDAction
@@ -47,6 +48,7 @@
                                     new
                                     {
                                         EDAction = ed.Field<string>(Enums.Column.KeyAction.ToString()),
+                                        EDKeyPriority = ed.Field<string>(Enums.Column.DevicePriority.ToString()),
                                         EDKeyGameValue = ed.Field<string>(Enums.Column.KeyGameValue.ToString()),
                                         EDKeyEnumerationValue = ed.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
                                         EDKeyEnumerationCode = ed.Field<int>(Enums.Column.KeyEnumerationCode.ToString())
@@ -58,11 +60,13 @@
                     definedInED = true;
                     if (elitedangerousBinding.EDKeyEnumerationCode == voiceattackBinding.VAKeyCode)
                     {
-                        operationConclusion = "No action required: key code is aligned";
+                        remapRequired = "NO";
+                        rationale = "Key codes are aligned";
                     }
                     else
                     {
-                        operationConclusion = string.Format("Voice Attack Profile requires change in key code from {0} to {1}", voiceattackBinding.VAKeyCode, elitedangerousBinding.EDKeyEnumerationCode);
+                        remapRequired = "YES";
+                        rationale = string.Format("Misaligned key codes : Voice Attack Profile requires change in key code from [{0}] to [{1}]", voiceattackBinding.VAKeyCode, elitedangerousBinding.EDKeyEnumerationCode);
                     }
 
                     // Append to DataTable ..
@@ -70,12 +74,14 @@
                                                 {
                                                  voiceattackBinding.VAAction, //VoiceAttackAction
                                                  voiceattackBinding.EDAction, //EliteDangerousAction
+                                                 elitedangerousBinding.EDKeyPriority, //DevicePriority
                                                  voiceattackBinding.VAKeyValue, //VoiceAttackKeyValue
                                                  elitedangerousBinding.EDKeyGameValue, //EliteDangerousKeyValue
                                                  voiceattackBinding.VAKeyCode, //VoiceAttackKeyCode
                                                  elitedangerousBinding.EDKeyEnumerationCode, //EliteDangerousKeyCode
                                                  voiceattackBinding.VAKeyID, //VoiceAttackKeyId
-                                                 operationConclusion //OperationRequired
+                                                 remapRequired, //ReMapRequired
+                                                 rationale //Rationale
                                                 },
                                                 false);
                 }
@@ -84,17 +90,20 @@
                 if (!definedInED)
                 {
                     // Append to DataTable
-                    operationConclusion += string.Format(": [{0}] has not been bound to a key", voiceattackBinding.EDAction);
+                    remapRequired = "NO";
+                    rationale = string.Format("[{0}] has not been bound to a key", voiceattackBinding.EDAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
                                                  voiceattackBinding.VAAction, //VoiceAttackAction
                                                  voiceattackBinding.EDAction, //EliteDangerousAction
+                                                 NA, //DevicePriority
                                                  voiceattackBinding.VAKeyValue, //VoiceAttackKeyValue
                                                  NA, //EliteDangerousKeyValue
                                                  voiceattackBinding.VAKeyCode, //VoiceAttackKeyCode
                                                  NA, //EliteDangerousKeyCode
                                                  voiceattackBinding.VAKeyID, //VoiceAttackKeyId
-                                                 operationConclusion //OperationRequired
+                                                 remapRequired, //ReMapRequired
+                                                 rationale //Rationale
                                                 },
                                                 false);
                 }
@@ -114,12 +123,14 @@
             // Define table structure ..
             consolidatedActions.Columns.Add(Enums.Column.VoiceAttackAction.ToString(), typeof(string));
             consolidatedActions.Columns.Add(Enums.Column.EliteDangerousAction.ToString(), typeof(string));
+            consolidatedActions.Columns.Add(Enums.Column.DevicePriority.ToString(), typeof(string));
             consolidatedActions.Columns.Add(Enums.Column.VoiceAttackKeyValue.ToString(), typeof(string));
             consolidatedActions.Columns.Add(Enums.Column.EliteDangerousKeyValue.ToString(), typeof(string));
             consolidatedActions.Columns.Add(Enums.Column.VoiceAttackKeyCode.ToString(), typeof(string));
             consolidatedActions.Columns.Add(Enums.Column.EliteDangerousKeyCode.ToString(), typeof(string));
             consolidatedActions.Columns.Add(Enums.Column.VoiceAttackKeyId.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.OperationRequired.ToString(), typeof(string));
+            consolidatedActions.Columns.Add(Enums.Column.ReMapRequired.ToString(), typeof(string));
+            consolidatedActions.Columns.Add(Enums.Column.Rationale.ToString(), typeof(string));
         }
     }
 }

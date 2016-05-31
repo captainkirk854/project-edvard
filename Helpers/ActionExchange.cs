@@ -166,6 +166,7 @@
             {
                 return "RadarDecreaseRange";
             }
+
             if (actionVA == "((Increase Sensor Range Max))")
             {
                 return "RadarIncreaseRange";
