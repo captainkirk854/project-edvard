@@ -50,6 +50,8 @@
             ModifierKeyEnumerationCode,
             ModifierKeyId,
             FilePath,
+            VoiceAttackProfile,
+            EliteDangerousBinds,
             DeviceType,
             VoiceAttackAction,
             VoiceAttackKeyValue,

@@ -43,7 +43,8 @@
 
                 // Consolidate Voice Attack action bindings with Elite Dangerous bindings ..
                 keyBindingsConsolidated = ActionBinding.Consolidate(keyBindingsVA, keyBindingsED);
-                keyBindingsConsolidated.AddDefaultColumn(Enums.Column.FilePath.ToString(), cfgVA);
+                keyBindingsConsolidated.AddDefaultColumn(Enums.Column.VoiceAttackProfile.ToString(), cfgVA);
+                keyBindingsConsolidated.AddDefaultColumn(Enums.Column.EliteDangerousBinds.ToString(), cfgED);
                 keyBindingsConsolidated = keyBindingsConsolidated.Sort(Enums.Column.EliteDangerousAction.ToString() + " asc");
                 Console.WriteLine("Config(s) Consolidated");
 
