@@ -63,5 +63,14 @@
             ReMapRequired,
             Rationale
         }
+
+        /// <summary>
+        /// Enumeration of ReMapRequired flags
+        /// </summary>
+        public enum ReMapRequired
+        {
+            YES,
+            NO
+        }
     }
 }

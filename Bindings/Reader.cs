@@ -1,14 +1,12 @@
-﻿namespace Application
+﻿namespace Bindings
 {
     using Helpers;
     using System.Data;
-    using System.Linq;
-    using System.Xml.Linq;
 
     /// <summary>
     /// Read and process Elite Dangerous and Voice Attack Binding Configuration Files
     /// </summary>
-    public static partial class BindingsReader
+    public static partial class Reader
     {
         // Initialise ..
         private const string D = "+";

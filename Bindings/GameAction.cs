@@ -1,9 +1,10 @@
-﻿namespace Helpers
+﻿namespace Bindings
 {
     using System;
     using System.Data;
+    using Helpers;
 
-    public static class ActionBinding
+    public static class GameAction
     {
         private const string NA = "n/a";
 
@@ -25,15 +26,15 @@
 
             // Search through all defined Voice Attack bindings ..
             var voiceattackBindings = from va in keyBindingsVA.AsEnumerable()
-                             select
-                                new
-                                {
-                                    VAAction = va.Field<string>(Enums.Column.KeyAction.ToString()),
-                                    VAKeyValue = va.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
-                                    VAKeyCode = va.Field<int>(Enums.Column.KeyEnumerationCode.ToString()),
-                                    VAKeyID = va.Field<string>(Enums.Column.KeyId.ToString()),
-                                    EDAction = actions.GetED(va.Field<string>(Enums.Column.KeyAction.ToString()))
-                                };
+                                    select
+                                       new
+                                         {
+                                            VAAction = va.Field<string>(Enums.Column.KeyAction.ToString()),
+                                            VAKeyValue = va.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
+                                            VAKeyCode = va.Field<int>(Enums.Column.KeyEnumerationCode.ToString()),
+                                            VAKeyID = va.Field<string>(Enums.Column.KeyId.ToString()),
+                                            EDAction = actions.GetED(va.Field<string>(Enums.Column.KeyAction.ToString()))
+                                         };
 
             // .. and compare with what has been defined in the Elite Dangerous bindings ..
             foreach (var voiceattackBinding in voiceattackBindings)
@@ -43,16 +44,16 @@
                 string rationale = "unknown";
 
                 var elitedangerousBindings = from ed in keyBindingsED.AsEnumerable()
-                                 where ed.Field<string>(Enums.Column.KeyAction.ToString()) == voiceattackBinding.EDAction
-                                 select
-                                    new
-                                    {
-                                        EDAction = ed.Field<string>(Enums.Column.KeyAction.ToString()),
-                                        EDKeyPriority = ed.Field<string>(Enums.Column.DevicePriority.ToString()),
-                                        EDKeyGameValue = ed.Field<string>(Enums.Column.KeyGameValue.ToString()),
-                                        EDKeyEnumerationValue = ed.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
-                                        EDKeyEnumerationCode = ed.Field<int>(Enums.Column.KeyEnumerationCode.ToString())
-                                    };
+                                            where ed.Field<string>(Enums.Column.KeyAction.ToString()) == voiceattackBinding.EDAction
+                                           select
+                                              new
+                                                {
+                                                    EDAction = ed.Field<string>(Enums.Column.KeyAction.ToString()),
+                                                    EDKeyPriority = ed.Field<string>(Enums.Column.DevicePriority.ToString()),
+                                                    EDKeyGameValue = ed.Field<string>(Enums.Column.KeyGameValue.ToString()),
+                                                    EDKeyEnumerationValue = ed.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
+                                                    EDKeyEnumerationCode = ed.Field<int>(Enums.Column.KeyEnumerationCode.ToString())
+                                                };
 
                 // Compare matching action bindings with their assigned key value/code ..
                 foreach (var elitedangerousBinding in elitedangerousBindings)
@@ -60,13 +61,21 @@
                     definedInED = true;
                     if (elitedangerousBinding.EDKeyEnumerationCode == voiceattackBinding.VAKeyCode)
                     {
-                        remapRequired = "NO";
+                        remapRequired = Enums.ReMapRequired.NO.ToString();
                         rationale = "Key codes are aligned";
                     }
                     else
                     {
-                        remapRequired = "YES";
-                        rationale = string.Format("Misaligned key codes : Voice Attack Profile requires change in key code from [{0}] to [{1}]", voiceattackBinding.VAKeyCode, elitedangerousBinding.EDKeyEnumerationCode);
+                        if (elitedangerousBinding.EDKeyEnumerationCode > 0)
+                        {
+                            remapRequired = Enums.ReMapRequired.YES.ToString();
+                            rationale = string.Format("Misaligned key codes: Voice Attack Profile requires change in key code from [{0}] to [{1}]", voiceattackBinding.VAKeyCode, elitedangerousBinding.EDKeyEnumerationCode);
+                        }
+                        else
+                        {
+                            remapRequired = Enums.ReMapRequired.NO.ToString();
+                            rationale = string.Format("Unresolvable key code for: [{0}]", elitedangerousBinding.EDKeyGameValue);
+                        }
                     }
 
                     // Append to DataTable ..
@@ -90,7 +99,7 @@
                 if (!definedInED)
                 {
                     // Append to DataTable
-                    remapRequired = "NO";
+                    remapRequired = Enums.ReMapRequired.NO.ToString();
                     rationale = string.Format("[{0}] has not been bound to a key", voiceattackBinding.EDAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {

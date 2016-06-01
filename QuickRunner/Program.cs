@@ -1,6 +1,6 @@
 ﻿namespace QuickRunner
 {
-    using Application;
+    using Bindings;
     using Helpers;
     using System;
     using System.Data;
@@ -33,20 +33,21 @@
             // Read EliteDangerous and Voice Attack configuration(s) to get key bindings ..
             try
             {
-                keyActions = BindingsReader.EliteDangerousBindings(cfgED);
-                keyActions.Merge(BindingsReader.VoiceAttackBindings(cfgVA));
+                // Create DataTable listing all possible actions ..
+                keyActions = Reader.EliteDangerousBindings(cfgED);
+                keyActions.Merge(Reader.VoiceAttackBindings(cfgVA));
 
                 // Populate individual DataTables from both application bindings ..
-                keyBindingsED = BindingsReader.EliteDangerousKeyBindings(cfgED);
-                keyBindingsVA = BindingsReader.VoiceAttackKeyBindings(cfgVA);
-                Console.WriteLine("Config(s) Read");
+                keyBindingsED = Reader.EliteDangerousKeyBindings(cfgED);
+                keyBindingsVA = Reader.VoiceAttackKeyBindings(cfgVA);
+                Console.WriteLine("Config(s) read");
 
                 // Consolidate Voice Attack action bindings with Elite Dangerous bindings ..
-                keyBindingsConsolidated = ActionBinding.Consolidate(keyBindingsVA, keyBindingsED);
-                keyBindingsConsolidated.AddDefaultColumn(Enums.Column.VoiceAttackProfile.ToString(), cfgVA);
-                keyBindingsConsolidated.AddDefaultColumn(Enums.Column.EliteDangerousBinds.ToString(), cfgED);
-                keyBindingsConsolidated = keyBindingsConsolidated.Sort(Enums.Column.EliteDangerousAction.ToString() + " asc");
-                Console.WriteLine("Config(s) Consolidated");
+                keyBindingsConsolidated = Writer.Consolidate(keyBindingsVA, keyBindingsED, cfgVA, cfgED);
+                Console.WriteLine("Config(s) consolidated");
+
+                Writer.UpdateVoiceAttackProfile(keyBindingsConsolidated);
+                Console.WriteLine("VoiceAttack updated");
 
                 // Combine DataTables  ..
                 keyBindingsCSV = keyBindingsED;

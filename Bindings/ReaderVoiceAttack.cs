@@ -1,4 +1,4 @@
-﻿namespace Application
+﻿namespace Bindings
 {
     using Helpers;
     using System.Data;
@@ -8,7 +8,7 @@
     /// <summary>
     /// BindingsReader content for parsing Voice Attack Profile file(s)
     /// </summary>
-    public static partial class BindingsReader
+    public static partial class Reader
     {
         // Initialise ..
         private const string XMLCommand = "Command";
@@ -69,8 +69,9 @@
         ///                  |_ <Command/>
         ///                      |_<Id/>
         ///                      !_<CommandString/>
-        ///                      |_<ActionSequences/>
-        ///                        !_[some] <CommandActions/>
+        ///                      |_<ActionSequence/>
+        ///                        !_[some] <CommandAction/>
+        ///                                 !_<Id/>
         ///                                 |_<ActionType/>
         ///                                  |_<KeyCodes/>
         ///                             

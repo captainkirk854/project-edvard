@@ -1,4 +1,4 @@
-﻿namespace Application
+﻿namespace Bindings
 {
     using Helpers;
     using System.Data;
@@ -8,7 +8,7 @@
     /// <summary>
     /// BindingsReader content for parsing Elite Dangerous Bind file(s)
     /// </summary>
-    public static partial class BindingsReader
+    public static partial class Reader
     {
         //Initialise ..
         private const string XMLRoot = "Root";
