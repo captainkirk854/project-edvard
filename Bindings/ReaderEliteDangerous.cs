@@ -118,8 +118,7 @@
             string devicePriority = devicepriority.ToString();
 
             // Datatable to hold tabulated XML contents ..
-            DataTable keyactionbinder = new DataTable();
-            keyactionbinder.DefineKeyActionBinder();
+            DataTable keyactionbinder = DefineKeyActionBinder();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             // Scan all child nodes from top-level node ..
@@ -217,8 +216,7 @@
             string[] devicePriority = { Enums.EliteDangerousDevicePriority.Primary.ToString(), Enums.EliteDangerousDevicePriority.Secondary.ToString() };
 
             // Datatable to hold tabulated XML contents ..
-            DataTable bindableactions = new DataTable();
-            bindableactions.DefineBindableActions();
+            DataTable bindableactions = DefineBindableActions();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             // Scan all child nodes from top-level node ..

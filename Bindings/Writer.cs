@@ -8,13 +8,9 @@
     /// </summary>
     public static partial class Writer
     {
-        public static DataTable Consolidate(DataTable keyBindingsVA, DataTable keyBindingsED, string cfgVA, string cfgED)
+        public static DataTable Consolidate(DataTable keyBindingsVA, DataTable keyBindingsED)
         {
-            DataTable keyBindingsConsolidated = new DataTable();
-
-            keyBindingsConsolidated = GameAction.Consolidate(keyBindingsVA, keyBindingsED);
-            keyBindingsConsolidated.AddDefaultColumn(Enums.Column.VoiceAttackProfile.ToString(), cfgVA);
-            keyBindingsConsolidated.AddDefaultColumn(Enums.Column.EliteDangerousBinds.ToString(), cfgED);
+            DataTable keyBindingsConsolidated = GameAction.Consolidate(keyBindingsVA, keyBindingsED);
             keyBindingsConsolidated = keyBindingsConsolidated.Sort(Enums.Column.EliteDangerousAction.ToString() + " asc");
 
             return keyBindingsConsolidated;

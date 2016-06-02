@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
-    using System.Windows.Forms;
 
     /// <summary>
     /// Implement Key Value/Code lookup dictionary ..
@@ -18,16 +18,22 @@
         /// Initializes a new instance of the <see cref="KeyMapper"/> class
         /// </summary>
         /// <param name="keytype"></param>
-        public KeyMapper(Enums.KeyboardEnumType keytype)
+        public KeyMapper(Enums.InputKeyEnumType keytype)
         {
             switch (keytype)
             {
-                case Enums.KeyboardEnumType.WindowsForms:
-                    this.InitialiseKeyMap_WindowsForms();
-                    break;
-                case Enums.KeyboardEnumType.Console:
+                case Enums.InputKeyEnumType.Console:
                     this.InitialiseKeyMap_Console();
                     break;
+
+                case Enums.InputKeyEnumType.SharpDX:
+                    this.InitialiseKeyMap_SharpDX();
+                    break;
+
+                case Enums.InputKeyEnumType.WindowsForms:
+                    this.InitialiseKeyMap_WindowsForms();
+                    break;
+
                 default:
                     this.InitialiseKeyMap_Console();
                     break;
@@ -37,7 +43,7 @@
             this.KeyType = keytype;
         }
 
-        public Enums.KeyboardEnumType KeyType { get; set; }
+        public Enums.InputKeyEnumType KeyType { get; set; }
 
         /// <summary>
         /// Get Key Value from Key Code ..
@@ -78,7 +84,7 @@
             try
             {
                 // Handle numerics which cannot be enumerated ..
-                if (this.KeyType == Enums.KeyboardEnumType.WindowsForms)
+                if (this.KeyType == Enums.InputKeyEnumType.WindowsForms)
                 {
                     // Handle numerics which require prefixing with 'D' ..
                     int junk;
@@ -138,7 +144,50 @@
         }
 
         /// <summary>
-        /// Use Keys Enum to create a lookup dictionary for windows form keys and their codes ..
+        /// Write Key Enumeration Dictionary as CSV
+        /// </summary>
+        /// <param name="csvPath"></param>
+        public void WriteKeyMap(string csvPath)
+        {
+            // Create DataTable with correct structure ..
+            DataTable keyMap = DefineKeyMap();
+
+            // Loop through dictionary adding information to DataTable ..
+            foreach (KeyValuePair<string, int> kvp in this.relationship)
+            {
+                keyMap.LoadDataRow(new object[] 
+                                                {
+                                                 this.KeyType.ToString(),
+                                                 kvp.Key,
+                                                 kvp.Value
+                                                },
+                                   false); 
+            }
+
+            // Write DataTable contents as csv ..
+            keyMap.CreateCSV(csvPath);
+        }
+
+        /// <summary>
+        /// Define Binding Actions DataTable Structure
+        /// </summary>
+        /// <returns></returns>
+        private static DataTable DefineKeyMap()
+        {
+            // New DataTable ..
+            DataTable keyMap = new DataTable();
+            keyMap.TableName = "KeyMap";
+
+            // Define its structure ..
+            keyMap.Columns.Add(Enums.Column.KeyEnumeration.ToString(), typeof(string));
+            keyMap.Columns.Add(Enums.Column.KeyEnumerationValue.ToString(), typeof(string));
+            keyMap.Columns.Add(Enums.Column.KeyEnumerationCode.ToString(), typeof(int));
+
+            return keyMap;
+        }
+
+        /// <summary>
+        /// Use Windows Forms Keys Enum to create a lookup dictionary for keys and their codes ..
         /// </summary>
         /// <remarks>
         /// ref: https://msdn.microsoft.com/en-us/library/system.windows.forms.keys(v=vs.110).aspx
@@ -156,7 +205,7 @@
         private void InitialiseKeyMap_WindowsForms()
         {
             // Initialise lists of key names and codes ..
-            var keyEnums = Enum.GetValues(typeof(Keys)).Cast<Keys>().Distinct();
+            var keyEnums = Enum.GetValues(typeof(System.Windows.Forms.Keys)).Cast<System.Windows.Forms.Keys>().Distinct();
             var keyNames = keyEnums.ToList();
             var keyCodes = keyEnums.Cast<int>().ToList();
 
@@ -168,14 +217,31 @@
         }
 
         /// <summary>
-        /// Use Keys Enum to create a lookup dictionary for console keys and their codes ..
+        /// Use System.Console Keys Enum to create a lookup dictionary for keys and their codes ..
         /// ref: https://msdn.microsoft.com/en-us/library/system.consolekey(v=vs.100).aspx
-        /// ref: http://www.theasciicode.com.ar/
         /// </summary>
         private void InitialiseKeyMap_Console()
         {
             // Initialise lists of key names and codes ..
-            var keyEnums = Enum.GetValues(typeof(ConsoleKey)).Cast<ConsoleKey>().Distinct();
+            var keyEnums = Enum.GetValues(typeof(System.ConsoleKey)).Cast<System.ConsoleKey>().Distinct();
+            var keyNames = keyEnums.ToList();
+            var keyCodes = keyEnums.Cast<int>().ToList();
+
+            // Add key names and codes to dictionary ..
+            for (int i = 0; i < keyNames.Count; i++)
+            {
+                this.relationship.Add(keyNames[i].ToString(), keyCodes[i]);
+            }
+        }
+
+        /// <summary>
+        /// Use DirectX DirectInput Keys Enum to create a lookup dictionary for keys and their codes ..
+        /// ref: https://msdn.microsoft.com/en-us/library/windows/desktop/bb321074(v=vs.85).aspx
+        /// </summary>
+        private void InitialiseKeyMap_SharpDX()
+        {
+            // Initialise lists of key names and codes ..
+            var keyEnums = Enum.GetValues(typeof(SharpDX.DirectInput.Key)).Cast<SharpDX.DirectInput.Key>().Distinct();
             var keyNames = keyEnums.ToList();
             var keyCodes = keyEnums.Cast<int>().ToList();
 

@@ -19,17 +19,18 @@
         /// </summary>
         public enum KeyboardInteraction
         {
-            Keyboard, //ED
-            PressKey  //VA
+            Keyboard, //EliteDangerous
+            PressKey  //VoiceAttack
         }
 
         /// <summary>
         /// Enumeration of Keyboard Enumerations
         /// </summary>
-        public enum KeyboardEnumType
+        public enum InputKeyEnumType
         {
-            WindowsForms,
-            Console
+            Console,
+            SharpDX,
+            WindowsForms
         }
 
         /// <summary>

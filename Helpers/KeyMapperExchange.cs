@@ -22,7 +22,7 @@
         /// </summary>
         /// <param name="keyType"></param>
         /// <param name="game"></param>
-        public KeyMapperExchange(Enums.KeyboardEnumType keyType, Enums.Game game)
+        public KeyMapperExchange(Enums.InputKeyEnumType keyType, Enums.Game game)
         {
             this.Initialise(keyType, game);
         }
@@ -32,9 +32,9 @@
         /// </summary>
         /// <param name="keyType"></param>
         /// <param name="game"></param>
-        public void Initialise(Enums.KeyboardEnumType keyType, Enums.Game game)
+        public void Initialise(Enums.InputKeyEnumType keyType, Enums.Game game)
         {
-            if (keyType == Enums.KeyboardEnumType.WindowsForms)
+            if (keyType == Enums.InputKeyEnumType.WindowsForms)
             {
                 if (game == Enums.Game.EliteDangerous)
                 {

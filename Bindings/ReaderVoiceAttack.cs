@@ -93,8 +93,7 @@
         private static DataTable GetVAKeyBindings(XDocument xdoc)
         {
             // Datatable to hold tabulated XML contents ..
-            DataTable keyactionbinder = new DataTable();
-            keyactionbinder.DefineKeyActionBinder();
+            DataTable keyactionbinder = DefineKeyActionBinder();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
@@ -143,8 +142,7 @@
         private static DataTable GetVABindingActions(XDocument xdoc)
         {
             // Datatable to hold tabulated XML contents ..
-            DataTable bindableactions = new DataTable();
-            bindableactions.DefineBindableActions();
+            DataTable bindableactions = DefineBindableActions();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
