@@ -38,14 +38,14 @@
             {
                 if (game == Enums.Game.EliteDangerous)
                 {
-                    this.relationship.Add("Grave", "Grave");
-                    this.relationship.Add("LeftBracket", "LeftBracket");
-                    this.relationship.Add("RightBracket", "RightBracket");
+                    this.relationship.Add("Grave", "Oem8");
+                    this.relationship.Add("LeftBracket", "OemOpenBrackets");
+                    this.relationship.Add("RightBracket", "Oem6");
                     this.relationship.Add("LeftShift", "LShiftKey");
                     this.relationship.Add("RightShift", "RShiftKey");
                     this.relationship.Add("LeftControl", "LControlKey");
                     this.relationship.Add("RightControl", "RControlKey");
-                    this.relationship.Add("Minus", "Minus");
+                    this.relationship.Add("Minus", "Subtract");
                     this.relationship.Add("Numpad_0", "NumPad0");
                     this.relationship.Add("Numpad_1", "NumPad1");
                     this.relationship.Add("Numpad_2", "NumPad2");
@@ -56,7 +56,7 @@
                     this.relationship.Add("Numpad_7", "NumPad7");
                     this.relationship.Add("Numpad_8", "NumPad8");
                     this.relationship.Add("Numpad_9", "NumPad9");
-                    this.relationship.Add("Numpad_Enter", "NumPad_Enter");
+                    this.relationship.Add("Numpad_Enter", "Return");
                     this.relationship.Add("Numpad_Multiply", "Multiply");
                     this.relationship.Add("Numpad_Plus", "Add");
                     this.relationship.Add("Numpad_Add", "Add");
@@ -64,7 +64,7 @@
                     this.relationship.Add("Numpad_Subtract", "Subtract");
                     this.relationship.Add("Numpad_Divide", "Divide");
                     this.relationship.Add("PageUp", "PageUp");
-                    this.relationship.Add("PageDown", "PageDown");
+                    this.relationship.Add("PageDown", "Next");
                     this.relationship.Add("LeftArrow", "Left");
                     this.relationship.Add("UpArrow", "Up");
                     this.relationship.Add("RightArrow", "Right");
@@ -73,6 +73,8 @@
                     this.relationship.Add("Backspace", "Back");
                     this.relationship.Add("Period", "OemPeriod");
                     this.relationship.Add("Comma", "Oemcomma");
+                    this.relationship.Add("Equals", "Oemplus");
+                    this.relationship.Add("Slash", "Oem5");
                 }
             }
         }
