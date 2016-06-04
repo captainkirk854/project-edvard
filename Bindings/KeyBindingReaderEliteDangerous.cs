@@ -174,13 +174,6 @@
         private DataTable GetKeyBindings(XDocument xdoc, Enums.EliteDangerousDevicePriority devicepriority)
         {
             // Initialise ..
-            /*
-            const string XMLRoot = "Root";
-            const string XMLKey = "Key";
-            const string XMLDevice = "Device";
-            const string XMLModifier = "Modifier";
-            string[] keybindingIndicator = { "Key_" };
-            */
             string devicePriority = devicepriority.ToString();
 
             // Datatable to hold tabulated XML contents ..
