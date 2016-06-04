@@ -20,25 +20,26 @@
         private const string XMLKeyCodes = "KeyCodes";
         private const string XMLunsignedShort = "unsignedShort";
         private static string[] keybindingIndicatorVA = { "((", "))" };
-
-        public KeyBindingReaderVoiceAttack(string cfgFilePath)
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyBindingReaderVoiceAttack" /> class.
+        /// Base class constructor loads config.file as XDocument (this.xCfg)
+        /// </summary>
+        /// <param name="cfgFilePath"></param>
+        public KeyBindingReaderVoiceAttack(string cfgFilePath) : base(cfgFilePath)
         {
-            this.cfgFilePath = cfgFilePath;
         }
-
+   
         /// <summary>
         /// Read all Voice Attack Commands mapped to Elite Dangerous Key-Bindable Actions into DataTable
         /// </summary>
         /// <returns></returns>
         public DataTable GetBindableCommands()
         {
-            // Load configuration file as xml document object .. 
-            var xCfg = Xml.ReadXDoc(this.cfgFilePath);
-
             // Read bindings and tabulate ..
-            DataTable primary = this.GetBindableActions(xCfg);
+            DataTable primary = this.GetBindableActions(this.xCfg);
 
-            // Modify ..
+            // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
@@ -51,13 +52,10 @@
         /// <returns></returns>
         public DataTable GetBoundCommands()
         {
-            // Load configuration file as xml document object .. 
-            var xCfg = Xml.ReadXDoc(this.cfgFilePath);
-
             // Read bindings and tabulate ..
-            DataTable primary = this.GetKeyBindings(xCfg);
+            DataTable primary = this.GetKeyBindings(this.xCfg);
 
-            // Modify ..
+            // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..

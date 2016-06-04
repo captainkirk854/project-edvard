@@ -19,20 +19,21 @@
         private KeyMapperExchange exchange = new KeyMapperExchange(KeyType, Enums.Game.EliteDangerous);
         private string[] keybindingIndicatorED = { "Key_" };
 
-        public KeyBindingReaderEliteDangerous(string cfgFilePath)
-        {
-            this.cfgFilePath = cfgFilePath;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyBindingReaderEliteDangerous" /> class.
+        /// Base class constructor loads config.file as XDocument (this.xCfg)
+        /// </summary>
+        /// <param name="cfgFilePath"></param>
+        public KeyBindingReaderEliteDangerous(string cfgFilePath) : base(cfgFilePath) 
+        { 
         }
-
+        
         /// <summary>
         ///  Read all possible Elite Dangerous Key-Bindable Actions into DataTable
         /// </summary>
         /// <returns></returns>
         public DataTable GetBindableCommands()
         {
-            // Load configuration file as xml document object ..
-            XDocument xCfg = Xml.ReadXDoc(this.cfgFilePath);
-
             // Read bindings and tabulate ..
             DataTable primary = this.GetBindableActions(xCfg);
 
@@ -49,9 +50,6 @@
         /// <returns></returns>
         public DataTable GetBoundCommands()
         {
-            // Load configuration file as xml document object ..
-            var xCfg = Xml.ReadXDoc(this.cfgFilePath);
-
             // Read bindings and tabulate ..
             DataTable primary = this.GetKeyBindings(xCfg, Enums.EliteDangerousDevicePriority.Primary);
             DataTable secondary = this.GetKeyBindings(xCfg, Enums.EliteDangerousDevicePriority.Secondary);
