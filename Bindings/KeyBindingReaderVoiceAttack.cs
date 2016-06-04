@@ -11,6 +11,8 @@
     public class KeyBindingReaderVoiceAttack : KeyBindingReader, IKeyBindingReader
     {
         // Initialise ..
+        private const string XMLRoot = "Profile";
+        private const string XMLName = "Name";
         private const string XMLCommand = "Command";
         private const string XMLCommandString = "CommandString";
         private const string XMLActionSequence = "ActionSequence";
@@ -40,6 +42,9 @@
             DataTable primary = this.GetBindableActions(this.xCfg);
 
             // Add column ..
+            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference());
+
+            // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
@@ -54,6 +59,9 @@
         {
             // Read bindings and tabulate ..
             DataTable primary = this.GetKeyBindings(this.xCfg);
+
+            // Add column ..
+            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference());
 
             // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
@@ -93,8 +101,7 @@
                                                  xmlExtract.Commandstring, //BindingAction
                                                  NA, // Device priority
                                                  Enums.KeyboardInteraction.Keyboard.ToString() // Device binding applied to
-                                                },
-                                       false);
+                                                }, false);
             }
 
             // return Datatable ..
@@ -166,12 +173,24 @@
                                                  NA, //ModifierKeyEnumerationValue
                                                  INA, //ModifierKeyEnumerationCode
                                                  NA //ModifierId
-                                                },
-                                       false);
+                                                }, false);
             }
 
             // return Datatable ..
             return keyactionbinder;
+        }
+
+        /// <summary>
+        /// Process Voice Attack Config File looking for internal reference
+        ///   Format: XML
+        ///             o <Profile/>
+        ///               |_ <Name>       
+        /// </summary>
+        /// <param name="xdoc"></param>
+        /// <returns></returns>
+        private string GetInternalReference()
+        {
+            return this.xCfg.Element(XMLRoot).Element(XMLName).SafeElementValue().Trim();
         }
     }
 }

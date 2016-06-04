@@ -37,7 +37,8 @@
                                             KeyValue = va.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
                                             KeyCode = va.Field<int>(Enums.Column.KeyEnumerationCode.ToString()),
                                             KeyID = va.Field<string>(Enums.Column.KeyId.ToString()),
-                                            FilePath = va.Field<string>(Enums.Column.FilePath.ToString())
+                                            FilePath = va.Field<string>(Enums.Column.FilePath.ToString()),
+                                            Internal = va.Field<string>(Enums.Column.Internal.ToString())
                                          };
 
             // .. and compare with what has been defined in the Elite Dangerous bindings ..
@@ -57,7 +58,8 @@
                                                     KeyGameValue = ed.Field<string>(Enums.Column.KeyGameValue.ToString()),
                                                     KeyEnumerationValue = ed.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
                                                     KeyEnumerationCode = ed.Field<int>(Enums.Column.KeyEnumerationCode.ToString()),
-                                                    FilePath = ed.Field<string>(Enums.Column.FilePath.ToString())
+                                                    FilePath = ed.Field<string>(Enums.Column.FilePath.ToString()),
+                                                    Internal = ed.Field<string>(Enums.Column.Internal.ToString())
                                                 };
 
                 // Compare matching action bindings with their assigned key value/code ..
@@ -97,10 +99,11 @@
                                                  voiceattackBinding.KeyID, //VoiceAttackKeyId
                                                  remapRequired, //ReMapRequired
                                                  rationale, //Rationale
+                                                 voiceattackBinding.Internal, //VoiceAttackInternal
+                                                 elitedangerousBinding.Internal, //EliteDangerousInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
                                                  elitedangerousBinding.FilePath//EliteDangerousBinds
-                                                },
-                                                false);
+                                                }, false);
                 }
 
                 // If not defined in Elite Dangerous binding file ..
@@ -122,6 +125,8 @@
                                                  voiceattackBinding.KeyID, //VoiceAttackKeyId
                                                  remapRequired, //ReMapRequired
                                                  rationale, //Rationale
+                                                 voiceattackBinding.Internal, //VoiceAttackInternal
+                                                 NA, //EliteDangerousInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
                                                  NA //EliteDangerousBinds
                                                 },

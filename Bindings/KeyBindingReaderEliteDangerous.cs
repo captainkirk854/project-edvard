@@ -38,6 +38,9 @@
             DataTable primary = this.GetBindableActions(xCfg);
 
             // Add column ..
+            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference());
+
+            // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
@@ -56,6 +59,9 @@
 
             // Merge ..
             primary.Merge(secondary);
+
+            // Add column ..
+            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference());
 
             // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
@@ -118,8 +124,7 @@
                                                          xmlExtract.BindingAction, //BindingAction
                                                          xmlExtract.Priority, // Device priority
                                                          xmlExtract.DeviceType // Device binding applied to
-                                                        },
-                                               false);
+                                                        }, false);
                     }
                 }
             }
@@ -254,14 +259,34 @@
                                                          this.exchange.GetValue(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationValue
                                                          KeyMapper.GetKey(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationCode
                                                          customModifierKeyId //ModifierId
-                                                        },
-                                               false);
+                                                        }, false);
                     }
                 }
             }
 
             // return Datatable ..
             return keyactionbinder;
+        }
+
+        /// <summary>
+        /// Process Elite Dangerous Config File looking for internal reference
+        ///   Format: XML
+        ///             o <Root/>
+        ///               |_ PresetName; MajorVersion; MinorVersion
+        /// </summary>
+        /// <returns></returns>
+        private string GetInternalReference()
+        {
+            //Initialise ..
+            string properties = string.Empty;
+            string delim = " ";
+
+            foreach (var nodeAttributes in this.xCfg.Element(XMLRoot).Attributes())
+            {
+                properties += nodeAttributes.Value + delim;
+            }
+
+            return properties.Trim();
         }
     }
 }
