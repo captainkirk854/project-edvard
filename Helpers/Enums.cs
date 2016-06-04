@@ -61,14 +61,14 @@
             EliteDangerousAction,
             EliteDangerousKeyValue,
             EliteDangerousKeyCode,
-            ReMapRequired,
+            KeyUpdateRequired,
             Rationale
         }
 
         /// <summary>
         /// Enumeration of ReMapRequired flags
         /// </summary>
-        public enum ReMapRequired
+        public enum KeyUpdateRequired
         {
             YES,
             NO

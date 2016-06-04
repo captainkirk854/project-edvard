@@ -51,7 +51,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="EnumsEliteDangerous.cs" />
     <Compile Include="EnumsVoiceAttack.cs" />
-    <Compile Include="ActionExchange.cs" />
+    <Compile Include="CommandExchange.cs" />
     <Compile Include="KeyMapperExchange.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -43,7 +43,11 @@
             this.KeyType = keytype;
         }
 
-        public Enums.InputKeyEnumType KeyType { get; set; }
+        public Enums.InputKeyEnumType KeyType 
+        { 
+            get; 
+            set; 
+        }
 
         /// <summary>
         /// Get Key Value from Key Code ..

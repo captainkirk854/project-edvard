@@ -6,60 +6,128 @@
     using System.Xml.Linq;
 
     /// <summary>
-    /// BindingsReader content for parsing Elite Dangerous Bind file(s)
+    /// Parse Elite Dangerous Binds file
     /// </summary>
-    public static partial class Reader
+    public class KeyBindingReaderEliteDangerous : KeyBindingReader, IKeyBindingReader
     {
         //Initialise ..
         private const string XMLRoot = "Root";
         private const string XMLKey = "Key";
         private const string XMLDevice = "Device";
         private const string XMLModifier = "Modifier";
-        private static KeyMapperExchange exchange = new KeyMapperExchange(KeyType, Enums.Game.EliteDangerous);
-        private static string[] keybindingIndicatorED = { "Key_" };
+        private const string D = "+";
+        private KeyMapperExchange exchange = new KeyMapperExchange(KeyType, Enums.Game.EliteDangerous);
+        private string[] keybindingIndicatorED = { "Key_" };
+
+        public KeyBindingReaderEliteDangerous(string cfgFilePath)
+        {
+            this.cfgFilePath = cfgFilePath;
+        }
 
         /// <summary>
-        /// Read Elite Dangerous Key Bindings into DataTable
+        ///  Read all possible Elite Dangerous Key-Bindable Actions into DataTable
         /// </summary>
-        /// <param name="cfgFilePath"></param>
         /// <returns></returns>
-        public static DataTable EliteDangerousKeyBindings(string cfgFilePath)
+        public DataTable GetBindableCommands()
         {
             // Load configuration file as xml document object ..
-            var cfgED = Xml.ReadXDoc(cfgFilePath);
+            XDocument xCfg = Xml.ReadXDoc(this.cfgFilePath);
 
             // Read bindings and tabulate ..
-            DataTable primary = GetEDKeyBindings(cfgED, Enums.EliteDangerousDevicePriority.Primary);
-            DataTable secondary = GetEDKeyBindings(cfgED, Enums.EliteDangerousDevicePriority.Secondary);
-
-            // Merge ..
-            primary.Merge(secondary);
+            DataTable primary = this.GetBindableActions(xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), cfgFilePath);
+            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
         }
 
         /// <summary>
-        ///  Read Elite Dangerous Binding Actions into DataTable
+        /// Read Elite Dangerous Key Bindings into DataTable
         /// </summary>
-        /// <param name="cfgFilePath"></param>
         /// <returns></returns>
-        public static DataTable EliteDangerousBindings(string cfgFilePath)
+        public DataTable GetBoundCommands()
         {
             // Load configuration file as xml document object ..
-            var cfgED = Xml.ReadXDoc(cfgFilePath);
+            var xCfg = Xml.ReadXDoc(this.cfgFilePath);
 
             // Read bindings and tabulate ..
-            DataTable primary = GetEDBindingActions(cfgED);
+            DataTable primary = this.GetKeyBindings(xCfg, Enums.EliteDangerousDevicePriority.Primary);
+            DataTable secondary = this.GetKeyBindings(xCfg, Enums.EliteDangerousDevicePriority.Secondary);
+
+            // Merge ..
+            primary.Merge(secondary);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), cfgFilePath);
+            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
+        }
+
+        /// <summary>
+        /// Process Elite Dangerous Config File to return all possible bindable actions
+        /// </summary>
+        /// <param name="xdoc"></param>
+        /// <returns></returns>
+        private DataTable GetBindableActions(XDocument xdoc)
+        {
+            // Initialise ..
+            string[] devicePriority = { Enums.EliteDangerousDevicePriority.Primary.ToString(), Enums.EliteDangerousDevicePriority.Secondary.ToString() };
+
+            // Datatable to hold tabulated XML contents ..
+            DataTable bindableactions = TableType.BindableActions();
+
+            // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
+            // Scan all child nodes from top-level node ..
+            foreach (var childNode in xdoc.Element(XMLRoot).Elements())
+            {
+                // can only process if child node itself has children ..
+                if (childNode.DescendantNodes().Any())
+                {
+                    // Get all primary devices ..
+                    var primaryDevices = from item in xdoc.Descendants(childNode.Name)
+                                         where item.Element(devicePriority[0]).SafeElementName() == devicePriority[0]
+                                         select
+                                            new
+                                            {
+                                                BindingAction = item.SafeElementName(),
+                                                Priority = item.Element(devicePriority[0]).SafeElementName(),
+                                                DeviceType = item.Element(devicePriority[0]).SafeAttributeValue(XMLDevice)
+                                            };
+
+                    // Get all secondary devices ..
+                    var secondaryDevices = from item in xdoc.Descendants(childNode.Name)
+                                           where item.Element(devicePriority[1]).SafeElementName() == devicePriority[1]
+                                           select
+                                              new
+                                              {
+                                                  BindingAction = item.SafeElementName(),
+                                                  Priority = item.Element(devicePriority[1]).SafeElementName(),
+                                                  DeviceType = item.Element(devicePriority[1]).SafeAttributeValue(XMLDevice)
+                                              };
+
+                    // Perform a 'union all' ...
+                    var xmlExtracts = primaryDevices.Concat(secondaryDevices);
+
+                    // insert anonymous type row data (with some additional values) into DataTable ..
+                    foreach (var xmlExtract in xmlExtracts)
+                    {
+                        bindableactions.LoadDataRow(new object[] 
+                                                        {
+                                                         Enums.Game.EliteDangerous.ToString(), //Context
+                                                         xmlExtract.BindingAction, //BindingAction
+                                                         xmlExtract.Priority, // Device priority
+                                                         xmlExtract.DeviceType // Device binding applied to
+                                                        },
+                                               false);
+                    }
+                }
+            }
+
+            // return Datatable ..
+            return bindableactions;
         }
 
         /// <summary>
@@ -105,7 +173,7 @@
         /// <param name="xdoc"></param>
         /// <param name="devicepriority"></param>
         /// <returns></returns>
-        private static DataTable GetEDKeyBindings(XDocument xdoc, Enums.EliteDangerousDevicePriority devicepriority)
+        private DataTable GetKeyBindings(XDocument xdoc, Enums.EliteDangerousDevicePriority devicepriority)
         {
             // Initialise ..
             /*
@@ -130,7 +198,7 @@
                     var xmlExtracts = from item in xdoc.Descendants(childNode.Name)
                                       where
                                             item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Enums.KeyboardInteraction.Keyboard.ToString() &&
-                                            item.Element(devicePriority).Attribute(XMLKey).Value.Contains(keybindingIndicatorED[0]) == true
+                                            item.Element(devicePriority).Attribute(XMLKey).Value.Contains(this.keybindingIndicatorED[0]) == true
                                       select
                                          new // create anonymous type for every key code ..
                                          {
@@ -188,11 +256,11 @@
                                                          childNode.Name, //BindingAction
                                                          xmlExtract.xmlNode_DevicePriority, //Priority 
                                                          xmlExtract.KeyValue, //KeyGameValue
-                                                         exchange.GetValue(xmlExtract.KeyValue), //KeyEnumerationValue
+                                                         this.exchange.GetValue(xmlExtract.KeyValue), //KeyEnumerationValue
                                                          KeyMapper.GetKey(xmlExtract.KeyValue), //KeyEnumerationCode
                                                          customKeyId, //KeyId
                                                          xmlExtract.ModifierKeyValue, //ModifierKeyGameValue
-                                                         exchange.GetValue(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationValue
+                                                         this.exchange.GetValue(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationValue
                                                          KeyMapper.GetKey(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationCode
                                                          customModifierKeyId //ModifierId
                                                         },
@@ -203,70 +271,6 @@
 
             // return Datatable ..
             return keyactionbinder;
-        }
-
-        /// <summary>
-        /// Process Elite Dangerous Config File to return all possible bindable actions
-        /// </summary>
-        /// <param name="xdoc"></param>
-        /// <returns></returns>
-        private static DataTable GetEDBindingActions(XDocument xdoc)
-        {
-            // Initialise ..
-            string[] devicePriority = { Enums.EliteDangerousDevicePriority.Primary.ToString(), Enums.EliteDangerousDevicePriority.Secondary.ToString() };
-
-            // Datatable to hold tabulated XML contents ..
-            DataTable bindableactions = TableType.BindableActions();
-
-            // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
-            // Scan all child nodes from top-level node ..
-            foreach (var childNode in xdoc.Element(XMLRoot).Elements())
-            {
-                // can only process if child node itself has children ..
-                if (childNode.DescendantNodes().Any())
-                {
-                    // Get all primary devices ..
-                    var primaryDevices = from item in xdoc.Descendants(childNode.Name)
-                                         where item.Element(devicePriority[0]).SafeElementName() == devicePriority[0]
-                                         select
-                                            new
-                                            {
-                                                BindingAction = item.SafeElementName(),
-                                                Priority = item.Element(devicePriority[0]).SafeElementName(),
-                                                DeviceType = item.Element(devicePriority[0]).SafeAttributeValue(XMLDevice)
-                                            };
-
-                    // Get all secondary devices ..
-                    var secondaryDevices = from item in xdoc.Descendants(childNode.Name)
-                                           where item.Element(devicePriority[1]).SafeElementName() == devicePriority[1]
-                                           select
-                                              new
-                                              {
-                                                BindingAction = item.SafeElementName(),
-                                                Priority = item.Element(devicePriority[1]).SafeElementName(),
-                                                DeviceType = item.Element(devicePriority[1]).SafeAttributeValue(XMLDevice)
-                                              };
-
-                    // Perform a 'union all' ...
-                    var xmlExtracts = primaryDevices.Concat(secondaryDevices);
-
-                    // insert anonymous type row data (with some additional values) into DataTable ..
-                    foreach (var xmlExtract in xmlExtracts)
-                    {
-                        bindableactions.LoadDataRow(new object[] 
-                                                        {
-                                                         Enums.Game.EliteDangerous.ToString(), //Context
-                                                         xmlExtract.BindingAction, //BindingAction
-                                                         xmlExtract.Priority, // Device priority
-                                                         xmlExtract.DeviceType // Device binding applied to
-                                                        },
-                                               false);
-                    }
-                }
-            }
-
-            // return Datatable ..
-            return bindableactions;
         }
     }
 }

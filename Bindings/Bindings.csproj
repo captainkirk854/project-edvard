@@ -39,13 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameAction.cs" />
-    <Compile Include="Reader.cs" />
-    <Compile Include="ReaderEliteDangerous.cs" />
-    <Compile Include="ReaderVoiceAttack.cs" />
-    <Compile Include="WriterEliteDangerous.cs" />
-    <Compile Include="WriterVoiceAttack.cs" />
-    <Compile Include="Writer.cs" />
+    <Compile Include="GameBindingsSynchroniser.cs" />
+    <Compile Include="IKeyBindingReader.cs" />
+    <Compile Include="IKeyBindingUpdater.cs" />
+    <Compile Include="KeyBindingReader.cs" />
+    <Compile Include="KeyBindingReaderEliteDangerous.cs" />
+    <Compile Include="KeyBindingReaderVoiceAttack.cs" />
+    <Compile Include="KeyBindingUpdaterVoiceAttack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

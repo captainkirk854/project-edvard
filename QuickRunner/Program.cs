@@ -9,50 +9,65 @@
     {
         public static void Main(string[] args)
         {
+            //////////////////////////////////////////////////////////////////
             // Initialise ..
+            //////////////////////////////////////////////////////////////////
+
             // Point to project sample (not a resource as such) data ..
-            string cfgED = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
-            string cfgVA = GetProjectDirectory() + "\\Sample" + "\\VA02.vap";
+            string eliteDangerousBinds = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
+            string voiceAttackProfile = GetProjectDirectory() + "\\Sample" + "\\VA02.vap";
 
             // Path for serialised DataTable output ..
-            const string KeyActionsFile = "EDVA_Binding_Actions.csv";
-            const string KeyBindingsFile = "EDVA_Combined_KeyBindings.csv";
-            const string KeyConsolidatedFile = "EDVA_Consolidated_KeyBindings.csv";
+            const string Commands = "EDVA_Commands.csv";
+            const string Bindings = "EDVA_Command_Bindings.csv";
+            const string Consolidated = "EDVA_Consolidated_Bindings.csv";
 
             string csvOutputDirectory = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
-            string csvKeyActions = csvOutputDirectory + "\\" + KeyActionsFile;
-            string csvKeyBindings = csvOutputDirectory + "\\" + KeyBindingsFile;
-            string csvKeyBindingsConsolidated = csvOutputDirectory + "\\" + KeyConsolidatedFile;
+            string csvCommands = csvOutputDirectory + "\\" + Commands;
+            string csvBindings = csvOutputDirectory + "\\" + Bindings;
+            string csvConsolidatedBindings = csvOutputDirectory + "\\" + Consolidated;
+
+            //////////////////////////////////////////////////////////////////
+            // Initialise ..
+            //////////////////////////////////////////////////////////////////
 
             // Read EliteDangerous and VoiceAttack configuration(s) to get key bindings ..
             try
             {
-                Console.WriteLine("Reading Config(s)");
-
-                // Create DataTable listing all possible actions ..
-                DataTable keyActions = Reader.EliteDangerousBindings(cfgED);
-                keyActions.Merge(Reader.VoiceAttackBindings(cfgVA));
-
-                // Populate individual DataTables from both application bindings ..
-                DataTable keyBindingsED = Reader.EliteDangerousKeyBindings(cfgED);
-                DataTable keyBindingsVA = Reader.VoiceAttackKeyBindings(cfgVA);
-                Console.WriteLine("Config(s) read");
-
-                // Consolidate Voice Attack action bindings with Elite Dangerous bindings ..
-                DataTable keyBindingsConsolidated = Writer.Consolidate(keyBindingsVA, keyBindingsED);
-                Console.WriteLine("Config(s) consolidated");
+                // Read Voice Attack Commands and Elite Dangerous Binds ..
+                KeyBindingReader.KeyType = Enums.InputKeyEnumType.WindowsForms; // [optional] sets key type enumeration to use
+                KeyBindingReaderEliteDangerous ed = new KeyBindingReaderEliteDangerous(eliteDangerousBinds);
+                KeyBindingReaderVoiceAttack va = new KeyBindingReaderVoiceAttack(voiceAttackProfile);
+                Console.WriteLine("Configs read ..");
 
                 // Update VoiceAttack Profile ..
-                Writer.UpdateVoiceAttackProfile(keyBindingsConsolidated);
-                Console.WriteLine("VoiceAttack updated");
+                KeyBindingUpdaterVoiceAttack voiceattackUpdater = new KeyBindingUpdaterVoiceAttack();
+                Console.WriteLine("VoiceAttack Profile: {0}", voiceattackUpdater.Write(GameBindingsSynchroniser.ForUpdateInVoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands())) == true ? "updated" : "no update possible or required");
 
-                // Create informational CSV file(s) ..
-                DataTable keyBindingsCSV = keyBindingsED;
-                keyBindingsCSV.Merge(keyBindingsVA);
-                keyActions.CreateCSV(csvKeyActions);
-                keyBindingsCSV.CreateCSV(csvKeyBindings);
-                keyBindingsConsolidated.CreateCSV(csvKeyBindingsConsolidated);
                 PressIt();
+
+                //////////////////////////////////////////////////////////////////
+                //////// O P T I O N A L /////////////////////////////////////////
+                //////////////////////////////////////////////////////////////////
+
+                // Create CSV listing all possible actions ..
+                var elitedangerousCommands = ed.GetBindableCommands();
+                elitedangerousCommands.Merge(va.GetBindableCommands());
+                elitedangerousCommands.CreateCSV(csvCommands);
+
+                // Create CSV listing all bound actions ..
+                elitedangerousCommands = ed.GetBoundCommands();
+                elitedangerousCommands.Merge(va.GetBoundCommands());
+                elitedangerousCommands.CreateCSV(csvBindings);
+
+                // Create CSV listing all consolidated actions ..
+                DataTable consolidatedBindings = GameBindingsSynchroniser.ForUpdateInVoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands());
+                consolidatedBindings = consolidatedBindings.Sort(Enums.Column.EliteDangerousAction.ToString() + " asc");
+                consolidatedBindings.CreateCSV(csvConsolidatedBindings);
+
+                //////////////////////////////////////////////////////////////////
+                //////// O P T I O N A L /////////////////////////////////////////
+                //////////////////////////////////////////////////////////////////
             }
             catch
             {

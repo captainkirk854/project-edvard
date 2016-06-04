@@ -70,7 +70,7 @@
             table.Columns.Add(Enums.Column.VoiceAttackKeyCode.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.EliteDangerousKeyCode.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackKeyId.ToString(), typeof(string));
-            table.Columns.Add(Enums.Column.ReMapRequired.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.KeyUpdateRequired.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.Rationale.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackProfile.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.EliteDangerousBinds.ToString(), typeof(string));

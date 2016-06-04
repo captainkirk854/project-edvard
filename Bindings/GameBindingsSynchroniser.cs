@@ -4,20 +4,23 @@
     using System.Data;
     using Helpers;
 
-    public static class GameAction
+    /// <summary>
+    /// Synchronise Binding Codes between VoiceAttack and Elite Dangerous ..
+    /// </summary>
+    public static class GameBindingsSynchroniser
     {
         private const string NA = "n/a";
 
         /// <summary>
-        /// Consolidate Action References between VoiceAttack and Elite Dangerous ..
+        /// Update Command Codes in VoiceAttack based on Elite Dangerous Binds as Master ..
         /// </summary>
         /// <param name="voiceAttack"></param>
         /// <param name="eliteDangerous"></param>
         /// <returns></returns>
-        public static DataTable Consolidate(DataTable voiceAttack, DataTable eliteDangerous)
+        public static DataTable ForUpdateInVoiceAttack(DataTable voiceAttack, DataTable eliteDangerous)
         {
             // Initialise lookup dictionary for inter-game action references ..
-            ActionExchange actions = new ActionExchange();
+            CommandExchange actions = new CommandExchange();
             actions.Initialise();
 
             // Datatable to hold tabulated contents ..
@@ -40,7 +43,7 @@
             // .. and compare with what has been defined in the Elite Dangerous bindings ..
             foreach (var voiceattackBinding in voiceattackBindings)
             {
-                bool definedInED = false;
+                bool commandDefinedInEliteDangerousBindsFile = false;
                 string remapRequired = "unknown";
                 string rationale = "unknown";
 
@@ -60,22 +63,22 @@
                 // Compare matching action bindings with their assigned key value/code ..
                 foreach (var elitedangerousBinding in elitedangerousBindings)
                 {
-                    definedInED = true;
+                    commandDefinedInEliteDangerousBindsFile = true;
                     if (elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode)
                     {
-                        remapRequired = Enums.ReMapRequired.NO.ToString();
+                        remapRequired = Enums.KeyUpdateRequired.NO.ToString();
                         rationale = "Key codes are aligned";
                     }
                     else
                     {
                         if (elitedangerousBinding.KeyEnumerationCode > 0)
                         {
-                            remapRequired = Enums.ReMapRequired.YES.ToString();
+                            remapRequired = Enums.KeyUpdateRequired.YES.ToString();
                             rationale = string.Format("Misaligned key codes: Voice Attack Profile requires change in key code from [{0}] to [{1}]", voiceattackBinding.KeyCode, elitedangerousBinding.KeyEnumerationCode);
                         }
                         else
                         {
-                            remapRequired = Enums.ReMapRequired.NO.ToString();
+                            remapRequired = Enums.KeyUpdateRequired.NO.ToString();
                             rationale = string.Format("Unresolvable key code for: [{0}]", elitedangerousBinding.KeyGameValue);
                         }
                     }
@@ -101,10 +104,10 @@
                 }
 
                 // If not defined in Elite Dangerous binding file ..
-                if (!definedInED)
+                if (!commandDefinedInEliteDangerousBindsFile)
                 {
                     // Append to DataTable
-                    remapRequired = Enums.ReMapRequired.NO.ToString();
+                    remapRequired = Enums.KeyUpdateRequired.NO.ToString();
                     rationale = string.Format("[{0}] has not been bound to a key", voiceattackBinding.EliteDangerousAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {

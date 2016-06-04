@@ -5,9 +5,9 @@
     using System.Xml.XPath;
 
     /// <summary>
-    /// Voice Attack Profile update
+    /// Update Voice Attack Profile Command(s) with new Key Codes
     /// </summary>
-    public static partial class Writer
+    public class KeyBindingUpdaterVoiceAttack : IKeyBindingUpdater
     {
         // Initialise ..
         private const string XMLCommand = "Command";
@@ -18,13 +18,17 @@
         private const string XMLunsignedShort = "unsignedShort";
         
         /// <summary>
-        /// Update Voice Attack Profile
+        /// Update Voice Attack Profile with adjusted KeyCode(s) from Elite Dangerous Key Bindings
         /// </summary>
         /// <param name="consolidatedkeybindings"></param>
-        public static void UpdateVoiceAttackProfile(DataTable consolidatedkeybindings)
+        /// <returns></returns>
+        public bool Write(DataTable consolidatedkeybindings)
         {
+            bool profileUpdated = false;
+
+            // Find VoiceAttack commands which require remapping ..
             var consolidatedBindings = from cb in consolidatedkeybindings.AsEnumerable()
-                                      where cb.Field<string>(Enums.Column.ReMapRequired.ToString()) == Enums.ReMapRequired.YES.ToString()
+                                      where cb.Field<string>(Enums.Column.KeyUpdateRequired.ToString()) == Enums.KeyUpdateRequired.YES.ToString()
                                      select
                                         new
                                             {
@@ -35,24 +39,28 @@
                                                 VAP = cb.Field<string>(Enums.Column.VoiceAttackProfile.ToString())
                                             };
 
+            // Perform Update(s) for those commands that require it ..
             foreach (var consolidatedBinding in consolidatedBindings)
             {
-                UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDKeyCode);
+                this.UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDKeyCode);
+                profileUpdated = true;
             }
+
+            return profileUpdated;
         }
 
         /// <summary>
-        /// Update Key Code associated to specific Id in Voice Attack
+        /// Update Key Code associated to specific [Id] in Voice Attack
         /// </summary>
         /// <param name="vaprofile"></param>
         /// <param name="vakeyId"></param>
         /// <param name="keyCode"></param>
-        private static void UpdateVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
+        private void UpdateVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
         {
             // Read Voice Attack Profile ...
             var vap = Xml.ReadXDoc(vaprofile);
 
-            // Construct XPathSelect to locate the element for update ..
+            // Construct XPathSelect to locate element (XMLunsignedShort) for update using XMLActionId ..
             string xPathSelect = "//" + XMLCommand +
                                   "/" + XMLActionSequence +
                                   "/" + XMLCommandAction +

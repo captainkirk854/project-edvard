@@ -6,9 +6,9 @@
     using System.Xml.Linq;
 
     /// <summary>
-    /// BindingsReader content for parsing Voice Attack Profile file(s)
+    /// Parse Voice Attack Profile file
     /// </summary>
-    public static partial class Reader
+    public class KeyBindingReaderVoiceAttack : KeyBindingReader, IKeyBindingReader
     {
         // Initialise ..
         private const string XMLCommand = "Command";
@@ -21,48 +21,90 @@
         private const string XMLunsignedShort = "unsignedShort";
         private static string[] keybindingIndicatorVA = { "((", "))" };
 
+        public KeyBindingReaderVoiceAttack(string cfgFilePath)
+        {
+            this.cfgFilePath = cfgFilePath;
+        }
+
+        /// <summary>
+        /// Read all Voice Attack Commands mapped to Elite Dangerous Key-Bindable Actions into DataTable
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetBindableCommands()
+        {
+            // Load configuration file as xml document object .. 
+            var xCfg = Xml.ReadXDoc(this.cfgFilePath);
+
+            // Read bindings and tabulate ..
+            DataTable primary = this.GetBindableActions(xCfg);
+
+            // Modify ..
+            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
+
+            // return Datatable ..
+            return primary;
+        }
+
         /// <summary>
         /// Read Voice Attack Key Bindings into DataTable
         /// </summary>
-        /// <param name="cfgFilePath"></param>
         /// <returns></returns>
-        public static DataTable VoiceAttackKeyBindings(string cfgFilePath)
+        public DataTable GetBoundCommands()
         {
             // Load configuration file as xml document object .. 
-            var cfgVA = Xml.ReadXDoc(cfgFilePath);
+            var xCfg = Xml.ReadXDoc(this.cfgFilePath);
 
             // Read bindings and tabulate ..
-            DataTable primary = GetVAKeyBindings(cfgVA);
+            DataTable primary = this.GetKeyBindings(xCfg);
 
             // Modify ..
-            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), cfgFilePath);
+            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
             return primary;
         }
 
         /// <summary>
-        /// Read Voice Attack Binding Actions into DataTable
+        /// Process Voice Attack Config File to return all possible bindable actions
         /// </summary>
-        /// <param name="cfgFilePath"></param>
+        /// <param name="xdoc"></param>
         /// <returns></returns>
-        public static DataTable VoiceAttackBindings(string cfgFilePath)
+        private DataTable GetBindableActions(XDocument xdoc)
         {
-            // Load configuration file as xml document object .. 
-            var cfgVA = Xml.ReadXDoc(cfgFilePath);
+            // Datatable to hold tabulated XML contents ..
+            DataTable bindableactions = TableType.BindableActions();
 
-            // Read bindings and tabulate ..
-            DataTable primary = GetVABindingActions(cfgVA);
+            // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
+            var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
+                              where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[0]) &&
+                                    item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[1]) &&
+                                    item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
+                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.KeyboardInteraction.PressKey.ToString()
+                              select
+                                 new
+                                 {
+                                     Commandstring = item.Element(XMLCommandString).SafeElementValue()
+                                 };
 
-            // Modify ..
-            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), cfgFilePath);
+            // insert anonymous type row data (with some additional values) into DataTable ..
+            foreach (var xmlExtract in xmlExtracts)
+            {
+                bindableactions.LoadDataRow(new object[] 
+                                                {
+                                                 Enums.Game.VoiceAttack.ToString(), //Context
+                                                 xmlExtract.Commandstring, //BindingAction
+                                                 NA, // Device priority
+                                                 Enums.KeyboardInteraction.Keyboard.ToString() // Device binding applied to
+                                                },
+                                       false);
+            }
 
             // return Datatable ..
-            return primary;
+            return bindableactions;
         }
 
         /// <summary>
-        /// Process Voice Attack Config File looking for keyboard-specific bindings
+        /// Process Voice Attack Profile looking for Elite Dangerous keyboard-specific bindings
         ///   Format: XML
         ///             o <Profile/>
         ///               |_ <Commands/>
@@ -86,11 +128,11 @@
         ///                   
         ///                Note 
         ///                There are other commands that also use key codes which are part of the multi-command suite.
-        ///                These are currently ignored
+        ///                These are ignored
         /// </summary>
         /// <param name="xdoc"></param>
         /// <returns></returns>
-        private static DataTable GetVAKeyBindings(XDocument xdoc)
+        private DataTable GetKeyBindings(XDocument xdoc)
         {
             // Datatable to hold tabulated XML contents ..
             DataTable keyactionbinder = TableType.KeyActionBinder();
@@ -132,45 +174,6 @@
 
             // return Datatable ..
             return keyactionbinder;
-        }
-
-        /// <summary>
-        /// Process Voice Attack Config File to return all possible bindable actions
-        /// </summary>
-        /// <param name="xdoc"></param>
-        /// <returns></returns>
-        private static DataTable GetVABindingActions(XDocument xdoc)
-        {
-            // Datatable to hold tabulated XML contents ..
-            DataTable bindableactions = TableType.BindableActions();
-
-            // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
-            var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
-                              where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[0]) &&
-                                    item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[1]) &&
-                                    item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
-                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.KeyboardInteraction.PressKey.ToString()
-                              select
-                                 new
-                                 {
-                                     Commandstring = item.Element(XMLCommandString).SafeElementValue()
-                                 };
-
-            // insert anonymous type row data (with some additional values) into DataTable ..
-            foreach (var xmlExtract in xmlExtracts)
-            {
-                bindableactions.LoadDataRow(new object[] 
-                                                {
-                                                 Enums.Game.VoiceAttack.ToString(), //Context
-                                                 xmlExtract.Commandstring, //BindingAction
-                                                 NA, // Device priority
-                                                 Enums.KeyboardInteraction.Keyboard.ToString() // Device binding applied to
-                                                },
-                                       false);
-            }
-
-            // return Datatable ..
-            return bindableactions;
         }
     }
 }
