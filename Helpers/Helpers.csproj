@@ -55,6 +55,7 @@
     <Compile Include="KeyMapperExchange.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TableType.cs" />
     <Compile Include="Xml.cs" />
   </ItemGroup>
   <ItemGroup>

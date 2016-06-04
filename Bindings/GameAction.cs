@@ -9,19 +9,19 @@
         private const string NA = "n/a";
 
         /// <summary>
-        /// Consolidate Action bindings between VoiceAttack and Elite Dangerous ..
+        /// Consolidate Action References between VoiceAttack and Elite Dangerous ..
         /// </summary>
         /// <param name="voiceAttack"></param>
         /// <param name="eliteDangerous"></param>
         /// <returns></returns>
         public static DataTable Consolidate(DataTable voiceAttack, DataTable eliteDangerous)
         {
-            // Initialise lookup dictionary ..
+            // Initialise lookup dictionary for inter-game action references ..
             ActionExchange actions = new ActionExchange();
             actions.Initialise();
 
             // Datatable to hold tabulated contents ..
-            DataTable consolidatedaction = DefineConsolidatedActions();
+            DataTable consolidatedaction = TableType.ConsolidatedActions();
 
             // Search through all defined Voice Attack bindings ..
             var voiceattackBindings = from va in voiceAttack.AsEnumerable()
@@ -127,34 +127,6 @@
             }
 
             return consolidatedaction;
-        }
-
-        /// <summary>
-        /// Define Binding Actions DataTable Structure
-        /// </summary>
-        /// <returns></returns>
-        private static DataTable DefineConsolidatedActions()
-        {
-            // New DataTable ..
-            DataTable consolidatedActions = new DataTable();
-            consolidatedActions.TableName = "ConsolidatedActions";
-
-            // Define its structure ..
-            consolidatedActions.Columns.Add(Enums.Column.VoiceAttackAction.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.EliteDangerousAction.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.DevicePriority.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.KeyEnumeration.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.VoiceAttackKeyValue.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.EliteDangerousKeyValue.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.VoiceAttackKeyCode.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.EliteDangerousKeyCode.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.VoiceAttackKeyId.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.ReMapRequired.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.Rationale.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.VoiceAttackProfile.ToString(), typeof(string));
-            consolidatedActions.Columns.Add(Enums.Column.EliteDangerousBinds.ToString(), typeof(string));
-
-            return consolidatedActions;
         }
     }
 }
