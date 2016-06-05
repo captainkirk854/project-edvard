@@ -106,17 +106,9 @@
             // Read Voice Attack Profile ...
             var vap = Xml.ReadXDoc(vaprofile);
 
-            // Construct XPathSelect to locate element (XMLunsignedShort) for update using XMLActionId ..
-            string xPathSelect = "//" + XMLCommand +
-                                  "/" + XMLActionSequence +
-                                  "/" + XMLCommandAction +
-                                  "/" + XMLActionId + "[text() = '" + vakeyId + "']" +
-                                  "/.." +
-                                  "/" + XMLKeyCodes +
-                                  "/" + XMLunsignedShort;
-
-            // Update located element with new keyCode value ..
-            vap.XPathSelectElement(xPathSelect).Value = keyCode;
+            vap.Descendants(XMLunsignedShort)
+               .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId).FirstOrDefault()
+               .SetValue(keyCode);
 
             // Save file ..
             vap.Save(vaprofile);
