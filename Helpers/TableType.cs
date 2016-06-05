@@ -61,19 +61,19 @@
             table.TableName = "ConsolidatedActions";
 
             // Define its structure ..
-            //--------------------------------------------------------------------------
+            ////--------------------------------------------------------------------------
             table.Columns.Add(Enums.Column.KeyEnumeration.ToString(), typeof(string));
-            //--------------------------------------------------------------------------
+            ////--------------------------------------------------------------------------
             table.Columns.Add(Enums.Column.KeyUpdateRequired.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.Rationale.ToString(), typeof(string));
-            //--------------------------------------------------------------------------
+            ////--------------------------------------------------------------------------
             table.Columns.Add(Enums.Column.VoiceAttackAction.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.EliteDangerousAction.ToString(), typeof(string));
-            //--------------------------------------------------------------------------
+            ////--------------------------------------------------------------------------
             table.Columns.Add(Enums.Column.VoiceAttackKeyValue.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackKeyCode.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackKeyId.ToString(), typeof(string));
-            //--------------------------------------------------------------------------
+            ////--------------------------------------------------------------------------
             table.Columns.Add(Enums.Column.EliteDangerousDevicePriority.ToString(), typeof(string)); 
             table.Columns.Add(Enums.Column.EliteDangerousKeyValue.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.EliteDangerousKeyCode.ToString(), typeof(string));
@@ -81,12 +81,12 @@
             table.Columns.Add(Enums.Column.EliteDangerousModifierKeyValue.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.EliteDangerousModifierKeyCode.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.EliteDangerousModifierKeyId.ToString(), typeof(string));
-            //--------------------------------------------------------------------------
+            ////--------------------------------------------------------------------------
             table.Columns.Add(Enums.Column.VoiceAttackInternal.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackProfile.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.EliteDangerousInternal.ToString(), typeof(string));           
             table.Columns.Add(Enums.Column.EliteDangerousBinds.ToString(), typeof(string));
-            //--------------------------------------------------------------------------
+            ////--------------------------------------------------------------------------
 
             return table;
         }

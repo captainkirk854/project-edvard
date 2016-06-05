@@ -10,6 +10,7 @@
     public static class GameBindingsAnalyser
     {
         private const string NA = "n/a";
+        private const string IntNA = "-2";
 
         /// <summary>
         /// Consolidate Command Key Codes in VoiceAttack based on Elite Dangerous Binds as Master ..
@@ -93,19 +94,19 @@
                     // Append to DataTable ..
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  voiceattackBinding.KeyEnumeration, //KeyEnumeration
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  remapRequired, //ReMapRequired
                                                  rationale, //Rationale
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  voiceattackBinding.Action, //VoiceAttackAction
                                                  voiceattackBinding.EliteDangerousAction, //EliteDangerousAction
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  voiceattackBinding.KeyValue, //VoiceAttackKeyValue
                                                  voiceattackBinding.KeyCode, //VoiceAttackKeyCode
                                                  voiceattackBinding.KeyID, //VoiceAttackKeyId
-                                                 //--------------------------------------------------------------------------                                                 
+                                                 ////--------------------------------------------------------------------------                                                 
                                                  elitedangerousBinding.KeyPriority, //EliteDangerousDevicePriority
                                                  elitedangerousBinding.KeyGameValue, //EliteDangerousKeyValue
                                                  elitedangerousBinding.KeyEnumerationCode, //EliteDangerousKeyCode
@@ -113,13 +114,14 @@
                                                  elitedangerousBinding.ModifierKeyGameValue, //EliteDangerousModifierKeyValue
                                                  elitedangerousBinding.ModifierKeyEnumerationCode, //EliteDangerousModifierKeyCode
                                                  elitedangerousBinding.ModifierKeyID, //EliteDangerousModifierKeyId
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  voiceattackBinding.Internal, //VoiceAttackInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
                                                  elitedangerousBinding.Internal, //EliteDangerousInternal
                                                  elitedangerousBinding.FilePath //EliteDangerousFilePath
-                                                 //--------------------------------------------------------------------------
-                                                }, false);
+                                                 ////--------------------------------------------------------------------------
+                                                }, 
+                                                false);
                 }
 
                 // If not defined in Elite Dangerous binding file ..
@@ -130,32 +132,32 @@
                     rationale = string.Format("[{0}] has not been bound to a key", voiceattackBinding.EliteDangerousAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  voiceattackBinding.KeyEnumeration, //KeyEnumeration
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  remapRequired, //ReMapRequired
                                                  rationale, //Rationale
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  voiceattackBinding.Action, //VoiceAttackAction
                                                  voiceattackBinding.EliteDangerousAction, //EliteDangerousAction
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  voiceattackBinding.KeyValue, //VoiceAttackKeyValue
                                                  voiceattackBinding.KeyCode, //VoiceAttackKeyCode
                                                  voiceattackBinding.KeyID, //VoiceAttackKeyId
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                  NA, //EliteDangerousDevicePriority                 
                                                  NA, //EliteDangerousKeyValue
-                                                 NA, //EliteDangerousKeyCode
+                                                 IntNA, //EliteDangerousKeyCode
                                                  NA, //EliteDangerousKeyId
                                                  NA, //EliteDangerousModifierKeyValue
-                                                 NA, //EliteDangerousModifierKeyCode
+                                                 IntNA, //EliteDangerousModifierKeyCode
                                                  NA, //EliteDangerousModifierKeyId
-                                                 //--------------------------------------------------------------------------                                               
+                                                 ////--------------------------------------------------------------------------                                               
                                                  voiceattackBinding.Internal, //VoiceAttackInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
                                                  NA, //EliteDangerousInternal
                                                  NA //EliteDangerousFilePath
-                                                 //--------------------------------------------------------------------------
+                                                 ////--------------------------------------------------------------------------
                                                 },
                                                 false);
                 }

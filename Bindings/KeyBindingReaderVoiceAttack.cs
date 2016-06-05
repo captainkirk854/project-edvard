@@ -101,7 +101,8 @@
                                                  xmlExtract.Commandstring, //BindingAction
                                                  NA, // Device priority
                                                  Enums.KeyboardInteraction.Keyboard.ToString() // Device binding applied to
-                                                }, false);
+                                                }, 
+                                                false);
             }
 
             // return Datatable ..
@@ -110,6 +111,8 @@
 
         /// <summary>
         /// Process Voice Attack Profile looking for Elite Dangerous keyboard-specific bindings
+        /// </summary>
+        /// <remarks>
         ///   Format: XML
         ///             o <Profile/>
         ///               |_ <Commands/>
@@ -136,7 +139,7 @@
         ///                Note 
         ///                There are other commands that also use key codes which are part of the multi-command suite.
         ///                These are ignored
-        /// </summary>
+        /// </remarks>
         /// <param name="xdoc"></param>
         /// <returns></returns>
         private DataTable GetKeyBindings(XDocument xdoc)
@@ -175,7 +178,8 @@
                                                  NA, //ModifierKeyEnumerationValue
                                                  INA, //ModifierKeyEnumerationCode
                                                  NA //ModifierId
-                                                }, false);
+                                                }, 
+                                                false);
             }
 
             // return Datatable ..

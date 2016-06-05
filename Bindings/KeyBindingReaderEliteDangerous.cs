@@ -124,7 +124,8 @@
                                                          xmlExtract.BindingAction, //BindingAction
                                                          xmlExtract.Priority, // Device priority
                                                          xmlExtract.DeviceType // Device binding applied to
-                                                        }, false);
+                                                        }, 
+                                                        false);
                     }
                 }
             }
@@ -259,7 +260,8 @@
                                                          this.exchange.GetValue(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationValue
                                                          KeyMapper.GetKey(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationCode
                                                          customModifierKeyId //ModifierId
-                                                        }, false);
+                                                        }, 
+                                                        false);
                     }
                 }
             }

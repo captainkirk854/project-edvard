@@ -34,9 +34,10 @@
                                             {
                                                 VAAction = cb.Field<string>(Enums.Column.VoiceAttackAction.ToString()),
                                                 VAKeyCode = cb.Field<string>(Enums.Column.VoiceAttackKeyCode.ToString()),
-                                                EDKeyCode = cb.Field<string>(Enums.Column.EliteDangerousKeyCode.ToString()),
                                                 VAKeyId = cb.Field<string>(Enums.Column.VoiceAttackKeyId.ToString()),
-                                                VAP = cb.Field<string>(Enums.Column.VoiceAttackProfile.ToString())
+                                                VAP = cb.Field<string>(Enums.Column.VoiceAttackProfile.ToString()),
+                                                EDKeyCode = cb.Field<string>(Enums.Column.EliteDangerousKeyCode.ToString()),
+                                                EDModifierKeyCode = cb.Field<string>(Enums.Column.EliteDangerousModifierKeyCode.ToString())
                                             };
 
             // Perform Update(s) for those commands that require it ..
@@ -52,6 +53,21 @@
         /// <summary>
         /// Update Key Code associated to specific [Id] in Voice Attack
         /// </summary>
+        /// <remarks>
+        ///   Format: XML
+        ///             o <Profile/>
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        ///                      |_<Id/>
+        ///                      !_<CommandString/>
+        ///                      |_<ActionSequence/>
+        ///                        !_[some] <CommandAction/>
+        ///                                 !_<Id/>
+        ///                                 |_<ActionType/>
+        ///                                  |_<KeyCodes/>
+        ///                                    (|_<unsignedShort/> = when modifier present)
+        ///                                     |_<unsignedShort/>
+        /// </remarks>
         /// <param name="vaprofile"></param>
         /// <param name="vakeyId"></param>
         /// <param name="keyCode"></param>
