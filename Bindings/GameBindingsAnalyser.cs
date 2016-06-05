@@ -58,8 +58,10 @@
                                                     KeyGameValue = ed.Field<string>(Enums.Column.KeyGameValue.ToString()),
                                                     KeyEnumerationValue = ed.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
                                                     KeyEnumerationCode = ed.Field<int>(Enums.Column.KeyEnumerationCode.ToString()),
-                                                    ModifierKeyValue = ed.Field<string>(Enums.Column.ModifierKeyEnumerationValue.ToString()),
-                                                    ModifierKeyCode = ed.Field<int>(Enums.Column.ModifierKeyEnumerationCode.ToString()),
+                                                    KeyID = ed.Field<string>(Enums.Column.KeyId.ToString()),
+                                                    ModifierKeyGameValue = ed.Field<string>(Enums.Column.ModifierKeyGameValue.ToString()),
+                                                    ModifierKeyEnumerationValue = ed.Field<string>(Enums.Column.ModifierKeyEnumerationValue.ToString()),
+                                                    ModifierKeyEnumerationCode = ed.Field<int>(Enums.Column.ModifierKeyEnumerationCode.ToString()),
                                                     ModifierKeyID = ed.Field<string>(Enums.Column.ModifierKeyId.ToString()),
                                                     FilePath = ed.Field<string>(Enums.Column.FilePath.ToString()),
                                                     Internal = ed.Field<string>(Enums.Column.Internal.ToString())
@@ -107,6 +109,10 @@
                                                  elitedangerousBinding.KeyPriority, //EliteDangerousDevicePriority
                                                  elitedangerousBinding.KeyGameValue, //EliteDangerousKeyValue
                                                  elitedangerousBinding.KeyEnumerationCode, //EliteDangerousKeyCode
+                                                 elitedangerousBinding.KeyID, //EliteDangerousKeyId
+                                                 elitedangerousBinding.ModifierKeyGameValue, //EliteDangerousModifierKeyValue
+                                                 elitedangerousBinding.ModifierKeyEnumerationCode, //EliteDangerousModifierKeyCode
+                                                 elitedangerousBinding.ModifierKeyID, //EliteDangerousModifierKeyId
                                                  //--------------------------------------------------------------------------
                                                  voiceattackBinding.Internal, //VoiceAttackInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
@@ -139,7 +145,11 @@
                                                  //--------------------------------------------------------------------------
                                                  NA, //EliteDangerousDevicePriority                 
                                                  NA, //EliteDangerousKeyValue
-                                                 NA, //EliteDangerousKeyCode  
+                                                 NA, //EliteDangerousKeyCode
+                                                 NA, //EliteDangerousKeyId
+                                                 NA, //EliteDangerousModifierKeyValue
+                                                 NA, //EliteDangerousModifierKeyCode
+                                                 NA, //EliteDangerousModifierKeyId
                                                  //--------------------------------------------------------------------------                                               
                                                  voiceattackBinding.Internal, //VoiceAttackInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile

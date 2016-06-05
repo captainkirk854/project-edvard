@@ -77,6 +77,10 @@
             table.Columns.Add(Enums.Column.EliteDangerousDevicePriority.ToString(), typeof(string)); 
             table.Columns.Add(Enums.Column.EliteDangerousKeyValue.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.EliteDangerousKeyCode.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousKeyId.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousModifierKeyValue.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousModifierKeyCode.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousModifierKeyId.ToString(), typeof(string));
             //--------------------------------------------------------------------------
             table.Columns.Add(Enums.Column.VoiceAttackInternal.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackProfile.ToString(), typeof(string));
