@@ -15,13 +15,15 @@
         private const string XMLName = "Name";
         private const string XMLCommand = "Command";
         private const string XMLCommandString = "CommandString";
+        private const string XMLCategory = "Category";
         private const string XMLActionSequence = "ActionSequence";
         private const string XMLCommandAction = "CommandAction";
         private const string XMLActionType = "ActionType";
         private const string XMLActionId = "Id";
         private const string XMLKeyCodes = "KeyCodes";
         private const string XMLunsignedShort = "unsignedShort";
-        private static string[] keybindingIndicatorVA = { "((", "))" };
+        private const string KeybindingCategoryHCSVoicePack = "Keybindings";
+        private static string[] keybindingIndicatorHCSVoicePack = { "((", "))" };
         
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyBindingReaderVoiceAttack" /> class.
@@ -82,8 +84,9 @@
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
-                              where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[0]) &&
-                                    item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[1]) &&
+                              where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorHCSVoicePack[0]) &&
+                                    item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorHCSVoicePack[1]) &&
+                                    item.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.KeyboardInteraction.PressKey.ToString()
                               select
@@ -126,6 +129,7 @@
         ///                                 |_<KeyCodes/>
         ///                                   (|_<unsignedShort/> = when modifier present)
         ///                                    |_<unsignedShort/>
+        ///                      !_<Category/> = Keybindings
         ///                             
         /// Keys Bindings: 
         ///                VA uses actual key codes (as opposed to key value). Actions directly mappable to Elite Dangerous
@@ -149,10 +153,11 @@
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
-                              where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[0]) &&
-                                    item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorVA[1]) &&
+                              where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorHCSVoicePack[0]) &&
+                                    item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorHCSVoicePack[1]) &&
+                                    item.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
-                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.KeyboardInteraction.PressKey.ToString()
+                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.KeyboardInteraction.PressKey.ToString()                   
                               select
                                  new // create anonymous type for every key code ..
                                  {

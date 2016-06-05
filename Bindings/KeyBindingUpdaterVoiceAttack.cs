@@ -1,10 +1,10 @@
 ﻿namespace Bindings
 {
-    using Helpers;
     using System.Data;
-    using System.Xml.XPath;
-    using System.Xml.Linq;
     using System.Linq;
+    using System.Xml.Linq;
+    using System.Xml.XPath;
+    using Helpers;
 
     /// <summary>
     /// Update Voice Attack Profile Command(s) with new Key Codes
@@ -53,6 +53,7 @@
                 {
                     this.InsertVoiceAttackModifierKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
                 }
+
                 profileUpdated = true;
             }
 
@@ -95,6 +96,7 @@
         ///                                 |_<KeyCodes/>
         ///                                   (|_<unsignedShort/> = when modifier present)
         ///                                    |_<unsignedShort/>
+        ///                      !_<Category/> = Keybindings
         /// </remarks>
         /// <param name="vaprofile"></param>
         /// <param name="vakeyId"></param>
