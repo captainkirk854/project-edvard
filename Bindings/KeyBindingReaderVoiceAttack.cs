@@ -122,10 +122,10 @@
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>
-        ///                                 |_<ActionType/>
-        ///                                  |_<KeyCodes/>
-        ///                                    (|_<unsignedShort/> = when modifier present)
-        ///                                     |_<unsignedShort/>
+        ///                                 |_<ActionType/> = PressKey
+        ///                                 |_<KeyCodes/>
+        ///                                   (|_<unsignedShort/> = when modifier present)
+        ///                                    |_<unsignedShort/>
         ///                             
         /// Keys Bindings: 
         ///                VA uses actual key codes (as opposed to key value). Actions directly mappable to Elite Dangerous

@@ -3,6 +3,8 @@
     using Helpers;
     using System.Data;
     using System.Xml.XPath;
+    using System.Xml.Linq;
+    using System.Linq;
 
     /// <summary>
     /// Update Voice Attack Profile Command(s) with new Key Codes
@@ -43,11 +45,37 @@
             // Perform Update(s) for those commands that require it ..
             foreach (var consolidatedBinding in consolidatedBindings)
             {
+                // Align key code with that used in Elite Dangerous ..
                 this.UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDKeyCode);
+
+                // Align modifier key code by creating additional element for modifier ..
+                if (int.Parse(consolidatedBinding.EDModifierKeyCode) > 0)
+                {
+                    this.InsertVoiceAttackModifierKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
+                }
                 profileUpdated = true;
             }
 
             return profileUpdated;
+        }
+
+        /// <summary>
+        /// Add KeyCode as <unsignedShort> for modifier associated to specific [Id] in Voice Attack
+        /// </summary>
+        /// <param name="vaprofile"></param>
+        /// <param name="vakeyId"></param>
+        /// <param name="keyCode"></param>
+        private void InsertVoiceAttackModifierKeyCode(string vaprofile, string vakeyId, string keyCode)
+        {
+            var vap = Xml.ReadXDoc(vaprofile);
+
+            // Search through all <unsignedShort> elements whose grandparent (Parent.Parent) <id> element equals vakeyId
+            // and add a new <unsignedShort> element with keyCode value physically before existing one ..
+            vap.Descendants(XMLunsignedShort)
+               .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId).FirstOrDefault()
+               .AddBeforeSelf(new XElement(XMLunsignedShort, keyCode));
+
+            vap.Save(vaprofile);
         }
 
         /// <summary>
@@ -63,10 +91,10 @@
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>
-        ///                                 |_<ActionType/>
-        ///                                  |_<KeyCodes/>
-        ///                                    (|_<unsignedShort/> = when modifier present)
-        ///                                     |_<unsignedShort/>
+        ///                                 |_<ActionType/> = PressKey
+        ///                                 |_<KeyCodes/>
+        ///                                   (|_<unsignedShort/> = when modifier present)
+        ///                                    |_<unsignedShort/>
         /// </remarks>
         /// <param name="vaprofile"></param>
         /// <param name="vakeyId"></param>
@@ -85,7 +113,7 @@
                                   "/" + XMLKeyCodes +
                                   "/" + XMLunsignedShort;
 
-            // Update element value ..
+            // Update located element with new keyCode value ..
             vap.XPathSelectElement(xPathSelect).Value = keyCode;
 
             // Save file ..
