@@ -5,14 +5,14 @@
     using Helpers;
 
     /// <summary>
-    /// Synchronise Binding Codes between VoiceAttack and Elite Dangerous ..
+    /// Analyse Actions between VoiceAttack and Elite Dangerous ..
     /// </summary>
-    public static class GameBindingsSynchroniser
+    public static class GameBindingsAnalyser
     {
         private const string NA = "n/a";
 
         /// <summary>
-        /// Update Command Codes in VoiceAttack based on Elite Dangerous Binds as Master ..
+        /// Consolidate Command Key Codes in VoiceAttack based on Elite Dangerous Binds as Master ..
         /// </summary>
         /// <param name="voiceAttack"></param>
         /// <param name="eliteDangerous"></param>
@@ -58,6 +58,9 @@
                                                     KeyGameValue = ed.Field<string>(Enums.Column.KeyGameValue.ToString()),
                                                     KeyEnumerationValue = ed.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
                                                     KeyEnumerationCode = ed.Field<int>(Enums.Column.KeyEnumerationCode.ToString()),
+                                                    ModifierKeyValue = ed.Field<string>(Enums.Column.ModifierKeyEnumerationValue.ToString()),
+                                                    ModifierKeyCode = ed.Field<int>(Enums.Column.ModifierKeyEnumerationCode.ToString()),
+                                                    ModifierKeyID = ed.Field<string>(Enums.Column.ModifierKeyId.ToString()),
                                                     FilePath = ed.Field<string>(Enums.Column.FilePath.ToString()),
                                                     Internal = ed.Field<string>(Enums.Column.Internal.ToString())
                                                 };
@@ -88,21 +91,28 @@
                     // Append to DataTable ..
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
-                                                 voiceattackBinding.Action, //VoiceAttackAction
-                                                 voiceattackBinding.EliteDangerousAction, //EliteDangerousAction
-                                                 elitedangerousBinding.KeyPriority, //DevicePriority
+                                                 //--------------------------------------------------------------------------
                                                  voiceattackBinding.KeyEnumeration, //KeyEnumeration
-                                                 voiceattackBinding.KeyValue, //VoiceAttackKeyValue
-                                                 elitedangerousBinding.KeyGameValue, //EliteDangerousKeyValue
-                                                 voiceattackBinding.KeyCode, //VoiceAttackKeyCode
-                                                 elitedangerousBinding.KeyEnumerationCode, //EliteDangerousKeyCode
-                                                 voiceattackBinding.KeyID, //VoiceAttackKeyId
+                                                 //--------------------------------------------------------------------------
                                                  remapRequired, //ReMapRequired
                                                  rationale, //Rationale
+                                                 //--------------------------------------------------------------------------
+                                                 voiceattackBinding.Action, //VoiceAttackAction
+                                                 voiceattackBinding.EliteDangerousAction, //EliteDangerousAction
+                                                 //--------------------------------------------------------------------------
+                                                 voiceattackBinding.KeyValue, //VoiceAttackKeyValue
+                                                 voiceattackBinding.KeyCode, //VoiceAttackKeyCode
+                                                 voiceattackBinding.KeyID, //VoiceAttackKeyId
+                                                 //--------------------------------------------------------------------------                                                 
+                                                 elitedangerousBinding.KeyPriority, //EliteDangerousDevicePriority
+                                                 elitedangerousBinding.KeyGameValue, //EliteDangerousKeyValue
+                                                 elitedangerousBinding.KeyEnumerationCode, //EliteDangerousKeyCode
+                                                 //--------------------------------------------------------------------------
                                                  voiceattackBinding.Internal, //VoiceAttackInternal
-                                                 elitedangerousBinding.Internal, //EliteDangerousInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
-                                                 elitedangerousBinding.FilePath//EliteDangerousBinds
+                                                 elitedangerousBinding.Internal, //EliteDangerousInternal
+                                                 elitedangerousBinding.FilePath //EliteDangerousFilePath
+                                                 //--------------------------------------------------------------------------
                                                 }, false);
                 }
 
@@ -114,21 +124,28 @@
                     rationale = string.Format("[{0}] has not been bound to a key", voiceattackBinding.EliteDangerousAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
-                                                 voiceattackBinding.Action, //VoiceAttackAction
-                                                 voiceattackBinding.EliteDangerousAction, //EliteDangerousAction
-                                                 NA, //DevicePriority
+                                                 //--------------------------------------------------------------------------
                                                  voiceattackBinding.KeyEnumeration, //KeyEnumeration
-                                                 voiceattackBinding.KeyValue, //VoiceAttackKeyValue
-                                                 NA, //EliteDangerousKeyValue
-                                                 voiceattackBinding.KeyCode, //VoiceAttackKeyCode
-                                                 NA, //EliteDangerousKeyCode
-                                                 voiceattackBinding.KeyID, //VoiceAttackKeyId
+                                                 //--------------------------------------------------------------------------
                                                  remapRequired, //ReMapRequired
                                                  rationale, //Rationale
+                                                 //--------------------------------------------------------------------------
+                                                 voiceattackBinding.Action, //VoiceAttackAction
+                                                 voiceattackBinding.EliteDangerousAction, //EliteDangerousAction
+                                                 //--------------------------------------------------------------------------
+                                                 voiceattackBinding.KeyValue, //VoiceAttackKeyValue
+                                                 voiceattackBinding.KeyCode, //VoiceAttackKeyCode
+                                                 voiceattackBinding.KeyID, //VoiceAttackKeyId
+                                                 //--------------------------------------------------------------------------
+                                                 NA, //EliteDangerousDevicePriority                 
+                                                 NA, //EliteDangerousKeyValue
+                                                 NA, //EliteDangerousKeyCode  
+                                                 //--------------------------------------------------------------------------                                               
                                                  voiceattackBinding.Internal, //VoiceAttackInternal
-                                                 NA, //EliteDangerousInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
-                                                 NA //EliteDangerousBinds
+                                                 NA, //EliteDangerousInternal
+                                                 NA //EliteDangerousFilePath
+                                                 //--------------------------------------------------------------------------
                                                 },
                                                 false);
                 }

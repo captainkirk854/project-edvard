@@ -52,20 +52,21 @@
             ModifierKeyId,
             FilePath,
             Internal,
-            VoiceAttackInternal,
-            EliteDangerousInternal,
-            VoiceAttackProfile,
-            EliteDangerousBinds,
             DeviceType,
+            KeyUpdateRequired,
+            Rationale,
+            EliteDangerousAction,
+            EliteDangerousBinds,
+            EliteDangerousDevicePriority,
+            EliteDangerousInternal,
+            EliteDangerousKeyCode,
+            EliteDangerousKeyValue,
             VoiceAttackAction,
-            VoiceAttackKeyValue,
+            VoiceAttackInternal,
             VoiceAttackKeyCode,
             VoiceAttackKeyId,
-            EliteDangerousAction,
-            EliteDangerousKeyValue,
-            EliteDangerousKeyCode,
-            KeyUpdateRequired,
-            Rationale
+            VoiceAttackKeyValue,
+            VoiceAttackProfile
         }
 
         /// <summary>

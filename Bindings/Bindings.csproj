@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameBindingsSynchroniser.cs" />
+    <Compile Include="GameBindingsAnalyser.cs" />
     <Compile Include="IKeyBindingReader.cs" />
     <Compile Include="IKeyBindingUpdater.cs" />
     <Compile Include="KeyBindingReader.cs" />
