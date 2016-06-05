@@ -55,22 +55,25 @@
             DeviceType,
             KeyUpdateRequired,
             Rationale,
-            EliteDangerousAction,
             EliteDangerousBinds,
+            EliteDangerousAction,
             EliteDangerousDevicePriority,
             EliteDangerousInternal,
             EliteDangerousKeyCode,
-            EliteDangerousKeyValue,
             EliteDangerousKeyId,
+            EliteDangerousKeyValue,
             EliteDangerousModifierKeyCode,
             EliteDangerousModifierKeyValue,
             EliteDangerousModifierKeyId,
+            VoiceAttackProfile,
             VoiceAttackAction,
             VoiceAttackInternal,
             VoiceAttackKeyCode,
             VoiceAttackKeyId,
             VoiceAttackKeyValue,
-            VoiceAttackProfile
+            VoiceAttackModifierKeyCode,
+            VoiceAttackModifierKeyValue,
+            VoiceAttackModifierKeyId
         }
 
         /// <summary>

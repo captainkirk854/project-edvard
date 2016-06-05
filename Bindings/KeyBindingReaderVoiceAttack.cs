@@ -41,10 +41,10 @@
         public DataTable GetBindableCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetBindableActions(this.xCfg);
+            DataTable primary = this.GetBindableActions(ref this.xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference());
+            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
@@ -60,10 +60,10 @@
         public DataTable GetBoundCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetKeyBindings(this.xCfg);
+            DataTable primary = this.GetKeyBindings(ref this.xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference());
+            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
@@ -77,10 +77,10 @@
         /// </summary>
         /// <param name="xdoc"></param>
         /// <returns></returns>
-        private DataTable GetBindableActions(XDocument xdoc)
+        private DataTable GetBindableActions(ref XDocument xdoc)
         {
             // Datatable to hold tabulated XML contents ..
-            DataTable bindableactions = TableType.BindableActions();
+            DataTable bindableactions = TableShape.BindableActions();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
@@ -146,10 +146,10 @@
         /// </remarks>
         /// <param name="xdoc"></param>
         /// <returns></returns>
-        private DataTable GetKeyBindings(XDocument xdoc)
+        private DataTable GetKeyBindings(ref XDocument xdoc)
         {
             // Datatable to hold tabulated XML contents ..
-            DataTable keyactionbinder = TableType.KeyActionBinder();
+            DataTable keyactionbinder = TableShape.KeyActionBinder();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
@@ -169,19 +169,33 @@
             // insert anonymous type row data (with some additional values) into DataTable ..
             foreach (var xmlExtract in xmlExtracts)
             {
+                // Initialise ..
+                string modifierKeyEnumerationValue = NA;
+                int regularKeyCode = int.Parse(xmlExtract.KeyCode);
+
+                // Check for modifier key already present in VoiceAttack Profile for current Key Id ..
+                int modifierKeyCode = this.GetModifierKey(ref xdoc, xmlExtract.Id);
+                if (modifierKeyCode >= 0)
+                {
+                    // If modifier found, some additional probing of that segment of the XML tree required ..
+                    modifierKeyEnumerationValue = KeyMapper.GetValue(modifierKeyCode);
+                    regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.Id);
+                }
+
+                // Load final values into datatable ..
                 keyactionbinder.LoadDataRow(new object[] 
                                                 {
                                                  Enums.Game.VoiceAttack.ToString(), //Context
                                                  KeyMapper.KeyType.ToString(), //KeyEnumerationType
                                                  xmlExtract.Commandstring, //BindingAction
                                                  NA, //Priority
-                                                 NA, //KeyGameValue
-                                                 KeyMapper.GetValue(int.Parse(xmlExtract.KeyCode)), //KeyEnumerationValue
-                                                 xmlExtract.KeyCode, //KeyEnumerationCode
+                                                 KeyMapper.GetValue(regularKeyCode), //KeyGameValue
+                                                 KeyMapper.GetValue(regularKeyCode), //KeyEnumerationValue
+                                                 regularKeyCode.ToString(), //KeyEnumerationCode
                                                  xmlExtract.Id, //KeyId
-                                                 NA, //ModifierKeyGameValue
-                                                 NA, //ModifierKeyEnumerationValue
-                                                 INA, //ModifierKeyEnumerationCode
+                                                 modifierKeyEnumerationValue, //ModifierKeyGameValue
+                                                 modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
+                                                 modifierKeyCode, //ModifierKeyEnumerationCode
                                                  NA //ModifierId
                                                 }, 
                                                 false);
@@ -199,9 +213,65 @@
         /// </summary>
         /// <param name="xdoc"></param>
         /// <returns></returns>
-        private string GetInternalReference()
+        private string GetInternalReference(ref XDocument xdoc)
         {
-            return this.xCfg.Element(XMLRoot).Element(XMLName).SafeElementValue().Trim();
+            return xdoc.Element(XMLRoot).Element(XMLName).SafeElementValue().Trim();
+        }
+
+        /// <summary>
+        /// Check if Modifier Key Code is present and return it if it is ..
+        /// </summary>
+        /// <param name="xdoc"></param>
+        /// <param name="keyId"></param>
+        /// <returns></returns>
+        private int GetModifierKey(ref XDocument xdoc, string keyId)
+        {
+            // Count number of unsigned short elements (KeyCode) exist per ActionId ...
+            var keyCodes = xdoc.Descendants(XMLunsignedShort)
+                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
+                                                   item.Parent.Parent.Element(XMLActionId).Value == keyId)
+                                    .DescendantsAndSelf();
+
+            var countOfKeyCode = keyCodes.Count();
+
+            // Check to see if modifier already exists in VoiceAttack Profile ..
+            if (countOfKeyCode > 1)
+            {
+                // First value is Modifier Key Code ..
+                return int.Parse(keyCodes.FirstOrDefault().Value);
+            }
+            else
+            {
+                return KeyBindingReader.INA;
+            }
+        }
+
+        /// <summary>
+        /// Get regular (non-Modifier) Key Code when Modifier Key Code is present and return key code ..
+        /// </summary>
+        /// <param name="xdoc"></param>
+        /// <param name="keyId"></param>
+        /// <returns></returns>
+        private int GetRegularKey(ref XDocument xdoc, string keyId)
+        {
+            // Count number of unsigned short elements (KeyCode) exist per ActionId ...
+            var keyCodes = xdoc.Descendants(XMLunsignedShort)
+                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
+                                                   item.Parent.Parent.Element(XMLActionId).Value == keyId)
+                                    .DescendantsAndSelf();
+
+            var countOfKeyCode = keyCodes.Count();
+
+            // Check to see if modifier already exists in VoiceAttack Profile ..
+            if (countOfKeyCode > 1)
+            {
+                // Last value is Regular Key Code ..
+                return int.Parse(keyCodes.LastOrDefault().Value);
+            }
+            else
+            {
+                return KeyBindingReader.INA;
+            }
         }
     }
 }

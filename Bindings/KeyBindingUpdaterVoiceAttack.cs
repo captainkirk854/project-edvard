@@ -34,10 +34,11 @@
                                      select
                                         new
                                             {
-                                                VAAction = cb.Field<string>(Enums.Column.VoiceAttackAction.ToString()),
-                                                VAKeyCode = cb.Field<string>(Enums.Column.VoiceAttackKeyCode.ToString()),
-                                                VAKeyId = cb.Field<string>(Enums.Column.VoiceAttackKeyId.ToString()),
                                                 VAP = cb.Field<string>(Enums.Column.VoiceAttackProfile.ToString()),
+                                                VAAction = cb.Field<string>(Enums.Column.VoiceAttackAction.ToString()),
+                                                VAKeyId = cb.Field<string>(Enums.Column.VoiceAttackKeyId.ToString()),
+                                                VAKeyCode = cb.Field<string>(Enums.Column.VoiceAttackKeyCode.ToString()),
+                                                VAModifierKeyCode = cb.Field<string>(Enums.Column.VoiceAttackModifierKeyCode.ToString()),
                                                 EDKeyCode = cb.Field<string>(Enums.Column.EliteDangerousKeyCode.ToString()),
                                                 EDModifierKeyCode = cb.Field<string>(Enums.Column.EliteDangerousModifierKeyCode.ToString())
                                             };
@@ -48,10 +49,20 @@
                 // Align key code with that used in Elite Dangerous ..
                 this.UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDKeyCode);
 
-                // Align modifier key code by creating additional element for modifier ..
-                if (int.Parse(consolidatedBinding.EDModifierKeyCode) > 0)
+                // Align modifier key codes ..
+                if (int.Parse(consolidatedBinding.EDModifierKeyCode) != int.Parse(consolidatedBinding.VAModifierKeyCode))
                 {
-                    this.InsertVoiceAttackModifierKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
+                    // .. by creating additional element for modifier ..
+                    if (int.Parse(consolidatedBinding.EDModifierKeyCode) > 0 && int.Parse(consolidatedBinding.VAModifierKeyCode) < 0)
+                    {
+                        this.InsertVoiceAttackModifierKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
+                    }
+
+                    // .. or updating the modifier key code that already exists ..
+                    if (int.Parse(consolidatedBinding.EDModifierKeyCode) > 0 && int.Parse(consolidatedBinding.VAModifierKeyCode) > 0)
+                    {
+                        this.UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
+                    }
                 }
 
                 profileUpdated = true;

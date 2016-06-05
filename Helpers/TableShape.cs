@@ -2,7 +2,7 @@
 {
     using System.Data;
 
-    public static class TableType
+    public static class TableShape
     {
         /// <summary>
         /// Define Bindable Actions DataTable Structure
@@ -73,6 +73,9 @@
             table.Columns.Add(Enums.Column.VoiceAttackKeyValue.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackKeyCode.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackKeyId.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.VoiceAttackModifierKeyValue.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.VoiceAttackModifierKeyCode.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.VoiceAttackModifierKeyId.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
             table.Columns.Add(Enums.Column.EliteDangerousDevicePriority.ToString(), typeof(string)); 
             table.Columns.Add(Enums.Column.EliteDangerousKeyValue.ToString(), typeof(string));

@@ -35,10 +35,10 @@
         public DataTable GetBindableCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetBindableActions(xCfg);
+            DataTable primary = this.GetBindableActions(ref xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference());
+            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
@@ -54,14 +54,14 @@
         public DataTable GetBoundCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetKeyBindings(xCfg, Enums.EliteDangerousDevicePriority.Primary);
-            DataTable secondary = this.GetKeyBindings(xCfg, Enums.EliteDangerousDevicePriority.Secondary);
+            DataTable primary = this.GetKeyBindings(ref xCfg, Enums.EliteDangerousDevicePriority.Primary);
+            DataTable secondary = this.GetKeyBindings(ref xCfg, Enums.EliteDangerousDevicePriority.Secondary);
 
             // Merge ..
             primary.Merge(secondary);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference());
+            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
             primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
@@ -75,13 +75,13 @@
         /// </summary>
         /// <param name="xdoc"></param>
         /// <returns></returns>
-        private DataTable GetBindableActions(XDocument xdoc)
+        private DataTable GetBindableActions(ref XDocument xdoc)
         {
             // Initialise ..
             string[] devicePriority = { Enums.EliteDangerousDevicePriority.Primary.ToString(), Enums.EliteDangerousDevicePriority.Secondary.ToString() };
 
             // Datatable to hold tabulated XML contents ..
-            DataTable bindableactions = TableType.BindableActions();
+            DataTable bindableactions = TableShape.BindableActions();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             // Scan all child nodes from top-level node ..
@@ -177,13 +177,13 @@
         /// <param name="xdoc"></param>
         /// <param name="devicepriority"></param>
         /// <returns></returns>
-        private DataTable GetKeyBindings(XDocument xdoc, Enums.EliteDangerousDevicePriority devicepriority)
+        private DataTable GetKeyBindings(ref XDocument xdoc, Enums.EliteDangerousDevicePriority devicepriority)
         {
             // Initialise ..
             string devicePriority = devicepriority.ToString();
 
             // Datatable to hold tabulated XML contents ..
-            DataTable keyactionbinder = TableType.KeyActionBinder();
+            DataTable keyactionbinder = TableShape.KeyActionBinder();
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             // Scan all child nodes from top-level node ..
@@ -246,6 +246,7 @@
                                                   xmlExtract.ModifierKeyValueFull;
                         }
 
+                        // Load final values into datatable ..
                         keyactionbinder.LoadDataRow(new object[] 
                                                         {
                                                          Enums.Game.EliteDangerous.ToString(), //Context
@@ -276,14 +277,15 @@
         ///             o <Root/>
         ///               |_ PresetName; MajorVersion; MinorVersion
         /// </summary>
+        /// <param name="xdoc"></param>
         /// <returns></returns>
-        private string GetInternalReference()
+        private string GetInternalReference(ref XDocument xdoc)
         {
             //Initialise ..
             string properties = string.Empty;
             string delim = " ";
 
-            foreach (var nodeAttributes in this.xCfg.Element(XMLRoot).Attributes())
+            foreach (var nodeAttributes in xdoc.Element(XMLRoot).Attributes())
             {
                 properties += nodeAttributes.Value + delim;
             }

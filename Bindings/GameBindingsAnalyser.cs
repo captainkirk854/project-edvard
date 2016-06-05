@@ -25,7 +25,7 @@
             actions.Initialise();
 
             // Datatable to hold tabulated contents ..
-            DataTable consolidatedaction = TableType.ConsolidatedActions();
+            DataTable consolidatedaction = TableShape.ConsolidatedActions();
 
             // Search through all defined Voice Attack bindings ..
             var voiceattackBindings = from va in voiceAttack.AsEnumerable()
@@ -38,6 +38,10 @@
                                             KeyValue = va.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
                                             KeyCode = va.Field<int>(Enums.Column.KeyEnumerationCode.ToString()),
                                             KeyID = va.Field<string>(Enums.Column.KeyId.ToString()),
+                                            ModifierKeyGameValue = va.Field<string>(Enums.Column.ModifierKeyGameValue.ToString()),
+                                            ModifierKeyEnumerationValue = va.Field<string>(Enums.Column.ModifierKeyEnumerationValue.ToString()),
+                                            ModifierKeyEnumerationCode = va.Field<int>(Enums.Column.ModifierKeyEnumerationCode.ToString()),
+                                            ModifierKeyID = va.Field<string>(Enums.Column.ModifierKeyId.ToString()),
                                             FilePath = va.Field<string>(Enums.Column.FilePath.ToString()),
                                             Internal = va.Field<string>(Enums.Column.Internal.ToString())
                                          };
@@ -68,30 +72,61 @@
                                                     Internal = ed.Field<string>(Enums.Column.Internal.ToString())
                                                 };
 
-                // Compare matching action bindings with their assigned key value/code ..
+                // Compare matching action bindings with their assigned key value/code to evaluate which key code(s) require remapping ..
                 foreach (var elitedangerousBinding in elitedangerousBindings)
                 {
                     commandDefinedInEliteDangerousBindsFile = true;
-                    if (elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode)
+
+                    // Check for: satisfactory alignment of regular and modifier key codes ..
+                    if (
+                        //// Matching Regular Key Codes with no Modifier Key(s) present ..
+                        ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
+                        (elitedangerousBinding.ModifierKeyEnumerationCode >= int.Parse(IntNA)))     ||
+                        
+                        //// Matching Regular Key Codes with matching Modifier Key(s) present ..
+                        ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
+                        (elitedangerousBinding.ModifierKeyEnumerationCode == voiceattackBinding.ModifierKeyEnumerationCode)))
                     {
                         remapRequired = Enums.KeyUpdateRequired.NO.ToString();
                         rationale = "Key codes are aligned";
                     }
                     else
                     {
+                        rationale = string.Empty;
+
+                        // Check for: misaligned key codes ..
                         if (elitedangerousBinding.KeyEnumerationCode > 0)
                         {
                             remapRequired = Enums.KeyUpdateRequired.YES.ToString();
-                            rationale = string.Format("Misaligned key codes: Voice Attack Profile requires change in key code from [{0}] to [{1}]", voiceattackBinding.KeyCode, elitedangerousBinding.KeyEnumerationCode);
+                            if (elitedangerousBinding.KeyEnumerationCode != voiceattackBinding.KeyCode)
+                            {
+                                rationale += string.Format("Misaligned key codes:[{0}] and [{1}];", voiceattackBinding.KeyCode, elitedangerousBinding.KeyEnumerationCode);
+                            }
                         }
                         else
                         {
                             remapRequired = Enums.KeyUpdateRequired.NO.ToString();
-                            rationale = string.Format("Unresolvable key code for: [{0}]", elitedangerousBinding.KeyGameValue);
+                            rationale += string.Format("Unresolvable key code for: [{0}];", elitedangerousBinding.KeyGameValue);
+                        }
+
+                        // Check for: misaligned modifier key codes ..
+                        if (elitedangerousBinding.ModifierKeyEnumerationCode > 0)
+                        {
+                            if (elitedangerousBinding.ModifierKeyEnumerationCode != voiceattackBinding.ModifierKeyEnumerationCode)
+                            {
+                                rationale += string.Format("Misaligned modifier key codes:[{0}] and [{1}];", voiceattackBinding.ModifierKeyEnumerationCode, elitedangerousBinding.ModifierKeyEnumerationCode);
+                            }
+                        }
+
+                        // Check for: unresolvable modifier key codes ..
+                        if (elitedangerousBinding.ModifierKeyEnumerationCode < int.Parse(IntNA))
+                        {
+                            remapRequired = Enums.KeyUpdateRequired.NO.ToString();
+                            rationale += string.Format("Unresolvable modifier key code for: [{0}];", elitedangerousBinding.ModifierKeyGameValue);
                         }
                     }
 
-                    // Append to DataTable ..
+                    // Append evaluated results to DataTable ..
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
                                                  ////--------------------------------------------------------------------------
@@ -106,6 +141,9 @@
                                                  voiceattackBinding.KeyValue, //VoiceAttackKeyValue
                                                  voiceattackBinding.KeyCode, //VoiceAttackKeyCode
                                                  voiceattackBinding.KeyID, //VoiceAttackKeyId
+                                                 voiceattackBinding.ModifierKeyGameValue, //VoiceAttackModifierKeyValue
+                                                 voiceattackBinding.ModifierKeyEnumerationCode, //VoiceAttackModifierKeyCode
+                                                 voiceattackBinding.ModifierKeyID, //VoiceAttackModifierKeyId
                                                  ////--------------------------------------------------------------------------                                                 
                                                  elitedangerousBinding.KeyPriority, //EliteDangerousDevicePriority
                                                  elitedangerousBinding.KeyGameValue, //EliteDangerousKeyValue
@@ -144,6 +182,9 @@
                                                  voiceattackBinding.KeyValue, //VoiceAttackKeyValue
                                                  voiceattackBinding.KeyCode, //VoiceAttackKeyCode
                                                  voiceattackBinding.KeyID, //VoiceAttackKeyId
+                                                 voiceattackBinding.ModifierKeyGameValue, //VoiceAttackModifierKeyValue
+                                                 voiceattackBinding.ModifierKeyEnumerationCode, //VoiceAttackModifierKeyCode
+                                                 voiceattackBinding.ModifierKeyID, //VoiceAttackModifierKeyId
                                                  ////--------------------------------------------------------------------------
                                                  NA, //EliteDangerousDevicePriority                 
                                                  NA, //EliteDangerousKeyValue
