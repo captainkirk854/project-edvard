@@ -6,7 +6,7 @@
     using System.Xml.Linq;
 
     /// <summary>
-    /// Parse Voice Attack Profile file
+    /// Parse HCSVoicePacks Voice Attack Profile File
     /// </summary>
     public class KeyBindingReaderVoiceAttack : KeyBindingReader, IKeyBindingReader
     {
@@ -23,7 +23,6 @@
         private const string XMLKeyCodes = "KeyCodes";
         private const string XMLunsignedShort = "unsignedShort";
         private const string KeybindingCategoryHCSVoicePack = "Keybindings";
-        private static string[] keybindingIndicatorHCSVoicePack = { "((", "))" };
         
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyBindingReaderVoiceAttack" /> class.
@@ -84,8 +83,7 @@
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
-                              where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorHCSVoicePack[0]) &&
-                                    item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorHCSVoicePack[1]) &&
+                              where
                                     item.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.KeyboardInteraction.PressKey.ToString()
@@ -113,7 +111,7 @@
         }
 
         /// <summary>
-        /// Process Voice Attack Profile looking for Elite Dangerous keyboard-specific bindings
+        /// Process Voice Attack Profile looking for Elite Dangerous keyboard-specific bindings as defined by HCSVoicePacks
         /// </summary>
         /// <remarks>
         ///   Format: XML
@@ -121,7 +119,7 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<CommandString/>
+        ///                      !_<CommandString/> = ((<action name/>))
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>
@@ -132,13 +130,15 @@
         ///                      !_<Category/> = Keybindings
         ///                             
         /// Keys Bindings: 
-        ///                VA uses actual key codes (as opposed to key value). Actions directly mappable to Elite Dangerous
-        ///                are defined by CommandString values which are pre- and post-fixed using '((' and '))'
-        ///                e.g. 
-        ///                   ((Shield Cell)) : 222 (= Oem7 Numpad?7)
-        ///                   ((Power To Weapons)) : 39  (= Right arrow)
-        ///                   ((Select Target Ahead)) : 84 (= T)
-        ///                   ((Flight Assist)) : 90 (= Z)
+        ///                VA uses actual key codes (as opposed to key value). 
+        ///                Actions directly mappable to Elite Dangerous have been defined by HCSVoicePacks using: 
+        ///                 o Command.Category = Keybindings
+        ///                 o Command.CommandString values which are pre- and post-fixed using '((' and '))'
+        ///                   e.g. 
+        ///                    ((Shield Cell)) : 222 (= Oem7 Numpad?7)
+        ///                    ((Power To Weapons)) : 39  (= Right arrow)
+        ///                    ((Select Target Ahead)) : 84 (= T)
+        ///                    ((Flight Assist)) : 90 (= Z)
         ///                   
         ///                Note 
         ///                There are other commands that also use key codes which are part of the multi-command suite.
@@ -153,8 +153,7 @@
 
             // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
-                              where item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorHCSVoicePack[0]) &&
-                                    item.Element(XMLCommandString).SafeElementValue().Contains(keybindingIndicatorHCSVoicePack[1]) &&
+                              where
                                     item.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.KeyboardInteraction.PressKey.ToString()                   
