@@ -169,7 +169,8 @@
             foreach (var xmlExtract in xmlExtracts)
             {
                 // Initialise ..
-                string modifierKeyEnumerationValue = StatusCode.NotApplicable;
+                //// string modifierKeyEnumerationValue = StatusCode.NotApplicable;
+                string modifierKeyEnumerationValue = StatusCode.EmptyString;
                 int regularKeyCode = int.Parse(xmlExtract.KeyCode);
 
                 // Check for modifier key already present in VoiceAttack Profile for current Key Id ..
@@ -195,7 +196,7 @@
                                                  modifierKeyEnumerationValue, //ModifierKeyGameValue
                                                  modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
                                                  modifierKeyCode, //ModifierKeyEnumerationCode
-                                                 StatusCode.NotApplicable //ModifierId
+                                                 xmlExtract.Id //ModifierKeyId
                                                 }, 
                                                 false);
             }
@@ -241,7 +242,8 @@
             }
             else
             {
-                return StatusCode.NotApplicableInt;
+                return StatusCode.EmptyStringInt;
+                ///// return StatusCode.NotApplicableInt;
             }
         }
 

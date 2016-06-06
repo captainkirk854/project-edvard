@@ -78,48 +78,56 @@
                     if (
                         //// Matching Regular Key Codes with no Modifier Key(s) present ..
                         ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
-                        (elitedangerousBinding.ModifierKeyEnumerationCode >= StatusCode.NotApplicableInt))     ||
+                        (elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NotApplicableInt))     ||
                         
                         //// Matching Regular Key Codes with matching Modifier Key(s) present ..
                         ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
                         (elitedangerousBinding.ModifierKeyEnumerationCode == voiceattackBinding.ModifierKeyEnumerationCode)))
                     {
                         remapRequired = Enums.KeyUpdateRequired.NO.ToString();
-                        rationale = "Key codes are aligned";
+                        rationale = "ED o--o VA Key Codes are aligned";
                     }
                     else
                     {
                         rationale = string.Empty;
 
-                        // Check for: misaligned key codes ..
-                        if (elitedangerousBinding.KeyEnumerationCode > 0)
+                        // Check for misaligned codes ..
+                        if (elitedangerousBinding.KeyEnumerationCode > StatusCode.EmptyStringInt)
                         {
                             remapRequired = Enums.KeyUpdateRequired.YES.ToString();
+
+                            // Check for: misaligned key codes ..
                             if (elitedangerousBinding.KeyEnumerationCode != voiceattackBinding.KeyCode)
                             {
-                                rationale += string.Format("Misaligned key codes:[{0}] and [{1}];", voiceattackBinding.KeyCode, elitedangerousBinding.KeyEnumerationCode);
+                                rationale += string.Format("Misaligned key codes: ED[{0}] o--O VA[{1}];", elitedangerousBinding.KeyEnumerationCode, voiceattackBinding.KeyCode);
                             }
-                        }
-                        else
-                        {
-                            remapRequired = Enums.KeyUpdateRequired.NO.ToString();
-                            rationale += string.Format("Unresolvable key code for: [{0}];", elitedangerousBinding.KeyGameValue);
-                        }
 
-                        // Check for: misaligned modifier key codes ..
-                        if (elitedangerousBinding.ModifierKeyEnumerationCode > 0)
-                        {
+                            // Check for: misaligned modifier key codes ..
                             if (elitedangerousBinding.ModifierKeyEnumerationCode != voiceattackBinding.ModifierKeyEnumerationCode)
                             {
-                                rationale += string.Format("Misaligned modifier key codes:[{0}] and [{1}];", voiceattackBinding.ModifierKeyEnumerationCode, elitedangerousBinding.ModifierKeyEnumerationCode);
+                                if (voiceattackBinding.ModifierKeyEnumerationCode == StatusCode.EmptyStringInt)
+                                {
+                                    rationale += string.Format("Misaligned modifier key codes: ED[{0}] o--O VA[{1}];", elitedangerousBinding.ModifierKeyEnumerationCode, "no-modifier defined");
+                                }
+                                else
+                                {
+                                    rationale += string.Format("Misaligned modifier key codes: ED[{0}] o--O VA[{1}];", elitedangerousBinding.ModifierKeyEnumerationCode, voiceattackBinding.ModifierKeyEnumerationCode);
+                                }
                             }
+                        }
+
+                        // Check for unresolvable key codes ..
+                        if (elitedangerousBinding.KeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || elitedangerousBinding.KeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
+                        {
+                            remapRequired = Enums.KeyUpdateRequired.NO.ToString();
+                            rationale += string.Format("Unresolvable key code for: ED[{0}];", elitedangerousBinding.KeyGameValue);
                         }
 
                         // Check for: unresolvable modifier key codes ..
-                        if (elitedangerousBinding.ModifierKeyEnumerationCode < StatusCode.NotApplicableInt)
+                        if (elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
                         {
                             remapRequired = Enums.KeyUpdateRequired.NO.ToString();
-                            rationale += string.Format("Unresolvable modifier key code for: [{0}];", elitedangerousBinding.ModifierKeyGameValue);
+                            rationale += string.Format("Unresolvable modifier key code for: ED[{0}];", elitedangerousBinding.ModifierKeyGameValue);
                         }
                     }
 
@@ -164,7 +172,7 @@
                 {
                     // Append to DataTable
                     remapRequired = Enums.KeyUpdateRequired.NO.ToString();
-                    rationale = string.Format("[{0}] has not been bound to a key", voiceattackBinding.EliteDangerousAction);
+                    rationale = string.Format("ED[{0}] has not been bound to a key", voiceattackBinding.EliteDangerousAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
                                                  ////--------------------------------------------------------------------------

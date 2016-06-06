@@ -103,7 +103,7 @@
             {
                 if (keyValue == string.Empty)
                 {
-                    return StatusCode.EmptyString;
+                    return StatusCode.EmptyStringInt;
                 }
                 else
                 {
