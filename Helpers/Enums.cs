@@ -81,7 +81,8 @@
         /// </summary>
         public enum KeyUpdateRequired
         {
-            YES,
+            YES_ed_to_va,
+            YES_va_to_ed,
             NO
         }
     }

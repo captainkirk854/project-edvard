@@ -94,7 +94,7 @@
                         // Check for misaligned codes ..
                         if (elitedangerousBinding.KeyEnumerationCode > StatusCode.EmptyStringInt)
                         {
-                            remapRequired = Enums.KeyUpdateRequired.YES.ToString();
+                            remapRequired = Enums.KeyUpdateRequired.YES_ed_to_va.ToString();
 
                             // Check for: misaligned key codes ..
                             if (elitedangerousBinding.KeyEnumerationCode != voiceattackBinding.KeyCode)
@@ -171,8 +171,8 @@
                 if (!commandDefinedInEliteDangerousBindsFile)
                 {
                     // Append to DataTable
-                    remapRequired = Enums.KeyUpdateRequired.NO.ToString();
-                    rationale = string.Format("ED[{0}] has not been bound to a key", voiceattackBinding.EliteDangerousAction);
+                    remapRequired = Enums.KeyUpdateRequired.YES_va_to_ed.ToString();
+                    rationale = string.Format("ED[{0}] not bound to a key", voiceattackBinding.EliteDangerousAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
                                                  ////--------------------------------------------------------------------------

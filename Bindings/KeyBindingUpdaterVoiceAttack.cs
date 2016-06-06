@@ -30,7 +30,7 @@
 
             // Find VoiceAttack commands which require remapping ..
             var consolidatedBindings = from cb in consolidatedkeybindings.AsEnumerable()
-                                      where cb.Field<string>(Enums.Column.KeyUpdateRequired.ToString()) == Enums.KeyUpdateRequired.YES.ToString()
+                                      where cb.Field<string>(Enums.Column.KeyUpdateRequired.ToString()) == Enums.KeyUpdateRequired.YES_ed_to_va.ToString()
                                      select
                                         new
                                             {
