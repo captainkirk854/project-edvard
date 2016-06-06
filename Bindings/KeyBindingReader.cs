@@ -10,8 +10,6 @@
     public class KeyBindingReader
     {
         // Initialise ..
-        protected const string NA = "n/a";
-        protected const int INA = -2;
         protected readonly KeyMapper KeyMapper = new KeyMapper(KeyType);
         protected string cfgFilePath = string.Empty;
         protected XDocument xCfg = new XDocument();

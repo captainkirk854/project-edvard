@@ -9,9 +9,6 @@
     /// </summary>
     public static class GameBindingsAnalyser
     {
-        private const string NA = "n/a";
-        private const string IntNA = "-2";
-
         /// <summary>
         /// Consolidate Command Key Codes in VoiceAttack based on Elite Dangerous Binds as Master ..
         /// </summary>
@@ -81,7 +78,7 @@
                     if (
                         //// Matching Regular Key Codes with no Modifier Key(s) present ..
                         ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
-                        (elitedangerousBinding.ModifierKeyEnumerationCode >= int.Parse(IntNA)))     ||
+                        (elitedangerousBinding.ModifierKeyEnumerationCode >= StatusCode.NotApplicableInt))     ||
                         
                         //// Matching Regular Key Codes with matching Modifier Key(s) present ..
                         ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
@@ -119,7 +116,7 @@
                         }
 
                         // Check for: unresolvable modifier key codes ..
-                        if (elitedangerousBinding.ModifierKeyEnumerationCode < int.Parse(IntNA))
+                        if (elitedangerousBinding.ModifierKeyEnumerationCode < StatusCode.NotApplicableInt)
                         {
                             remapRequired = Enums.KeyUpdateRequired.NO.ToString();
                             rationale += string.Format("Unresolvable modifier key code for: [{0}];", elitedangerousBinding.ModifierKeyGameValue);
@@ -186,18 +183,18 @@
                                                  voiceattackBinding.ModifierKeyEnumerationCode, //VoiceAttackModifierKeyCode
                                                  voiceattackBinding.ModifierKeyID, //VoiceAttackModifierKeyId
                                                  ////--------------------------------------------------------------------------
-                                                 NA, //EliteDangerousDevicePriority                 
-                                                 NA, //EliteDangerousKeyValue
-                                                 IntNA, //EliteDangerousKeyCode
-                                                 NA, //EliteDangerousKeyId
-                                                 NA, //EliteDangerousModifierKeyValue
-                                                 IntNA, //EliteDangerousModifierKeyCode
-                                                 NA, //EliteDangerousModifierKeyId
+                                                 StatusCode.NotApplicable, //EliteDangerousDevicePriority                 
+                                                 StatusCode.NotApplicable, //EliteDangerousKeyValue
+                                                 StatusCode.NotApplicableInt.ToString(), //EliteDangerousKeyCode
+                                                 StatusCode.NotApplicable, //EliteDangerousKeyId
+                                                 StatusCode.NotApplicable, //EliteDangerousModifierKeyValue
+                                                 StatusCode.NotApplicableInt.ToString(), //EliteDangerousModifierKeyCode
+                                                 StatusCode.NotApplicable, //EliteDangerousModifierKeyId
                                                  ////--------------------------------------------------------------------------                                               
                                                  voiceattackBinding.Internal, //VoiceAttackInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
-                                                 NA, //EliteDangerousInternal
-                                                 NA //EliteDangerousFilePath
+                                                 StatusCode.NotApplicable, //EliteDangerousInternal
+                                                 StatusCode.NotApplicable //EliteDangerousFilePath
                                                  ////--------------------------------------------------------------------------
                                                 },
                                                 false);

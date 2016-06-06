@@ -69,7 +69,6 @@
             }
             catch
             {
-                Console.WriteLine("*** No VALUE for key CODE:[{0}] ***", keyCode.ToString());
                 keyValue = "*** " + keyCode.ToString() + ":UNKNOWN ***"; 
             }
 
@@ -104,7 +103,7 @@
             {
                 if (keyValue == string.Empty)
                 {
-                    return -1;
+                    return StatusCode.EmptyString;
                 }
                 else
                 {
@@ -122,15 +121,13 @@
                         }
                         else
                         {
-                            Console.WriteLine("*** No CODE for key VALUE [{0}] at the Exchange ***", keyValue);
-                            return -998;
+                            return StatusCode.NoEquivalentKeyFoundAtExchange;
                         }
                     }
                     catch
                     {
                         // Nothing found to map to using Exchange value ..
-                        Console.WriteLine("*** No CODE for key VALUE:[{0}] ***", keyValue);
-                        return -999;
+                        return StatusCode.NoCodeFoundAfterExchange;
                     }
                 }
             }

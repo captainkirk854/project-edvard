@@ -100,7 +100,7 @@
                                                 {
                                                  Enums.Game.VoiceAttack.ToString(), //Context
                                                  xmlExtract.Commandstring, //BindingAction
-                                                 NA, // Device priority
+                                                 StatusCode.NotApplicable, // Device priority
                                                  Enums.KeyboardInteraction.Keyboard.ToString() // Device binding applied to
                                                 }, 
                                                 false);
@@ -169,7 +169,7 @@
             foreach (var xmlExtract in xmlExtracts)
             {
                 // Initialise ..
-                string modifierKeyEnumerationValue = NA;
+                string modifierKeyEnumerationValue = StatusCode.NotApplicable;
                 int regularKeyCode = int.Parse(xmlExtract.KeyCode);
 
                 // Check for modifier key already present in VoiceAttack Profile for current Key Id ..
@@ -187,7 +187,7 @@
                                                  Enums.Game.VoiceAttack.ToString(), //Context
                                                  KeyMapper.KeyType.ToString(), //KeyEnumerationType
                                                  xmlExtract.Commandstring, //BindingAction
-                                                 NA, //Priority
+                                                 StatusCode.NotApplicable, //Priority
                                                  KeyMapper.GetValue(regularKeyCode), //KeyGameValue
                                                  KeyMapper.GetValue(regularKeyCode), //KeyEnumerationValue
                                                  regularKeyCode.ToString(), //KeyEnumerationCode
@@ -195,7 +195,7 @@
                                                  modifierKeyEnumerationValue, //ModifierKeyGameValue
                                                  modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
                                                  modifierKeyCode, //ModifierKeyEnumerationCode
-                                                 NA //ModifierId
+                                                 StatusCode.NotApplicable //ModifierId
                                                 }, 
                                                 false);
             }
@@ -241,7 +241,7 @@
             }
             else
             {
-                return KeyBindingReader.INA;
+                return StatusCode.NotApplicableInt;
             }
         }
 
@@ -269,7 +269,7 @@
             }
             else
             {
-                return KeyBindingReader.INA;
+                return StatusCode.NotApplicableInt;
             }
         }
     }
