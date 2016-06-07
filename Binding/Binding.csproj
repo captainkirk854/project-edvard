@@ -49,7 +49,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Helpers\Helper.csproj">
+    <ProjectReference Include="..\Helper\Helper.csproj">
       <Project>{696e228d-a175-4c0a-afab-7ad2e30e1965}</Project>
       <Name>Helper</Name>
     </ProjectReference>
