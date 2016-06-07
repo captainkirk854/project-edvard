@@ -52,7 +52,7 @@
                 // Align (possible) modifier key code ..
                 if (int.Parse(consolidatedBinding.EDModifierKeyCode) != int.Parse(consolidatedBinding.VAModifierKeyCode))
                 {
-                    // .. and there is a valid modifier key code ..
+                    // .. if there is a valid modifier key code ..
                     if (int.Parse(consolidatedBinding.EDModifierKeyCode) > 0)
                     {
                         // .. by creating additional XElement for modifier if one does not exist ..
@@ -66,6 +66,13 @@
                         {
                             this.UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
                         }
+                    }
+
+                    // .. if there isn't a valid modifier key code ..
+                    if (int.Parse(consolidatedBinding.EDModifierKeyCode) < 0)
+                    {
+                        // .. must remove any other (modifier) key code XElement that may already exist for the VAKeyId ..
+                        this.RemoveAnyOtherVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDKeyCode);
                     }
                 }
 
@@ -85,12 +92,30 @@
         {
             var vap = Xml.ReadXDoc(vaprofile);
 
-            // Search through all <unsignedShort> elements whose grandparent (Parent.Parent) <id> element equals vakeyId
+            // Search all <unsignedShort> elements whose grandparent (Parent.Parent) <id> element equals vakeyId
             // and add a new <unsignedShort> element with keyCode value physically before existing one ..
             vap.Descendants(XMLunsignedShort)
                .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId).FirstOrDefault()
                .AddBeforeSelf(new XElement(XMLunsignedShort, keyCode));
 
+            vap.Save(vaprofile);
+        }
+
+        /// <summary>
+        /// Remove KeyCode(s) as <unsignedShort> that do not match KeyCode value where Id = vakeyId
+        /// </summary>
+        /// <param name="vaprofile"></param>
+        /// <param name="vakeyId"></param>
+        /// <param name="keyCode"></param>
+        private void RemoveAnyOtherVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
+        {
+            var vap = Xml.ReadXDoc(vaprofile);
+
+            // Search all <unsignedShort> elements whose grandparent (Parent.Parent) <id> element equals vakeyId
+            // and remove <unsignedShort> element(s) that do not match keyCode value ..
+            vap.Descendants(XMLunsignedShort)
+               .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId && item.Value != keyCode)
+               .Remove();
             vap.Save(vaprofile);
         }
 
