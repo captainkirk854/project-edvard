@@ -1,8 +1,8 @@
-﻿namespace Bindings
+﻿namespace Binding
 {
     using System.Data;
 
-    public interface IKeyBindingReader
+    public interface IKeyReader
     {
         DataTable GetBindableCommands();
 

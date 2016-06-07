@@ -1,4 +1,4 @@
-﻿namespace Helpers
+﻿namespace Helper
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,7 +6,7 @@
     /// <summary>
     /// Dictionary containing mappings between Elite Dangerous and Voice Attack Bindable Commands
     /// </summary>
-    public class CommandExchange
+    public class GameActionExchange
     {
         private const string EDCommandUndefined = "Elite Dangerous Command: Undefined";
         private const string VACommandUndefined = "VoiceAttack Command: Undefined";

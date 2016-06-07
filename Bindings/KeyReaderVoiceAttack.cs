@@ -1,14 +1,14 @@
-﻿namespace Bindings
+﻿namespace Binding
 {
-    using Helpers;
+    using Helper;
     using System.Data;
     using System.Linq;
     using System.Xml.Linq;
 
     /// <summary>
-    /// Parse HCSVoicePacks Voice Attack Profile File
+    /// Parse HCSVoicePacks Voice Attack Profile file
     /// </summary>
-    public class KeyBindingReaderVoiceAttack : KeyBindingReader, IKeyBindingReader
+    public class KeyReaderVoiceAttack : KeyReader, IKeyReader
     {
         // Initialise ..
         private const string XMLRoot = "Profile";
@@ -25,11 +25,11 @@
         private const string KeybindingCategoryHCSVoicePack = "Keybindings";
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyBindingReaderVoiceAttack" /> class.
+        /// Initializes a new instance of the <see cref="KeyReaderVoiceAttack" /> class.
         /// Base class constructor loads config.file as XDocument (this.xCfg)
         /// </summary>
         /// <param name="cfgFilePath"></param>
-        public KeyBindingReaderVoiceAttack(string cfgFilePath) : base(cfgFilePath)
+        public KeyReaderVoiceAttack(string cfgFilePath) : base(cfgFilePath)
         {
         }
    

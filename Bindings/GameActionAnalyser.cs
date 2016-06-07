@@ -1,24 +1,24 @@
-﻿namespace Bindings
+﻿namespace Binding
 {
     using System;
     using System.Data;
-    using Helpers;
+    using Helper;
 
     /// <summary>
-    /// Analyse Actions between VoiceAttack and Elite Dangerous ..
+    /// Analyse and Consolidate Game Action Bindings between VoiceAttack and Elite Dangerous ..
     /// </summary>
-    public static class GameBindingsAnalyser
+    public static class GameActionAnalyser
     {
         /// <summary>
-        /// Consolidate Command Key Codes in VoiceAttack based on Elite Dangerous Binds as Master ..
+        /// Match Command Key Codes in VoiceAttack based on Elite Dangerous Command Binds as Master ..
         /// </summary>
         /// <param name="voiceAttack"></param>
         /// <param name="eliteDangerous"></param>
         /// <returns></returns>
-        public static DataTable ForUpdateInVoiceAttack(DataTable voiceAttack, DataTable eliteDangerous)
+        public static DataTable VoiceAttack(DataTable voiceAttack, DataTable eliteDangerous)
         {
             // Initialise lookup dictionary for inter-game action references ..
-            CommandExchange actions = new CommandExchange();
+            GameActionExchange actions = new GameActionExchange();
             actions.Initialise();
 
             // Datatable to hold tabulated contents ..

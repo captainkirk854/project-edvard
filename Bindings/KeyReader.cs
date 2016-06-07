@@ -1,13 +1,13 @@
-﻿namespace Bindings
+﻿namespace Binding
 {
-    using Helpers;
+    using Helper;
     using System.Data;
     using System.Xml.Linq;
     
     /// <summary>
     /// Base Key-Bindings Reader Class
     /// </summary>
-    public class KeyBindingReader
+    public class KeyReader
     {
         // Initialise ..
         protected readonly KeyMapper KeyMapper = new KeyMapper(KeyType);
@@ -16,10 +16,10 @@
         private static Enums.InputKeyEnumType keyType = Enums.InputKeyEnumType.WindowsForms; // Default startup value for KeyType Property ..
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyBindingReader" /> class.
+        /// Initializes a new instance of the <see cref="KeyReader" /> class.
         /// </summary>
         /// <param name="cfgFilePath"></param>
-        public KeyBindingReader(string cfgFilePath)
+        public KeyReader(string cfgFilePath)
         {
             this.cfgFilePath = cfgFilePath;
 

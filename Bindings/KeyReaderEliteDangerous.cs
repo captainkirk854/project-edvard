@@ -1,6 +1,6 @@
-﻿namespace Bindings
+﻿namespace Binding
 {
-    using Helpers;
+    using Helper;
     using System.Data;
     using System.Linq;
     using System.Xml.Linq;
@@ -8,7 +8,7 @@
     /// <summary>
     /// Parse Elite Dangerous Binds file
     /// </summary>
-    public class KeyBindingReaderEliteDangerous : KeyBindingReader, IKeyBindingReader
+    public class KeyReaderEliteDangerous : KeyReader, IKeyReader
     {
         //Initialise ..
         private const string XMLRoot = "Root";
@@ -20,11 +20,11 @@
         private string[] keybindingIndicatorED = { "Key_" };
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyBindingReaderEliteDangerous" /> class.
+        /// Initializes a new instance of the <see cref="KeyReaderEliteDangerous" /> class.
         /// Base class constructor loads config.file as XDocument (this.xCfg)
         /// </summary>
         /// <param name="cfgFilePath"></param>
-        public KeyBindingReaderEliteDangerous(string cfgFilePath) : base(cfgFilePath) 
+        public KeyReaderEliteDangerous(string cfgFilePath) : base(cfgFilePath) 
         { 
         }
         

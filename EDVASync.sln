@@ -5,11 +5,11 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDVASync", "EDVASync\EDVASync.csproj", "{588089AA-1533-40D9-8D7A-13695300B091}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{696E228D-A175-4C0A-AFAB-7AD2E30E1965}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helpers\Helper.csproj", "{696E228D-A175-4C0A-AFAB-7AD2E30E1965}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickRunner", "QuickRunner\QuickRunner.csproj", "{79546902-CFBA-4C14-A119-0FC3E72DAF11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bindings", "Bindings\Bindings.csproj", "{08F8CC4B-45C2-4661-9F10-07094DCAE843}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binding", "Bindings\Binding.csproj", "{08F8CC4B-45C2-4661-9F10-07094DCAE843}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

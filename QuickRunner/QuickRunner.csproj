@@ -52,13 +52,13 @@
     <None Include="Sample\VA02.vap" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Bindings\Bindings.csproj">
+    <ProjectReference Include="..\Bindings\Binding.csproj">
       <Project>{08f8cc4b-45c2-4661-9f10-07094dcae843}</Project>
-      <Name>Bindings</Name>
+      <Name>Binding</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Helpers\Helpers.csproj">
+    <ProjectReference Include="..\Helpers\Helper.csproj">
       <Project>{696e228d-a175-4c0a-afab-7ad2e30e1965}</Project>
-      <Name>Helpers</Name>
+      <Name>Helper</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

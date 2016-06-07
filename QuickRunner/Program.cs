@@ -1,7 +1,7 @@
 ﻿namespace QuickRunner
 {
-    using Bindings;
-    using Helpers;
+    using Binding;
+    using Helper;
     using System;
     using System.Data;
 
@@ -35,14 +35,14 @@
             try
             {
                 // Read Voice Attack Commands and Elite Dangerous Binds ..
-                KeyBindingReader.KeyType = Enums.InputKeyEnumType.WindowsForms; // [optional] sets key type enumeration to use
-                KeyBindingReaderEliteDangerous ed = new KeyBindingReaderEliteDangerous(eliteDangerousBinds);
-                KeyBindingReaderVoiceAttack va = new KeyBindingReaderVoiceAttack(voiceAttackProfile);
+                KeyReader.KeyType = Enums.InputKeyEnumType.WindowsForms; // [optional] sets key type enumeration to use
+                KeyReaderEliteDangerous ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
+                KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
                 Console.WriteLine("Configs read ..");
 
                 // Update VoiceAttack Profile ..
-                KeyBindingUpdaterVoiceAttack voiceattackUpdater = new KeyBindingUpdaterVoiceAttack();
-                Console.WriteLine("VoiceAttack Profile: {0}", voiceattackUpdater.Write(GameBindingsAnalyser.ForUpdateInVoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands())) == true ? "updated" : "no update possible or required");
+                KeyWriterVoiceAttack newVoiceAttack = new KeyWriterVoiceAttack();
+                Console.WriteLine("VoiceAttack Profile: {0}", newVoiceAttack.Update(GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands())) == true ? "updated" : "no update possible or required");
 
                 PressIt();
 
@@ -61,7 +61,7 @@
                 elitedangerousCommands.CreateCSV(csvBindings);
 
                 // Create CSV listing all consolidated actions ..
-                DataTable consolidatedBindings = GameBindingsAnalyser.ForUpdateInVoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands());
+                DataTable consolidatedBindings = GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands());
                 consolidatedBindings = consolidatedBindings.Sort(Enums.Column.EliteDangerousAction.ToString() + " asc");
                 consolidatedBindings.CreateCSV(csvConsolidatedBindings);
 

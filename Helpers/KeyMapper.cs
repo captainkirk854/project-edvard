@@ -1,4 +1,4 @@
-﻿namespace Helpers
+﻿namespace Helper
 {
     using System;
     using System.Collections.Generic;

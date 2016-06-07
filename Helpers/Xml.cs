@@ -1,4 +1,4 @@
-﻿namespace Helpers
+﻿namespace Helper
 {
     using System.Xml.Linq;
 

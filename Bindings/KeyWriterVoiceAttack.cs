@@ -1,15 +1,15 @@
-﻿namespace Bindings
+﻿namespace Binding
 {
     using System.Data;
     using System.Linq;
     using System.Xml.Linq;
     using System.Xml.XPath;
-    using Helpers;
+    using Helper;
 
     /// <summary>
     /// Update Voice Attack Profile Command(s) with new Key Codes
     /// </summary>
-    public class KeyBindingUpdaterVoiceAttack : IKeyBindingUpdater
+    public class KeyWriterVoiceAttack : IKeyWriter
     {
         // Initialise ..
         private const string XMLCommand = "Command";
@@ -24,7 +24,7 @@
         /// </summary>
         /// <param name="consolidatedkeybindings"></param>
         /// <returns></returns>
-        public bool Write(DataTable consolidatedkeybindings)
+        public bool Update(DataTable consolidatedkeybindings)
         {
             bool profileUpdated = false;
 
