@@ -43,25 +43,29 @@
                                                 EDModifierKeyCode = cb.Field<string>(Enums.Column.EliteDangerousModifierKeyCode.ToString())
                                             };
 
-            // Perform Update(s) for those commands that require it ..
+            // Perform key code value update(s) for those commands that require it ..
             foreach (var consolidatedBinding in consolidatedBindings)
             {
                 // Align key code with that used in Elite Dangerous ..
                 this.UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDKeyCode);
 
-                // Align modifier key codes ..
+                // Align (possible) modifier key code ..
                 if (int.Parse(consolidatedBinding.EDModifierKeyCode) != int.Parse(consolidatedBinding.VAModifierKeyCode))
                 {
-                    // .. by creating additional element for modifier ..
-                    if (int.Parse(consolidatedBinding.EDModifierKeyCode) > 0 && int.Parse(consolidatedBinding.VAModifierKeyCode) < 0)
+                    // .. and there is a valid modifier key code ..
+                    if (int.Parse(consolidatedBinding.EDModifierKeyCode) > 0)
                     {
-                        this.InsertVoiceAttackModifierKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
-                    }
+                        // .. by creating additional XElement for modifier if one does not exist ..
+                        if (int.Parse(consolidatedBinding.VAModifierKeyCode) < 0)
+                        {
+                            this.InsertVoiceAttackModifierKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
+                        }
 
-                    // .. or updating the modifier key code that already exists ..
-                    if (int.Parse(consolidatedBinding.EDModifierKeyCode) > 0 && int.Parse(consolidatedBinding.VAModifierKeyCode) > 0)
-                    {
-                        this.UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
+                        // .. or updating the modifier key code XElement that already exists ..
+                        if (int.Parse(consolidatedBinding.VAModifierKeyCode) > 0)
+                        {
+                            this.UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
+                        }
                     }
                 }
 
