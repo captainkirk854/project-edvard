@@ -1,4 +1,4 @@
-﻿namespace EDVASync
+﻿namespace UX
 {
     using System;
     using System.Collections.Generic;
