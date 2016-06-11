@@ -1,6 +1,7 @@
 ﻿namespace Binding
 {
     using Helper;
+    using KeyHelper;
     using System.Data;
     using System.Linq;
     using System.Xml.Linq;
@@ -16,8 +17,7 @@
         private const string XMLDevice = "Device";
         private const string XMLModifier = "Modifier";
         private const string D = "+";
-        private KeyMapperExchange exchange = new KeyMapperExchange(KeyType, Enums.Game.EliteDangerous);
-        private string[] keybindingIndicatorED = { "Key_" };
+        private GameKeyExchanger keyExchanger = new GameKeyExchanger(Helper.Enums.Game.EliteDangerous);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyReaderEliteDangerous" /> class.
@@ -38,10 +38,10 @@
             DataTable primary = this.GetBindableActions(ref xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(Helper.Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(Helper.Enums.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
@@ -54,17 +54,17 @@
         public DataTable GetBoundCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetKeyBindings(ref xCfg, Enums.EliteDangerousDevicePriority.Primary);
-            DataTable secondary = this.GetKeyBindings(ref xCfg, Enums.EliteDangerousDevicePriority.Secondary);
+            DataTable primary = this.GetKeyBindings(ref xCfg, Helper.Enums.EliteDangerousDevicePriority.Primary);
+            DataTable secondary = this.GetKeyBindings(ref xCfg, Helper.Enums.EliteDangerousDevicePriority.Secondary);
 
             // Merge ..
             primary.Merge(secondary);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(Helper.Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(Helper.Enums.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
@@ -78,7 +78,7 @@
         private DataTable GetBindableActions(ref XDocument xdoc)
         {
             // Initialise ..
-            string[] devicePriority = { Enums.EliteDangerousDevicePriority.Primary.ToString(), Enums.EliteDangerousDevicePriority.Secondary.ToString() };
+            string[] devicePriority = { Helper.Enums.EliteDangerousDevicePriority.Primary.ToString(), Helper.Enums.EliteDangerousDevicePriority.Secondary.ToString() };
 
             // Datatable to hold tabulated XML contents ..
             DataTable bindableactions = TableShape.BindableActions();
@@ -120,7 +120,7 @@
                     {
                         bindableactions.LoadDataRow(new object[] 
                                                         {
-                                                         Enums.Game.EliteDangerous.ToString(), //Context
+                                                         Helper.Enums.Game.EliteDangerous.ToString(), //Context
                                                          xmlExtract.BindingAction, //BindingAction
                                                          xmlExtract.Priority, // Device priority
                                                          xmlExtract.DeviceType // Device binding applied to
@@ -136,6 +136,8 @@
 
         /// <summary>
         /// Process Elite Dangerous Config File looking for keyboard-specific bindings
+        /// </summary>
+        /// <remarks>
         ///   Keys can be in assigned with Primary or Secondary Priorities
         ///   Format: XML
         ///             o <Root/>
@@ -171,13 +173,12 @@
         ///                     SystemMapOpen : Key_B
         ///                     GalaxyMapOpen : Key_M
         ///                   FocusRightPanel : Key_4
-        ///                       SetSpeedZero: Key_0 + Key_RightShift (modifier)
-        ///                
-        /// </summary>
+        ///                       SetSpeedZero: Key_0 + Key_RightShift (modifier)           
+        /// </remarks>
         /// <param name="xdoc"></param>
         /// <param name="devicepriority"></param>
         /// <returns></returns>
-        private DataTable GetKeyBindings(ref XDocument xdoc, Enums.EliteDangerousDevicePriority devicepriority)
+        private DataTable GetKeyBindings(ref XDocument xdoc, Helper.Enums.EliteDangerousDevicePriority devicepriority)
         {
             // Initialise ..
             string devicePriority = devicepriority.ToString();
@@ -194,8 +195,8 @@
                 {
                     var xmlExtracts = from item in xdoc.Descendants(childNode.Name)
                                       where
-                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Enums.KeyboardInteraction.Keyboard.ToString() &&
-                                            item.Element(devicePriority).Attribute(XMLKey).Value.Contains(this.keybindingIndicatorED[0]) == true
+                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Helper.Enums.KeyboardInteraction.Keyboard.ToString() &&
+                                            item.Element(devicePriority).Attribute(XMLKey).Value.Contains(Helper.Enums.EliteDangerousBindingPrefix.Key_.ToString()) == true
                                       select
                                          new // create anonymous type for every key code ..
                                          {
@@ -249,16 +250,16 @@
                         // Load final values into datatable ..
                         keyactionbinder.LoadDataRow(new object[] 
                                                         {
-                                                         Enums.Game.EliteDangerous.ToString(), //Context
+                                                         Helper.Enums.Game.EliteDangerous.ToString(), //Context
                                                          KeyMapper.KeyType.ToString(), //KeyEnumerationType
                                                          childNode.Name, //BindingAction
                                                          xmlExtract.xmlNode_DevicePriority, //Priority 
                                                          xmlExtract.KeyValue, //KeyGameValue
-                                                         this.exchange.GetValue(xmlExtract.KeyValue), //KeyEnumerationValue
+                                                         this.keyExchanger.GetValue(xmlExtract.KeyValue), //KeyEnumerationValue
                                                          KeyMapper.GetKey(xmlExtract.KeyValue), //KeyEnumerationCode
                                                          customKeyId, //KeyId
                                                          xmlExtract.ModifierKeyValue, //ModifierKeyGameValue
-                                                         this.exchange.GetValue(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationValue
+                                                         this.keyExchanger.GetValue(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationValue
                                                          KeyMapper.GetKey(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationCode
                                                          customModifierKeyId //ModifierId
                                                         }, 
@@ -273,10 +274,12 @@
 
         /// <summary>
         /// Process Elite Dangerous Config File looking for internal reference
+        /// </summary>
+        /// <remarks>
         ///   Format: XML
         ///             o <Root/>
         ///               |_ PresetName; MajorVersion; MinorVersion
-        /// </summary>
+        /// </remarks>
         /// <param name="xdoc"></param>
         /// <returns></returns>
         private string GetInternalReference(ref XDocument xdoc)

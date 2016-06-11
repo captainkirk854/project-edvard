@@ -207,10 +207,12 @@
 
         /// <summary>
         /// Process Voice Attack Config File looking for internal reference
+        /// </summary>
+        /// <remarks>
         ///   Format: XML
         ///             o <Profile/>
         ///               |_ <Name>       
-        /// </summary>
+        /// </remarks>
         /// <param name="xdoc"></param>
         /// <returns></returns>
         private string GetInternalReference(ref XDocument xdoc)
@@ -243,7 +245,6 @@
             else
             {
                 return StatusCode.EmptyStringInt;
-                ///// return StatusCode.NotApplicableInt;
             }
         }
 

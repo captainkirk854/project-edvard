@@ -6,34 +6,6 @@
     public partial class Enums
     {
         /// <summary>
-        /// Enumeration of Game Names 
-        /// </summary>
-        public enum Game
-        {
-            EliteDangerous,
-            VoiceAttack
-        }
-
-        /// <summary>
-        /// Enumeration of Keyboard-interaction Indicator
-        /// </summary>
-        public enum KeyboardInteraction
-        {
-            Keyboard, //EliteDangerous
-            PressKey  //VoiceAttack
-        }
-
-        /// <summary>
-        /// Enumeration of Keyboard Enumerations
-        /// </summary>
-        public enum InputKeyEnumType
-        {
-            Console,
-            SharpDX,
-            WindowsForms
-        }
-
-        /// <summary>
         /// Enumeration of Table Columns
         /// </summary>
         public enum Column

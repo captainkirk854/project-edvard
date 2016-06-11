@@ -1,6 +1,7 @@
 ﻿namespace Binding
 {
     using Helper;
+    using KeyHelper;
     using System.Data;
     using System.Xml.Linq;
     
@@ -10,10 +11,10 @@
     public class KeyReader
     {
         // Initialise ..
-        protected readonly KeyMapper KeyMapper = new KeyMapper(KeyType);
+        protected readonly Mapper KeyMapper = new Mapper(KeyType);
         protected string cfgFilePath = string.Empty;
         protected XDocument xCfg = new XDocument();
-        private static Enums.InputKeyEnumType keyType = Enums.InputKeyEnumType.WindowsForms; // Default startup value for KeyType Property ..
+        private static KeyHelper.Enums.InputKeyEnumType keyType = KeyHelper.Enums.InputKeyEnumType.WindowsForms; // Default startup value for KeyType Property ..
         
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyReader" /> class.
@@ -28,7 +29,7 @@
         }
 
         // KeyType Property
-        public static Enums.InputKeyEnumType KeyType
+        public static KeyHelper.Enums.InputKeyEnumType KeyType
         {
             get { return keyType; }
 

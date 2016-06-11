@@ -3,6 +3,7 @@
     using System;
     using System.Data;
     using Helper;
+    using KeyHelper;
 
     /// <summary>
     /// Analyse and Consolidate Game Action Bindings between VoiceAttack and Elite Dangerous ..
@@ -18,7 +19,7 @@
         public static DataTable VoiceAttack(DataTable voiceAttack, DataTable eliteDangerous)
         {
             // Initialise lookup dictionary for inter-game action references ..
-            GameActionExchange actions = new GameActionExchange();
+            GameActionExchanger actions = new GameActionExchanger();
             actions.Initialise();
 
             // Datatable to hold tabulated contents ..
@@ -29,18 +30,18 @@
                                     select
                                        new
                                          {
-                                            KeyEnumeration = va.Field<string>(Enums.Column.KeyEnumeration.ToString()),
-                                            EliteDangerousAction = actions.GetED(va.Field<string>(Enums.Column.KeyAction.ToString())),
-                                            Action = va.Field<string>(Enums.Column.KeyAction.ToString()),
-                                            KeyValue = va.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
-                                            KeyCode = va.Field<int>(Enums.Column.KeyEnumerationCode.ToString()),
-                                            KeyID = va.Field<string>(Enums.Column.KeyId.ToString()),
-                                            ModifierKeyGameValue = va.Field<string>(Enums.Column.ModifierKeyGameValue.ToString()),
-                                            ModifierKeyEnumerationValue = va.Field<string>(Enums.Column.ModifierKeyEnumerationValue.ToString()),
-                                            ModifierKeyEnumerationCode = va.Field<int>(Enums.Column.ModifierKeyEnumerationCode.ToString()),
-                                            ModifierKeyID = va.Field<string>(Enums.Column.ModifierKeyId.ToString()),
-                                            FilePath = va.Field<string>(Enums.Column.FilePath.ToString()),
-                                            Internal = va.Field<string>(Enums.Column.Internal.ToString())
+                                            KeyEnumeration = va.Field<string>(Helper.Enums.Column.KeyEnumeration.ToString()),
+                                            EliteDangerousAction = actions.GetED(va.Field<string>(Helper.Enums.Column.KeyAction.ToString())),
+                                            Action = va.Field<string>(Helper.Enums.Column.KeyAction.ToString()),
+                                            KeyValue = va.Field<string>(Helper.Enums.Column.KeyEnumerationValue.ToString()),
+                                            KeyCode = va.Field<int>(Helper.Enums.Column.KeyEnumerationCode.ToString()),
+                                            KeyID = va.Field<string>(Helper.Enums.Column.KeyId.ToString()),
+                                            ModifierKeyGameValue = va.Field<string>(Helper.Enums.Column.ModifierKeyGameValue.ToString()),
+                                            ModifierKeyEnumerationValue = va.Field<string>(Helper.Enums.Column.ModifierKeyEnumerationValue.ToString()),
+                                            ModifierKeyEnumerationCode = va.Field<int>(Helper.Enums.Column.ModifierKeyEnumerationCode.ToString()),
+                                            ModifierKeyID = va.Field<string>(Helper.Enums.Column.ModifierKeyId.ToString()),
+                                            FilePath = va.Field<string>(Helper.Enums.Column.FilePath.ToString()),
+                                            Internal = va.Field<string>(Helper.Enums.Column.Internal.ToString())
                                          };
 
             // .. and compare with what has been defined in the Elite Dangerous bindings ..
@@ -51,22 +52,22 @@
                 string rationale = "unknown";
 
                 var elitedangerousBindings = from ed in eliteDangerous.AsEnumerable()
-                                            where ed.Field<string>(Enums.Column.KeyAction.ToString()) == voiceattackBinding.EliteDangerousAction
+                                             where ed.Field<string>(Helper.Enums.Column.KeyAction.ToString()) == voiceattackBinding.EliteDangerousAction
                                            select
                                               new
                                                 {
-                                                    Action = ed.Field<string>(Enums.Column.KeyAction.ToString()),
-                                                    KeyPriority = ed.Field<string>(Enums.Column.DevicePriority.ToString()),
-                                                    KeyGameValue = ed.Field<string>(Enums.Column.KeyGameValue.ToString()),
-                                                    KeyEnumerationValue = ed.Field<string>(Enums.Column.KeyEnumerationValue.ToString()),
-                                                    KeyEnumerationCode = ed.Field<int>(Enums.Column.KeyEnumerationCode.ToString()),
-                                                    KeyID = ed.Field<string>(Enums.Column.KeyId.ToString()),
-                                                    ModifierKeyGameValue = ed.Field<string>(Enums.Column.ModifierKeyGameValue.ToString()),
-                                                    ModifierKeyEnumerationValue = ed.Field<string>(Enums.Column.ModifierKeyEnumerationValue.ToString()),
-                                                    ModifierKeyEnumerationCode = ed.Field<int>(Enums.Column.ModifierKeyEnumerationCode.ToString()),
-                                                    ModifierKeyID = ed.Field<string>(Enums.Column.ModifierKeyId.ToString()),
-                                                    FilePath = ed.Field<string>(Enums.Column.FilePath.ToString()),
-                                                    Internal = ed.Field<string>(Enums.Column.Internal.ToString())
+                                                    Action = ed.Field<string>(Helper.Enums.Column.KeyAction.ToString()),
+                                                    KeyPriority = ed.Field<string>(Helper.Enums.Column.DevicePriority.ToString()),
+                                                    KeyGameValue = ed.Field<string>(Helper.Enums.Column.KeyGameValue.ToString()),
+                                                    KeyEnumerationValue = ed.Field<string>(Helper.Enums.Column.KeyEnumerationValue.ToString()),
+                                                    KeyEnumerationCode = ed.Field<int>(Helper.Enums.Column.KeyEnumerationCode.ToString()),
+                                                    KeyID = ed.Field<string>(Helper.Enums.Column.KeyId.ToString()),
+                                                    ModifierKeyGameValue = ed.Field<string>(Helper.Enums.Column.ModifierKeyGameValue.ToString()),
+                                                    ModifierKeyEnumerationValue = ed.Field<string>(Helper.Enums.Column.ModifierKeyEnumerationValue.ToString()),
+                                                    ModifierKeyEnumerationCode = ed.Field<int>(Helper.Enums.Column.ModifierKeyEnumerationCode.ToString()),
+                                                    ModifierKeyID = ed.Field<string>(Helper.Enums.Column.ModifierKeyId.ToString()),
+                                                    FilePath = ed.Field<string>(Helper.Enums.Column.FilePath.ToString()),
+                                                    Internal = ed.Field<string>(Helper.Enums.Column.Internal.ToString())
                                                 };
 
                 // Compare matching action bindings with their assigned key value/code to evaluate which key code(s) require remapping ..
@@ -84,7 +85,7 @@
                         ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
                         (elitedangerousBinding.ModifierKeyEnumerationCode == voiceattackBinding.ModifierKeyEnumerationCode)))
                     {
-                        remapRequired = Enums.KeyUpdateRequired.NO.ToString();
+                        remapRequired = Helper.Enums.KeyUpdateRequired.NO.ToString();
                         rationale = "ED o--o VA Key Codes are aligned";
                     }
                     else
@@ -94,7 +95,7 @@
                         // Check for misaligned codes ..
                         if (elitedangerousBinding.KeyEnumerationCode > StatusCode.EmptyStringInt)
                         {
-                            remapRequired = Enums.KeyUpdateRequired.YES_ed_to_va.ToString();
+                            remapRequired = Helper.Enums.KeyUpdateRequired.YES_ed_to_va.ToString();
 
                             // Check for: misaligned key codes ..
                             if (elitedangerousBinding.KeyEnumerationCode != voiceattackBinding.KeyCode)
@@ -119,14 +120,14 @@
                         // Check for unresolvable key codes ..
                         if (elitedangerousBinding.KeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || elitedangerousBinding.KeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
                         {
-                            remapRequired = Enums.KeyUpdateRequired.NO.ToString();
+                            remapRequired = Helper.Enums.KeyUpdateRequired.NO.ToString();
                             rationale += string.Format("Unresolvable key code for: ED[{0}];", elitedangerousBinding.KeyGameValue);
                         }
 
                         // Check for: unresolvable modifier key codes ..
                         if (elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
                         {
-                            remapRequired = Enums.KeyUpdateRequired.NO.ToString();
+                            remapRequired = Helper.Enums.KeyUpdateRequired.NO.ToString();
                             rationale += string.Format("Unresolvable modifier key code for: ED[{0}];", elitedangerousBinding.ModifierKeyGameValue);
                         }
                     }
@@ -171,7 +172,7 @@
                 if (!commandDefinedInEliteDangerousBindsFile)
                 {
                     // Append to DataTable
-                    remapRequired = Enums.KeyUpdateRequired.YES_va_to_ed.ToString();
+                    remapRequired = Helper.Enums.KeyUpdateRequired.YES_va_to_ed.ToString();
                     rationale = string.Format("ED[{0}] not bound to a key", voiceattackBinding.EliteDangerousAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
@@ -210,6 +211,69 @@
             }
 
             return consolidatedaction;
+        }
+
+        /// <summary>
+        /// Analyse vacant Game Action Bindings between Elite Dangerous and VoiceAttack ..
+        /// </summary>
+        /// <param name="eliteDangerousBinds"></param>
+        /// <param name="voiceAttackProfile"></param>
+        /// <returns></returns>
+        public static DataTable EliteDangerous(string eliteDangerousBinds, string voiceAttackProfile)
+        {
+            // Datatable to hold tabulated contents ..
+            DataTable reversebindableaction = TableShape.ReverseBindableVacantEDActions();
+
+            // Read bindings ..
+            KeyReaderEliteDangerous ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
+            KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
+
+            // Analyse binding differences uisng this class' VoiceAttack method ..
+            var consolidatedaction = GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands());
+
+            // Initialise lookup dictionary for inter-game action references ..
+            Mapper keyMapper = new Mapper(KeyHelper.Enums.InputKeyEnumType.WindowsForms);
+
+            // Search through all defined Voice Attack bindings where there is portential update in EliteDangerous ..
+            var vacantEliteDangerousBindings = from vac in consolidatedaction.AsEnumerable()
+                                               where vac.Field<string>(Helper.Enums.Column.KeyUpdateRequired.ToString()) == Helper.Enums.KeyUpdateRequired.YES_va_to_ed.ToString()
+                                              select
+                                                 new
+                                                 {
+                                                     KeyEnumeration = vac.Field<string>(Helper.Enums.Column.KeyEnumeration.ToString()),
+                                                     EliteDangerousAction = vac.Field<string>(Helper.Enums.Column.EliteDangerousAction.ToString()),
+                                                     VoiceAttackAction = vac.Field<string>(Helper.Enums.Column.VoiceAttackAction.ToString()),
+                                                     VoiceAttackKeyValue = vac.Field<string>(Helper.Enums.Column.VoiceAttackKeyValue.ToString()),
+                                                     VoiceAttackKeyCode = vac.Field<string>(Helper.Enums.Column.VoiceAttackKeyCode.ToString()),
+                                                     VoiceAttackModifierKeyValue = vac.Field<string>(Helper.Enums.Column.VoiceAttackModifierKeyValue.ToString()),
+                                                     VoiceAttackModifierKeyCode = vac.Field<string>(Helper.Enums.Column.VoiceAttackModifierKeyCode.ToString()),
+                                                     VoiceAttackInternal = vac.Field<string>(Helper.Enums.Column.VoiceAttackInternal.ToString()),
+                                                     VoiceAttackProfile = vac.Field<string>(Helper.Enums.Column.VoiceAttackProfile.ToString())
+                                                 };
+
+            foreach (var veb in vacantEliteDangerousBindings)
+            {
+                reversebindableaction.LoadDataRow(new object[] 
+                                                {
+                                                 ////--------------------------------------------------------------------------
+                                                 veb.KeyEnumeration, //KeyEnumeration
+                                                 veb.EliteDangerousAction, //EliteDangerousAction
+                                                 veb.VoiceAttackAction, //VoiceAttackAction
+                                                 ////--------------------------------------------------------------------------
+                                                 veb.VoiceAttackKeyValue, //VoiceAttackKeyValue
+                                                 veb.VoiceAttackKeyCode, //VoiceAttackKeyCode
+                                                 keyMapper.GetEDBindingValue(int.Parse(veb.VoiceAttackKeyCode)), //EliteDangerousKeyValue
+                                                 veb.VoiceAttackModifierKeyValue, //VoiceAttackModifierKeyValue
+                                                 veb.VoiceAttackModifierKeyCode, //VoiceAttackModifierKeyCode
+                                                 keyMapper.GetEDBindingValue(int.Parse(veb.VoiceAttackModifierKeyCode)), //EliteDangerousModifierKeyValue
+                                                 ////--------------------------------------------------------------------------
+                                                 veb.VoiceAttackInternal, //VoiceAttackInternal
+                                                 veb.VoiceAttackProfile //VoiceAttackProfile
+                                                },
+                                            false);
+            }
+
+            return reversebindableaction;
         }
     }
 }

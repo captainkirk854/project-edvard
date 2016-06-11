@@ -6,7 +6,7 @@
     /// <summary>
     /// Dictionary containing mappings between Elite Dangerous and Voice Attack Bindable Commands
     /// </summary>
-    public class GameActionExchange
+    public class GameActionExchanger
     {
         private const string EDCommandUndefined = "Elite Dangerous Command: Undefined";
         private const string VACommandUndefined = "VoiceAttack Command: Undefined";

@@ -2,6 +2,7 @@
 {
     using Binding;
     using Helper;
+    using KeyHelper;
     using System;
     using System.Data;
 
@@ -35,7 +36,7 @@
             try
             {
                 // Read Voice Attack Commands and Elite Dangerous Binds ..
-                KeyReader.KeyType = Enums.InputKeyEnumType.WindowsForms; // [optional] sets key type enumeration to use
+                KeyReader.KeyType = KeyHelper.Enums.InputKeyEnumType.WindowsForms; // [optional] sets key type enumeration to use
                 KeyReaderEliteDangerous ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
                 KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
                 Console.WriteLine("Configs read ..");
@@ -43,6 +44,9 @@
                 // Update VoiceAttack Profile ..
                 KeyWriterVoiceAttack newVoiceAttack = new KeyWriterVoiceAttack();
                 Console.WriteLine("VoiceAttack Profile: {0}", newVoiceAttack.Update(GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands())) == true ? "updated" : "no update possible or required");
+
+                // Reverse-synchronise any vacant Elite Dangerous Bindings ..
+                GameActionAnalyser.EliteDangerous(eliteDangerousBinds, voiceAttackProfile);
 
                 PressIt();
 
@@ -62,7 +66,7 @@
 
                 // Create CSV listing all consolidated actions ..
                 DataTable consolidatedBindings = GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands());
-                consolidatedBindings = consolidatedBindings.Sort(Enums.Column.EliteDangerousAction.ToString() + " asc");
+                consolidatedBindings = consolidatedBindings.Sort(Helper.Enums.Column.EliteDangerousAction.ToString() + " asc");
                 consolidatedBindings.CreateCSV(csvConsolidatedBindings);
 
                 //////////////////////////////////////////////////////////////////

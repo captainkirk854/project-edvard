@@ -5,6 +5,24 @@
     public static class TableShape
     {
         /// <summary>
+        /// Define KeyMap DataTable Structure
+        /// </summary>
+        /// <returns></returns>
+        public static DataTable DefineKeyMap()
+        {
+            // New DataTable ..
+            DataTable table = new DataTable();
+            table.TableName = "KeyMap";
+
+            // Define its structure ..
+            table.Columns.Add(Enums.Column.KeyEnumeration.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.KeyEnumerationValue.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.KeyEnumerationCode.ToString(), typeof(int));
+
+            return table;
+        }
+
+        /// <summary>
         /// Define Bindable Actions DataTable Structure
         /// </summary>
         /// <returns></returns>
@@ -89,6 +107,38 @@
             table.Columns.Add(Enums.Column.VoiceAttackProfile.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.EliteDangerousInternal.ToString(), typeof(string));           
             table.Columns.Add(Enums.Column.EliteDangerousBinds.ToString(), typeof(string));
+            ////--------------------------------------------------------------------------
+
+            return table;
+        }
+
+        /// <summary>
+        /// Define Reverse Bindable Vacant Elite Dangerous Actions DataTable Structure
+        /// </summary>
+        /// <returns></returns>
+        public static DataTable ReverseBindableVacantEDActions()
+        {
+            // New DataTable ..
+            DataTable table = new DataTable();
+            table.TableName = "ReverseBindableVacantEDActions";
+
+            // Define its structure ..
+            ////--------------------------------------------------------------------------
+            table.Columns.Add(Enums.Column.KeyEnumeration.ToString(), typeof(string));
+            ////--------------------------------------------------------------------------
+            table.Columns.Add(Enums.Column.EliteDangerousAction.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.VoiceAttackAction.ToString(), typeof(string));
+            ////--------------------------------------------------------------------------
+            table.Columns.Add(Enums.Column.VoiceAttackKeyValue.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.VoiceAttackKeyCode.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousKeyValue.ToString(), typeof(string));
+
+            table.Columns.Add(Enums.Column.VoiceAttackModifierKeyValue.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.VoiceAttackModifierKeyCode.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousModifierKeyValue.ToString(), typeof(string));
+            ////--------------------------------------------------------------------------
+            table.Columns.Add(Enums.Column.VoiceAttackInternal.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.VoiceAttackProfile.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
 
             return table;

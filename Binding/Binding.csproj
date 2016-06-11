@@ -53,6 +53,10 @@
       <Project>{696e228d-a175-4c0a-afab-7ad2e30e1965}</Project>
       <Name>Helper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KeyHelper\KeyHelper.csproj">
+      <Project>{6ed8bced-f737-4fd7-b8bd-b7aef7592ef3}</Project>
+      <Name>KeyHelper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
