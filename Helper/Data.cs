@@ -2,9 +2,7 @@
 {
     using System;
     using System.Data;
-    using System.Diagnostics;
     using System.IO;
-    using System.Threading;
 
     public static class Data
     {
@@ -292,37 +290,6 @@
 
             //Info ..
             Console.WriteLine("CREATED {0}", csvFilepath);
-        }
-
-        /// <summary>
-        /// Simple File Printing facility
-        /// </summary>
-        /// <param name="filename"></param>
-        private static void SendToPrinter(string filename)
-        {
-            // Define the print job ..
-            ProcessStartInfo printjob = new ProcessStartInfo();
-            printjob.Verb = "PRINT";
-            printjob.FileName = @filename;
-            printjob.CreateNoWindow = true;
-            printjob.WindowStyle = ProcessWindowStyle.Hidden;
-
-            // Start ..
-            Process printProcess = new Process();
-            printProcess.StartInfo = printjob;
-            printProcess.Start();
-
-            long ticks = -1;
-            while (ticks != printProcess.TotalProcessorTime.Ticks)
-            {
-                ticks = printProcess.TotalProcessorTime.Ticks;
-                Thread.Sleep(1000);
-            }
-
-            if (!printProcess.CloseMainWindow())
-            {
-                printProcess.Kill();
-            }
         }
 
         /// <summary>

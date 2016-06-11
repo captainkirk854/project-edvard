@@ -270,7 +270,7 @@
                                                  veb.VoiceAttackInternal, //VoiceAttackInternal
                                                  veb.VoiceAttackProfile //VoiceAttackProfile
                                                 },
-                                            false);
+                                                false);
             }
 
             return reversebindableaction;
