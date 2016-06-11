@@ -41,12 +41,13 @@
                 KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
                 Console.WriteLine("Configs read ..");
 
-                // Update VoiceAttack Profile ..
+                // Update VoiceAttack Profile (optional) ..
                 KeyWriterVoiceAttack newVoiceAttack = new KeyWriterVoiceAttack();
-                Console.WriteLine("VoiceAttack Profile: {0}", newVoiceAttack.Update(GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands())) == true ? "updated" : "no update possible or required");
+                Console.WriteLine("Voice Attack Profile: {0}", newVoiceAttack.Update(GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands())) == true ? "updated" : "no update possible or required");
 
-                // Reverse-synchronise any vacant Elite Dangerous Bindings ..
-                GameActionAnalyser.EliteDangerous(eliteDangerousBinds, voiceAttackProfile);
+                // Reverse-synchronise any vacant Elite Dangerous Bindings (optional) ..
+                KeyWriterEliteDangerous newEliteDangerous = new KeyWriterEliteDangerous();
+                Console.WriteLine("Elite Dangerous Binds: {0}", newEliteDangerous.Update(GameActionAnalyser.EliteDangerous(eliteDangerousBinds, voiceAttackProfile)) == true ? "updated" : "no update possible or required");
 
                 PressIt();
 

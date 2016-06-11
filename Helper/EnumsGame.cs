@@ -1,7 +1,7 @@
 ﻿namespace Helper
 {
     /// <summary>
-    /// Application related Enumerations for Elite Dangerous
+    /// Application-related Enumerations for Elite Dangerous and Voice Attack
     /// </summary>
     public partial class Enums
     {
@@ -15,12 +15,12 @@
         }
 
         /// <summary>
-        /// Enumeration of Keyboard-interaction Indicator
+        /// Enumeration of Game-interaction Indicator
         /// </summary>
-        public enum KeyboardInteraction
+        public enum HumanGameInteraction
         {
-            Keyboard, //EliteDangerous
-            PressKey  //VoiceAttack
+            Keyboard, //Elite Dangerous
+            PressKey  //Voice Attack
         }
 
         /// <summary>
