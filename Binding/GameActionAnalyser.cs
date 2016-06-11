@@ -4,6 +4,7 @@
     using System.Data;
     using Helper;
     using KeyHelper;
+    using System.Linq;
 
     /// <summary>
     /// Analyse and Consolidate Game Action Bindings between VoiceAttack and Elite Dangerous ..
@@ -24,6 +25,8 @@
 
             // Datatable to hold tabulated contents ..
             DataTable consolidatedaction = TableShape.ConsolidatedActions();
+            string fakeEliteDangerousBindsInternal = string.Empty;
+            string fakeEliteDangerousBindsFilePath = string.Empty;
 
             // Search through all defined Voice Attack bindings ..
             var voiceattackBindings = from va in voiceAttack.AsEnumerable()
@@ -74,6 +77,10 @@
                 foreach (var elitedangerousBinding in elitedangerousBindings)
                 {
                     commandDefinedInEliteDangerousBindsFile = true;
+
+                    // Assign for later faked use ..
+                    fakeEliteDangerousBindsInternal = elitedangerousBinding.Internal;
+                    fakeEliteDangerousBindsFilePath = elitedangerousBinding.FilePath;
 
                     // Check for: satisfactory alignment of regular and modifier key codes ..
                     if (
@@ -202,8 +209,8 @@
                                                  ////--------------------------------------------------------------------------                                               
                                                  voiceattackBinding.Internal, //VoiceAttackInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
-                                                 StatusCode.NotApplicable, //EliteDangerousInternal
-                                                 StatusCode.NotApplicable //EliteDangerousFilePath
+                                                 fakeEliteDangerousBindsInternal, //EliteDangerousInternal
+                                                 fakeEliteDangerousBindsFilePath //EliteDangerousFilePath
                                                  ////--------------------------------------------------------------------------
                                                 },
                                                 false);
@@ -248,7 +255,9 @@
                                                      VoiceAttackModifierKeyValue = vac.Field<string>(Helper.Enums.Column.VoiceAttackModifierKeyValue.ToString()),
                                                      VoiceAttackModifierKeyCode = vac.Field<string>(Helper.Enums.Column.VoiceAttackModifierKeyCode.ToString()),
                                                      VoiceAttackInternal = vac.Field<string>(Helper.Enums.Column.VoiceAttackInternal.ToString()),
-                                                     VoiceAttackProfile = vac.Field<string>(Helper.Enums.Column.VoiceAttackProfile.ToString())
+                                                     VoiceAttackProfile = vac.Field<string>(Helper.Enums.Column.VoiceAttackProfile.ToString()),
+                                                     EliteDangerousInternal = vac.Field<string>(Helper.Enums.Column.EliteDangerousInternal.ToString()),
+                                                     EliteDangerousBinds = vac.Field<string>(Helper.Enums.Column.EliteDangerousBinds.ToString())
                                                  };
 
             foreach (var veb in vacantEliteDangerousBindings)
@@ -268,7 +277,9 @@
                                                  keyMapper.GetEDBindingValue(int.Parse(veb.VoiceAttackModifierKeyCode)), //EliteDangerousModifierKeyValue
                                                  ////--------------------------------------------------------------------------
                                                  veb.VoiceAttackInternal, //VoiceAttackInternal
-                                                 veb.VoiceAttackProfile //VoiceAttackProfile
+                                                 veb.VoiceAttackProfile, //VoiceAttackProfile
+                                                 veb.EliteDangerousInternal, //EliteDangerousInternal
+                                                 veb.EliteDangerousBinds //EliteDangerousBinds
                                                 },
                                                 false);
             }

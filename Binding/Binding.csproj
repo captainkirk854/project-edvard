@@ -45,6 +45,7 @@
     <Compile Include="KeyReader.cs" />
     <Compile Include="KeyReaderEliteDangerous.cs" />
     <Compile Include="KeyReaderVoiceAttack.cs" />
+    <Compile Include="KeyWriterEliteDangerous.cs" />
     <Compile Include="KeyWriterVoiceAttack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

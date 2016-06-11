@@ -22,43 +22,49 @@
         /// <summary>
         /// Update Voice Attack Profile with adjusted KeyCode(s) from Elite Dangerous Key Bindings
         /// </summary>
-        /// <param name="consolidatedkeybindings"></param>
+        /// <param name="consolidatedActions"></param>
         /// <returns></returns>
-        public bool Update(DataTable consolidatedkeybindings)
+        public bool Update(DataTable consolidatedActions)
         {
             bool profileUpdated = false;
 
             // Find VoiceAttack commands which require remapping ..
-            var consolidatedBindings = from cb in consolidatedkeybindings.AsEnumerable()
+            var consolidatedBindings = from cb in consolidatedActions.AsEnumerable()
                                       where cb.Field<string>(Enums.Column.KeyUpdateRequired.ToString()) == Enums.KeyUpdateRequired.YES_ed_to_va.ToString()
                                      select
                                         new
                                             {
-                                                VAP = cb.Field<string>(Enums.Column.VoiceAttackProfile.ToString()),
-                                                VAAction = cb.Field<string>(Enums.Column.VoiceAttackAction.ToString()),
-                                                VAKeyId = cb.Field<string>(Enums.Column.VoiceAttackKeyId.ToString()),
-                                                VAKeyCode = cb.Field<string>(Enums.Column.VoiceAttackKeyCode.ToString()),
-                                                VAModifierKeyCode = cb.Field<string>(Enums.Column.VoiceAttackModifierKeyCode.ToString()),
-                                                EDKeyCode = cb.Field<string>(Enums.Column.EliteDangerousKeyCode.ToString()),
-                                                EDModifierKeyCode = cb.Field<string>(Enums.Column.EliteDangerousModifierKeyCode.ToString())
+                                                VoiceAttackProfile = cb.Field<string>(Enums.Column.VoiceAttackProfile.ToString()),
+                                                VoiceAttackAction = cb.Field<string>(Enums.Column.VoiceAttackAction.ToString()),
+                                                VoiceAttackKeyId = cb.Field<string>(Enums.Column.VoiceAttackKeyId.ToString()),
+                                                VoiceAttackKeyCode = cb.Field<string>(Enums.Column.VoiceAttackKeyCode.ToString()),
+                                                VoiceAttackModifierKeyCode = cb.Field<string>(Enums.Column.VoiceAttackModifierKeyCode.ToString()),
+                                                EliteDangerousKeyCode = cb.Field<string>(Enums.Column.EliteDangerousKeyCode.ToString()),
+                                                EliteDangerousModifierKeyCode = cb.Field<string>(Enums.Column.EliteDangerousModifierKeyCode.ToString())
                                             };
 
             // Perform key code value update(s) for those commands that require it ..
             foreach (var consolidatedBinding in consolidatedBindings)
             {
                 // Align key code in Voice Attack with that used in Elite Dangerous ..
-                this.UpdateVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDKeyCode);
+                this.UpdateVoiceAttackKeyCode(consolidatedBinding.VoiceAttackProfile,
+                                              consolidatedBinding.VoiceAttackKeyId.Trim(), 
+                                              consolidatedBinding.EliteDangerousKeyCode);
 
                 // Remove any other (modifier) key code(s) associated to the VA Key Id ..
-                this.RemoveAnyOtherVoiceAttackKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDKeyCode);
+                this.RemoveAnyOtherVoiceAttackKeyCode(consolidatedBinding.VoiceAttackProfile, 
+                                                      consolidatedBinding.VoiceAttackKeyId.Trim(), 
+                                                      consolidatedBinding.EliteDangerousKeyCode);
 
                 // Align modifier key code in VoiceAttack if there is a valid modifier key code from Elite Dangerous ..                  
-                if (int.Parse(consolidatedBinding.EDModifierKeyCode) > 0)
+                if (int.Parse(consolidatedBinding.EliteDangerousModifierKeyCode) > 0)
                 {
                     // .. by creating additional XElement to house modifier key code ..
-                    if (int.Parse(consolidatedBinding.VAModifierKeyCode) < 0)
+                    if (int.Parse(consolidatedBinding.VoiceAttackModifierKeyCode) < 0)
                     {
-                        this.InsertVoiceAttackModifierKeyCode(consolidatedBinding.VAP, consolidatedBinding.VAKeyId.Trim(), consolidatedBinding.EDModifierKeyCode);
+                        this.InsertVoiceAttackModifierKeyCode(consolidatedBinding.VoiceAttackProfile, 
+                                                              consolidatedBinding.VoiceAttackKeyId.Trim(), 
+                                                              consolidatedBinding.EliteDangerousModifierKeyCode);
                     }
                 }
 

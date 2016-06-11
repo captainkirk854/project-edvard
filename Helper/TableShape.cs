@@ -139,6 +139,8 @@
             ////--------------------------------------------------------------------------
             table.Columns.Add(Enums.Column.VoiceAttackInternal.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackProfile.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousInternal.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousBinds.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
 
             return table;
