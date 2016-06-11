@@ -29,10 +29,6 @@
                     this.keyEnum = this.WindowsInput();
                     break;
 
-                case Enums.InputKeyEnumType.SharpDX:
-                    this.keyEnum = this.SharpDX();
-                    break;
-
                 default:
                     this.keyEnum = this.WindowsForms();
                     break;
@@ -83,18 +79,6 @@
         private Dictionary<string, int> WindowsInput()
         {
             return this.MakeDictionary(Enum.GetValues(typeof(System.Windows.Input.Key)).Cast<System.Windows.Input.Key>().Distinct());
-        }
-
-        /// <summary>
-        /// Use SharpDX DirectInput Keys Enum to create a lookup dictionary for key values and codes ..
-        /// </summary>
-        /// <remarks>
-        /// ref: https://msdn.microsoft.com/en-us/library/windows/desktop/bb321074(v=vs.85).aspx
-        /// </remarks>
-        /// <returns></returns>
-        private Dictionary<string, int> SharpDX()
-        {
-            return this.MakeDictionary(Enum.GetValues(typeof(SharpDX.DirectInput.Key)).Cast<SharpDX.DirectInput.Key>().Distinct());
         }
 
         /// <summary>

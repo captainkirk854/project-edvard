@@ -11,7 +11,6 @@
         public enum InputKeyEnumType
         {
             Console,
-            SharpDX,
             WindowsForms,
             WindowsInput
         }
