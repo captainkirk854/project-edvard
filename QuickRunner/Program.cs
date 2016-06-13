@@ -52,8 +52,12 @@
                 PressIt();
 
                 //////////////////////////////////////////////////////////////////
-                //////// O P T I O N A L /////////////////////////////////////////
+                //////// O P T I O N A L /////FINAL PROFILE AND BINDS STATUS//////
                 //////////////////////////////////////////////////////////////////
+
+                // Re-read Voice Attack Commands and Elite Dangerous Binds ..
+                ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
+                va = new KeyReaderVoiceAttack(voiceAttackProfile);
 
                 // Create CSV listing all possible actions ..
                 var elitedangerousCommands = ed.GetBindableCommands();
@@ -71,7 +75,7 @@
                 consolidatedBindings.CreateCSV(csvConsolidatedBindings);
 
                 //////////////////////////////////////////////////////////////////
-                //////// O P T I O N A L /////////////////////////////////////////
+                //////// O P T I O N A L /////FINAL PROFILE AND BINDS STATUS//////
                 //////////////////////////////////////////////////////////////////
             }
             catch
