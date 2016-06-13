@@ -13,6 +13,7 @@
     {
         //Initialise ..
         private const string XMLRoot = "Root";
+        private const string XMLPresetName = "PresetName";
         private const string XMLKey = "Key";
         private const string XMLDevice = "Device";
         private const string XMLModifier = "Modifier";
@@ -278,22 +279,14 @@
         /// <remarks>
         ///   Format: XML
         ///             o <Root/>
-        ///               |_ PresetName; MajorVersion; MinorVersion
+        ///               |_ PresetName;
         /// </remarks>
         /// <param name="xdoc"></param>
         /// <returns></returns>
         private string GetInternalReference(ref XDocument xdoc)
         {
             //Initialise ..
-            string properties = string.Empty;
-            string delim = " ";
-
-            foreach (var nodeAttributes in xdoc.Element(XMLRoot).Attributes())
-            {
-                properties += nodeAttributes.Value + delim;
-            }
-
-            return properties.Trim();
+            return xdoc.Element(XMLRoot).SafeAttributeValue(XMLPresetName).Trim();
         }
     }
 }

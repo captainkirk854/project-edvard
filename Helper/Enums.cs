@@ -57,5 +57,13 @@
             YES_va_to_ed,
             NO
         }
+
+        /// <summary>
+        /// Enumeration of File Updated Indicator
+        /// </summary>
+        public enum FileUpdated
+        {
+            EdVard
+        }
     }
 }

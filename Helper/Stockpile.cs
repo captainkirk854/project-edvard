@@ -33,7 +33,7 @@
             string formatstring = new string(PadChar, padSize);
             var latestBackupFileName = string.Empty;
             int backupSequenceNumber = 1;
-            padSize = (padSize < 2 ? padSize = 2 : padSize);
+            padSize = padSize < 2 ? padSize = 2 : padSize;
 
             // Test for existing file of same name ..
             if (File.Exists(fileName))

@@ -1,5 +1,6 @@
 ﻿namespace Binding
 {
+    using System;
     using System.Data;
     using System.Linq;
     using Helper;
@@ -8,6 +9,7 @@
     {
         //Initialise ..
         private const string XMLRoot = "Root";
+        private const string XMLPresetName = "PresetName";
         private const string XMLKey = "Key";
         private const string XMLDevice = "Device";
         private const string XMLModifier = "Modifier";
@@ -20,6 +22,8 @@
         public bool Update(DataTable reverseBindableVacantEDActions)
         {
             bool bindsUpdated = false;
+            string fakeEliteDangerousInternal = string.Empty;
+            string fakeVoiceAttackProfileFilePath = string.Empty;
 
             // Find Elite Dangerous commands which are vacant and available for remapping ..
             var vacantBindings = from vb in reverseBindableVacantEDActions.AsEnumerable()
@@ -48,7 +52,17 @@
                                                        Helper.Enums.EliteDangerousDevicePriority.Primary.ToString(), 
                                                        vacantBinding.EliteDangerousAction, 
                                                        vacantBinding.EliteDangerousKeyValue);
+
+                fakeEliteDangerousInternal = vacantBinding.EliteDangerousInternal;
+                fakeVoiceAttackProfileFilePath = vacantBinding.EliteDangerousBinds;
                 bindsUpdated = true;
+            }
+
+            // Update internal reference ..
+            if (bindsUpdated)
+            {
+                string fileUpdatedTag = string.Format("[{0}.{1:yyyyMMddHmmss}]", Enums.FileUpdated.EdVard.ToString(), DateTime.Now);
+                this.UpdateBindsPresetName(fakeVoiceAttackProfileFilePath, fakeEliteDangerousInternal, fakeEliteDangerousInternal + fileUpdatedTag);
             }
 
             return bindsUpdated;
@@ -68,8 +82,8 @@
         ///                  |_<Deadzone/>
         ///               |_ <things/>
         ///                  |_<Primary/>
-        ///                     |_<Device = {NoDevice}/>
-        ///                     |_<Key/ = empty>
+        ///                     |_<Device = {NoDevice}/>[*]
+        ///                     |_<Key/ = empty>[*]
         ///                  |_<Secondary/>
         ///                     |_<Device/>
         ///                     |_<Key/>
@@ -83,7 +97,6 @@
             // Initialise ..
             const string VacantDeviceIndicator = "{NoDevice}";
 
-            // Read Voice Attack Profile ...
             var edb = Xml.ReadXDoc(edbinds);
 
             // Update [Key Binding] for Elite Dangerous Action using Key Value  ..
@@ -102,7 +115,38 @@
                       item.SafeAttributeValue(XMLKey) == Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
                .SetAttributeValue(XMLDevice, Enums.HumanGameInteraction.Keyboard.ToString());
 
-            // Save file ..
+            edb.Save(edbinds);
+        }
+
+        /// <summary>
+        /// Update Elite Dangerous Binds Preset Name
+        /// </summary>
+        /// <remarks>
+        ///   Format: XML
+        ///             o <Root PresetName=[*]/>
+        ///               |_ <KeyboardLayout/>
+        ///               |_ <things/>
+        ///                  |_<Binding/>
+        ///                  |_<Inverted/>
+        ///                  |_<Deadzone/>
+        ///               |_ <things/>
+        ///                  |_<Primary/>
+        ///                     |_<Device = {NoDevice}/>
+        ///                     |_<Key/ = empty>
+        /// </remarks>
+        /// <param name="vaprofile"></param>
+        /// <param name="profileName"></param>
+        /// <param name="updatedProfileName"></param>
+        private void UpdateBindsPresetName(string edbinds, string presetName, string updatedPresetName)
+        {
+            var edb = Xml.ReadXDoc(edbinds);
+ 
+            // Update attribute of root node ..
+            edb.Root
+               .Attributes(XMLPresetName)
+               .Where(item => item.Value == presetName).FirstOrDefault()
+               .SetValue(updatedPresetName);
+
             edb.Save(edbinds);
         }
     }

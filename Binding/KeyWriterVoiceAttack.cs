@@ -1,9 +1,9 @@
 ﻿namespace Binding
 {
+    using System;
     using System.Data;
     using System.Linq;
     using System.Xml.Linq;
-    using System.Xml.XPath;
     using Helper;
 
     /// <summary>
@@ -12,6 +12,7 @@
     public class KeyWriterVoiceAttack : IKeyWriter
     {
         // Initialise ..
+        private const string XMLName = "Name";
         private const string XMLCommand = "Command";
         private const string XMLActionSequence = "ActionSequence";
         private const string XMLCommandAction = "CommandAction";
@@ -27,6 +28,8 @@
         public bool Update(DataTable consolidatedActions)
         {
             bool profileUpdated = false;
+            string fakeVoiceAttackProfileInternal = string.Empty;
+            string fakeVoiceAttackProfileFilePath = string.Empty;
 
             // Find VoiceAttack commands which require remapping ..
             var consolidatedBindings = from cb in consolidatedActions.AsEnumerable()
@@ -34,6 +37,7 @@
                                      select
                                         new
                                             {
+                                                VoiceAttackInternal = cb.Field<string>(Enums.Column.VoiceAttackInternal.ToString()),
                                                 VoiceAttackProfile = cb.Field<string>(Enums.Column.VoiceAttackProfile.ToString()),
                                                 VoiceAttackAction = cb.Field<string>(Enums.Column.VoiceAttackAction.ToString()),
                                                 VoiceAttackKeyId = cb.Field<string>(Enums.Column.VoiceAttackKeyId.ToString()),
@@ -68,7 +72,16 @@
                     }
                 }
 
+                fakeVoiceAttackProfileInternal = consolidatedBinding.VoiceAttackInternal;
+                fakeVoiceAttackProfileFilePath = consolidatedBinding.VoiceAttackProfile;
                 profileUpdated = true;
+            }
+
+            // Update internal reference ..
+            if (profileUpdated)
+            {
+                string fileUpdatedTag = string.Format("[{0}.{1:yyyyMMddHmmss}]", Enums.FileUpdated.EdVard.ToString(), DateTime.Now);
+                this.UpdateVoiceAttackProfileName(fakeVoiceAttackProfileFilePath, fakeVoiceAttackProfileInternal, fakeVoiceAttackProfileInternal + fileUpdatedTag);
             }
 
             return profileUpdated;
@@ -79,7 +92,21 @@
         /// </summary>
         /// <remarks>
         /// Search for any <unsignedShort/> elements whose grandparent (Parent.Parent) <id> element equals vakeyId
-        ///  and add a new <unsignedShort/> XElement with keyCode value physically before existing one ..
+        /// and add a new <unsignedShort/> XElement with keyCode value physically before existing one ..
+        ///   Format: XML
+        ///             o <Profile/>
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        ///                      |_<Id/>
+        ///                      !_<CommandString/>
+        ///                      |_<ActionSequence/>
+        ///                        !_[some] <CommandAction/>
+        ///                                 !_<Id/>
+        ///                                 |_<ActionType/> = PressKey
+        ///                                 |_<KeyCodes/>
+        ///                                   (|_<unsignedShort/> = when modifier present)[*]
+        ///                                    |_<unsignedShort/>
+        ///                      !_<Category/> = Keybindings
         /// </remarks>
         /// <param name="vaprofile"></param>
         /// <param name="vakeyId"></param>
@@ -88,6 +115,7 @@
         {
             var vap = Xml.ReadXDoc(vaprofile);
 
+            // Insert XMLunsignedShort XElement before existing one ..
             vap.Descendants(XMLunsignedShort)
                .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId).FirstOrDefault()
                .AddBeforeSelf(new XElement(XMLunsignedShort, keyCode));
@@ -101,6 +129,20 @@
         /// <remarks>
         /// Search for any <unsignedShort/> elements whose grandparent (Parent.Parent) <id> element equals vakeyId
         /// and remove any <unsignedShort/> XElement(s) that do not match keyCode value ..
+        ///   Format: XML
+        ///             o <Profile/>
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        ///                      |_<Id/>
+        ///                      !_<CommandString/>
+        ///                      |_<ActionSequence/>
+        ///                        !_[some] <CommandAction/>
+        ///                                 !_<Id/>
+        ///                                 |_<ActionType/> = PressKey
+        ///                                 |_<KeyCodes/>
+        ///                                   (|_<unsignedShort/> = when modifier present)[*]
+        ///                                    |_<unsignedShort/>[*]
+        ///                      !_<Category/> = Keybindings
         /// </remarks>
         /// <param name="vaprofile"></param>
         /// <param name="vakeyId"></param>
@@ -109,6 +151,7 @@
         {
             var vap = Xml.ReadXDoc(vaprofile);
 
+            // Remove all XMLunsignedShort XElements ...
             vap.Descendants(XMLunsignedShort)
                .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId && item.Value != keyCode)
                .Remove();
@@ -131,8 +174,8 @@
         ///                                 !_<Id/>
         ///                                 |_<ActionType/> = PressKey
         ///                                 |_<KeyCodes/>
-        ///                                   (|_<unsignedShort/> = when modifier present)
-        ///                                    |_<unsignedShort/>
+        ///                                   (|_<unsignedShort/> = when modifier present)[*]
+        ///                                    |_<unsignedShort/>[*]
         ///                      !_<Category/> = Keybindings
         /// </remarks>
         /// <param name="vaprofile"></param>
@@ -140,14 +183,38 @@
         /// <param name="keyCode"></param>
         private void UpdateVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
         {
-            // Read Voice Attack Profile ...
             var vap = Xml.ReadXDoc(vaprofile);
 
+            // Update XMLunsignedShort XElement ..
             vap.Descendants(XMLunsignedShort)
                .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId).FirstOrDefault()
                .SetValue(keyCode);
 
-            // Save file ..
+            vap.Save(vaprofile);
+        }
+
+        /// <summary>
+        /// Update Voice Attack Profile Name
+        /// </summary>
+        /// <remarks>
+        ///   Format: XML
+        ///             o <Profile/>[*]
+        ///               |_ <Name/>
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        /// </remarks>
+        /// <param name="vaprofile"></param>
+        /// <param name="profileName"></param>
+        /// <param name="updatedProfileName"></param>
+        private void UpdateVoiceAttackProfileName(string vaprofile, string profileName, string updatedProfileName)
+        {
+            var vap = Xml.ReadXDoc(vaprofile);
+
+            // Update XMLunsignedShort XMLName ..
+            vap.Descendants(XMLName)
+               .Where(item => item.SafeElementValue() == profileName).FirstOrDefault()
+               .SetValue(updatedProfileName);
+
             vap.Save(vaprofile);
         }
     }
