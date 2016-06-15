@@ -24,8 +24,9 @@
         /// Update Voice Attack Profile with adjusted KeyCode(s) from Elite Dangerous Key Bindings
         /// </summary>
         /// <param name="consolidatedActions"></param>
+        /// <param name="updateChangeTag"></param>
         /// <returns></returns>
-        public bool Update(DataTable consolidatedActions)
+        public bool Update(DataTable consolidatedActions, bool updateChangeTag)
         {
             bool profileUpdated = false;
             string globalVoiceAttackProfileInternal = string.Empty;
@@ -78,7 +79,7 @@
             }
 
             // Update internal reference ..
-            if (profileUpdated)
+            if (profileUpdated && updateChangeTag)
             {
                 this.UpdateVoiceAttackProfileName(globalVoiceAttackProfileFilePath, globalVoiceAttackProfileInternal, Tag.Make(globalVoiceAttackProfileInternal));
             }

@@ -4,6 +4,6 @@
 
     public interface IKeyWriter
     {
-        bool Update(DataTable consolidatedkeybindings);
+        bool Update(DataTable consolidatedkeybindings, bool updateChangeTag);
     }
 }

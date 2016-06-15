@@ -18,8 +18,9 @@
         /// Update vacant Elite Dangerous Game Action binding with Key derived from Voice Attack Profile ..
         /// </summary>
         /// <param name="reverseBindableVacantEDActions"></param>
+        /// <param name="updateChangeTag"></param>
         /// <returns></returns>
-        public bool Update(DataTable reverseBindableVacantEDActions)
+        public bool Update(DataTable reverseBindableVacantEDActions, bool updateChangeTag)
         {
             // Initialise ..
             bool bindsUpdated = false;
@@ -75,7 +76,7 @@
             }
 
             // Update internal reference ..
-            if (bindsUpdated)
+            if (bindsUpdated && updateChangeTag)
             {
                 this.UpdateBindsPresetName(globalVoiceAttackProfileFilePath, globalEliteDangerousInternal, Tag.Make(globalEliteDangerousInternal));
             }
