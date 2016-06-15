@@ -21,7 +21,6 @@
         {
             // Initialise lookup dictionary for inter-game action references ..
             GameActionExchanger actions = new GameActionExchanger();
-            actions.Initialise();
 
             // Datatable to hold tabulated contents ..
             DataTable consolidatedaction = TableShape.ConsolidatedActions();

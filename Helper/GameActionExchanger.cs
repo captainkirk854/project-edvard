@@ -2,9 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Xml.Linq;
 
     /// <summary>
-    /// Dictionary containing mappings between Elite Dangerous and Voice Attack Bindable Commands
+    /// Dictionary with mappings between Elite Dangerous and Voice Attack Bindable Commands
     /// </summary>
     public class GameActionExchanger
     {
@@ -13,9 +14,12 @@
         private Dictionary<string, string> relationship = new Dictionary<string, string>();
 
         /// <summary>
-        /// Map Elite Dangerous Action Term to Voice Attack Action Term
+        /// Initializes a new instance of the <see cref="GameActionExchanger" /> class.
         /// </summary>
-        public void Initialise()
+        /// <remarks>
+        /// Create internal dictionary of Elite Dangerous Action Term : Voice Attack Action Term
+        /// </remarks>
+        public GameActionExchanger()
         {
             this.relationship.Add("BackwardKey", VACommandUndefined);
             this.relationship.Add("BackwardThrustButton", VACommandUndefined);
@@ -51,7 +55,8 @@
             this.relationship.Add("EjectAllCargo", VACommandUndefined);
             this.relationship.Add("FireChaffLauncher", "((Chaff))");
             this.relationship.Add("FocusCommsPanel", "((Comms Panel))");
-            this.relationship.Add("FocusLeftPanel", VACommandUndefined);
+            this.relationship.Add("FocusLeftPanel", "((Left Panel))");
+            this.relationship.Add("FocusRightPanel", "((Right Panel))");
             this.relationship.Add("FocusRadarPanel", "((Radar))");
             this.relationship.Add("ForwardKey", VACommandUndefined);
             this.relationship.Add("ForwardThrustButton", VACommandUndefined);
@@ -116,13 +121,13 @@
             this.relationship.Add("ToggleCargoScoop", "((Cargo Scoop))");
             this.relationship.Add("ToggleFlightAssist", "((Flight Assist))");
             this.relationship.Add("ToggleReverseThrottleInput", VACommandUndefined);
-            this.relationship.Add("UI_Back", VACommandUndefined);
-            this.relationship.Add("UI_Down", VACommandUndefined);
-            this.relationship.Add("UI_Left", VACommandUndefined);
-            this.relationship.Add("UI_Right", VACommandUndefined);
-            this.relationship.Add("UI_Select", VACommandUndefined);
-            this.relationship.Add("UI_Up", VACommandUndefined);
-            this.relationship.Add("UIFocus", VACommandUndefined);
+            this.relationship.Add("UI_Back", "((UI Cancel))");
+            this.relationship.Add("UI_Down", "((UI Down))");
+            this.relationship.Add("UI_Left", "((UI Left))");
+            this.relationship.Add("UI_Right", "((UI Right))");
+            this.relationship.Add("UI_Select", "((UI Accept))");
+            this.relationship.Add("UI_Up", "((UI Up))");
+            this.relationship.Add("UIFocus", "((UI Okay))");
             this.relationship.Add("UpThrustButton", VACommandUndefined);
             this.relationship.Add("UpThrustButton_Landing", VACommandUndefined);
             this.relationship.Add("UseBoostJuice", "((Afterburners))");
@@ -161,22 +166,78 @@
         /// <returns></returns>
         public string GetED(string commandVA)
         {
-            // Specials for these Voice Attack commands ...
-            if (commandVA == "((Decrease Sensor Range Max))")
-            {
-                return "RadarDecreaseRange";
-            }
+            // Initialise ..
+            string keyValue = string.Empty;
 
-            if (commandVA == "((Increase Sensor Range Max))")
-            {
-                return "RadarIncreaseRange";
-            }
+            // Search in specific list ..
+            keyValue = this.GetEDActionForDuplicateKeys(commandVA);
 
-            // Find value from key ..
-            string keyValue = this.relationship.FirstOrDefault(x => x.Value == commandVA).Key;
+            // Look to derive value from key ..
+            if (keyValue == null)
+            {
+                keyValue = this.relationship.FirstOrDefault(x => x.Value == commandVA).Key;
+            }
             
             // return with key value or default if null
             return keyValue != null ? keyValue : VACommandUndefined;
+        }
+
+        /// <summary>
+        /// Export internal dictionary as key-value XML
+        /// </summary>
+        /// <param name="xmlFilepath"></param>
+        public void Export(string xmlFilepath)
+        {
+            // Convert dictionary to XML ..
+            XElement el = new XElement("root", this.relationship.Select(kv => new XElement(kv.Key, kv.Value)));
+
+            // Save ..
+            el.Save(xmlFilepath);
+        }
+
+        /// <summary>
+        /// Import key-value XML as internal dictionary
+        /// </summary>
+        /// <param name="xmlFilepath"></param>
+        public void Import(string xmlFilepath)
+        {
+            // Convert to XML to key-value dictionary<string, string> ..
+            XElement root = XElement.Load(xmlFilepath);
+
+            // Clear existing dictionary created in class constructor ..
+            this.relationship.Clear();
+
+            // Traverse XML, adding each element to dictionary ..
+            foreach (var el in root.Elements())
+            {
+                this.relationship.Add(el.Name.LocalName, el.Value);
+            }
+        }
+
+        /// <summary>
+        /// Get Elite Dangerous Key which has multiple Voice Attack Commands .. 
+        /// </summary>
+        /// <param name="commandVA"></param>
+        /// <returns></returns>
+        private string GetEDActionForDuplicateKeys(string commandVA)
+        {
+            switch (commandVA)
+            {
+                case "((Decrease Sensor Range Max))":
+                    return "RadarDecreaseRange";
+
+                case "((Increase Sensor Range Max))":
+                    return "RadarIncreaseRange";
+
+                case "((UI Next))":
+                    return "UI_Right";
+
+                case "((UI Previous))":
+                    return "UI_Left";
+
+                default:
+                    return null;
+            }
         }
     }
 }
