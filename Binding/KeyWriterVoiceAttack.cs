@@ -80,8 +80,7 @@
             // Update internal reference ..
             if (profileUpdated)
             {
-                string fileUpdatedTag = string.Format("[{0}.{1:yyyyMMddHmmss}]", Enums.FileUpdated.EdVard.ToString(), DateTime.Now);
-                this.UpdateVoiceAttackProfileName(globalVoiceAttackProfileFilePath, globalVoiceAttackProfileInternal, globalVoiceAttackProfileInternal + fileUpdatedTag);
+                this.UpdateVoiceAttackProfileName(globalVoiceAttackProfileFilePath, globalVoiceAttackProfileInternal, Tag.Make(globalVoiceAttackProfileInternal));
             }
 
             return profileUpdated;

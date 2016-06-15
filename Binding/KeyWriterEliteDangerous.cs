@@ -77,8 +77,7 @@
             // Update internal reference ..
             if (bindsUpdated)
             {
-                string fileUpdatedTag = string.Format("[{0}.{1:yyyyMMddHmmss}]", Enums.FileUpdated.EdVard.ToString(), DateTime.Now);
-                this.UpdateBindsPresetName(globalVoiceAttackProfileFilePath, globalEliteDangerousInternal, globalEliteDangerousInternal + fileUpdatedTag);
+                this.UpdateBindsPresetName(globalVoiceAttackProfileFilePath, globalEliteDangerousInternal, Tag.Make(globalEliteDangerousInternal));
             }
 
             return bindsUpdated;

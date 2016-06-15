@@ -48,6 +48,7 @@
     <Compile Include="KeyWriterEliteDangerous.cs" />
     <Compile Include="KeyWriterVoiceAttack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tag.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Helper\Helper.csproj">
