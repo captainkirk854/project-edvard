@@ -13,10 +13,39 @@
             //////////////////////////////////////////////////////////////////
             // Initialise ..
             //////////////////////////////////////////////////////////////////
+            string eliteDangerousBinds = string.Empty;
+            string voiceAttackProfile = string.Empty;
 
-            // Point to project sample (not a resource as such) data ..
-            string eliteDangerousBinds = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
-            string voiceAttackProfile = GetProjectDirectory() + "\\Sample" + "\\VA02.vap";
+            // Get user-input ..
+            string defaultEDBindingsDirectory = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%") + "\\Frontier Developments\\Elite Dangerous\\Options\\Bindings";
+            string defaultVAProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
+
+            Console.WriteLine("Fullpath of Elite Dangerous Binds (.binds) File ..");
+            Console.WriteLine(" e.g. {0}", defaultEDBindingsDirectory);
+            Console.WriteLine("> ..", defaultEDBindingsDirectory);
+            eliteDangerousBinds = Console.ReadLine();
+            
+            Console.WriteLine("Fullpath of Voice Attack Profile (.vap) File ..");
+            Console.WriteLine(" e.g. {0}", defaultVAProfilesDirectory);
+            Console.WriteLine("> ..", defaultEDBindingsDirectory);
+            voiceAttackProfile = Console.ReadLine();
+
+            // Default if user-input is lazy ..
+            if ((eliteDangerousBinds.Length == 0) || (voiceAttackProfile.Length == 0))
+            {
+                Console.WriteLine("Using sample data ..");
+
+                // Point to project sample (not a resource as such) data ..
+                eliteDangerousBinds = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
+                voiceAttackProfile = GetProjectDirectory() + "\\Sample" + "\\VA02.vap";
+            }
+            else
+            {
+                // Perform backup ..
+                Console.WriteLine("Backing up ..");
+                eliteDangerousBinds.BackupFile(5, 3);
+                voiceAttackProfile.BackupFile(5, 3);
+            }
 
             // Path for serialised DataTable output ..
             const string Commands = "EDVA_Commands.csv";
@@ -37,13 +66,11 @@
             {
                 // Read Voice Attack Commands and Elite Dangerous Binds ..
                 KeyReader.KeyType = KeyHelper.Enums.InputKeyEnumType.WindowsForms; // [optional] sets key type enumeration to use
-                KeyReaderEliteDangerous ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
-                KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
-                Console.WriteLine("Configs read ..");
+                Console.WriteLine("Attempting update(s) ..");
 
                 // Update VoiceAttack Profile (optional) ..
                 KeyWriterVoiceAttack newVoiceAttack = new KeyWriterVoiceAttack();
-                Console.WriteLine("Voice Attack Profile: {0}", newVoiceAttack.Update(GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands())) == true ? "updated" : "no update possible or required");
+                Console.WriteLine("Voice Attack Profile: {0}", newVoiceAttack.Update(GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile)) == true ? "updated" : "no update possible or required");
 
                 // Reverse-synchronise any vacant Elite Dangerous Bindings (optional) ..
                 KeyWriterEliteDangerous newEliteDangerous = new KeyWriterEliteDangerous();
@@ -56,11 +83,11 @@
                 //////////////////////////////////////////////////////////////////
 
                 // Re-read Voice Attack Commands and Elite Dangerous Binds ..
-                ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
-                va = new KeyReaderVoiceAttack(voiceAttackProfile);
+                KeyReaderEliteDangerous ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
+                KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
 
                 // Create CSV listing all possible actions ..
-                var elitedangerousCommands = ed.GetBindableCommands();
+                DataTable elitedangerousCommands = ed.GetBindableCommands();
                 elitedangerousCommands.Merge(va.GetBindableCommands());
                 elitedangerousCommands.CreateCSV(csvCommands);
 
@@ -70,7 +97,7 @@
                 elitedangerousCommands.CreateCSV(csvBindings);
 
                 // Create CSV listing all consolidated actions ..
-                DataTable consolidatedBindings = GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands());
+                DataTable consolidatedBindings = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile);
                 consolidatedBindings = consolidatedBindings.Sort(Helper.Enums.Column.EliteDangerousAction.ToString() + " asc");
                 consolidatedBindings.CreateCSV(csvConsolidatedBindings);
 

@@ -14,10 +14,10 @@
         /// <summary>
         /// Match Command Key Codes in VoiceAttack based on Elite Dangerous Command Binds as Master ..
         /// </summary>
-        /// <param name="voiceAttack"></param>
-        /// <param name="eliteDangerous"></param>
+        /// <param name="eliteDangerousBinds"></param>
+        /// <param name="voiceAttackProfile"></param>
         /// <returns></returns>
-        public static DataTable VoiceAttack(DataTable voiceAttack, DataTable eliteDangerous)
+        public static DataTable VoiceAttack(string eliteDangerousBinds, string voiceAttackProfile)
         {
             // Initialise lookup dictionary for inter-game action references ..
             GameActionExchanger actions = new GameActionExchanger();
@@ -25,8 +25,11 @@
 
             // Datatable to hold tabulated contents ..
             DataTable consolidatedaction = TableShape.ConsolidatedActions();
-            string fakeEliteDangerousBindsInternal = string.Empty;
-            string fakeEliteDangerousBindsFilePath = string.Empty;
+            string globalEliteDangerousBindsInternal = string.Empty;
+
+            // Read bindings ..
+            var eliteDangerous = new KeyReaderEliteDangerous(eliteDangerousBinds).GetBoundCommands();
+            var voiceAttack = new KeyReaderVoiceAttack(voiceAttackProfile).GetBoundCommands();
 
             // Search through all defined Voice Attack bindings ..
             var voiceattackBindings = from va in voiceAttack.AsEnumerable()
@@ -78,9 +81,8 @@
                 {
                     commandDefinedInEliteDangerousBindsFile = true;
 
-                    // Assign for later faked use ..
-                    fakeEliteDangerousBindsInternal = elitedangerousBinding.Internal;
-                    fakeEliteDangerousBindsFilePath = elitedangerousBinding.FilePath;
+                    // Assign for later use ..
+                    globalEliteDangerousBindsInternal = elitedangerousBinding.Internal;
 
                     // Check for: satisfactory alignment of regular and modifier key codes ..
                     if (
@@ -209,8 +211,8 @@
                                                  ////--------------------------------------------------------------------------                                               
                                                  voiceattackBinding.Internal, //VoiceAttackInternal
                                                  voiceattackBinding.FilePath, //VoiceAttackProfile
-                                                 fakeEliteDangerousBindsInternal, //EliteDangerousInternal
-                                                 fakeEliteDangerousBindsFilePath //EliteDangerousFilePath
+                                                 globalEliteDangerousBindsInternal, //EliteDangerousInternal
+                                                 eliteDangerousBinds //EliteDangerousFilePath
                                                  ////--------------------------------------------------------------------------
                                                 },
                                                 false);
@@ -231,17 +233,13 @@
             // Datatable to hold tabulated contents ..
             DataTable reversebindableaction = TableShape.ReverseBindableVacantEDActions();
 
-            // Read bindings ..
-            KeyReaderEliteDangerous ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
-            KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
-
-            // Analyse binding differences uisng this class' VoiceAttack method ..
-            var consolidatedaction = GameActionAnalyser.VoiceAttack(va.GetBoundCommands(), ed.GetBoundCommands());
+            // Analyse binding differences ..
+            var consolidatedaction = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile);
 
             // Initialise lookup dictionary for inter-game action references ..
             Mapper keyMapper = new Mapper(KeyHelper.Enums.InputKeyEnumType.WindowsForms);
 
-            // Search through all defined Voice Attack bindings where there is portential update in EliteDangerous ..
+            // Find defined Voice Attack commands where there is potential for update in EliteDangerous binds ..
             var vacantEliteDangerousBindings = from vac in consolidatedaction.AsEnumerable()
                                                where vac.Field<string>(Helper.Enums.Column.KeyUpdateRequired.ToString()) == Helper.Enums.KeyUpdateRequired.YES_va_to_ed.ToString()
                                               select

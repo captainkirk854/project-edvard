@@ -28,8 +28,8 @@
         public bool Update(DataTable consolidatedActions)
         {
             bool profileUpdated = false;
-            string fakeVoiceAttackProfileInternal = string.Empty;
-            string fakeVoiceAttackProfileFilePath = string.Empty;
+            string globalVoiceAttackProfileInternal = string.Empty;
+            string globalVoiceAttackProfileFilePath = string.Empty;
 
             // Find VoiceAttack commands which require remapping ..
             var consolidatedBindings = from cb in consolidatedActions.AsEnumerable()
@@ -72,8 +72,8 @@
                     }
                 }
 
-                fakeVoiceAttackProfileInternal = consolidatedBinding.VoiceAttackInternal;
-                fakeVoiceAttackProfileFilePath = consolidatedBinding.VoiceAttackProfile;
+                globalVoiceAttackProfileInternal = consolidatedBinding.VoiceAttackInternal;
+                globalVoiceAttackProfileFilePath = consolidatedBinding.VoiceAttackProfile;
                 profileUpdated = true;
             }
 
@@ -81,7 +81,7 @@
             if (profileUpdated)
             {
                 string fileUpdatedTag = string.Format("[{0}.{1:yyyyMMddHmmss}]", Enums.FileUpdated.EdVard.ToString(), DateTime.Now);
-                this.UpdateVoiceAttackProfileName(fakeVoiceAttackProfileFilePath, fakeVoiceAttackProfileInternal, fakeVoiceAttackProfileInternal + fileUpdatedTag);
+                this.UpdateVoiceAttackProfileName(globalVoiceAttackProfileFilePath, globalVoiceAttackProfileInternal, globalVoiceAttackProfileInternal + fileUpdatedTag);
             }
 
             return profileUpdated;

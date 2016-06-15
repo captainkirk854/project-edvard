@@ -21,9 +21,10 @@
         /// <returns></returns>
         public bool Update(DataTable reverseBindableVacantEDActions)
         {
+            // Initialise ..
             bool bindsUpdated = false;
-            string fakeEliteDangerousInternal = string.Empty;
-            string fakeVoiceAttackProfileFilePath = string.Empty;
+            string globalEliteDangerousInternal = string.Empty;
+            string globalVoiceAttackProfileFilePath = string.Empty;
 
             // Find Elite Dangerous commands which are vacant and available for remapping ..
             var vacantBindings = from vb in reverseBindableVacantEDActions.AsEnumerable()
@@ -45,24 +46,39 @@
                                               EliteDangerousBinds = vb.Field<string>(Enums.Column.EliteDangerousBinds.ToString()),
                                           };
 
-            // Update each vacant, Primary binding ..
+            // Process each potentially vacant binding ..
             foreach (var vacantBinding in vacantBindings)
             {
-                this.UpdateVacantEliteDangerousBinding(vacantBinding.EliteDangerousBinds, 
-                                                       Helper.Enums.EliteDangerousDevicePriority.Primary.ToString(), 
-                                                       vacantBinding.EliteDangerousAction, 
-                                                       vacantBinding.EliteDangerousKeyValue);
+                bool updateStatus = false;
 
-                fakeEliteDangerousInternal = vacantBinding.EliteDangerousInternal;
-                fakeVoiceAttackProfileFilePath = vacantBinding.EliteDangerousBinds;
-                bindsUpdated = true;
+                // Try to update Primary bind ..
+                updateStatus = this.UpdateVacantEliteDangerousBinding(vacantBinding.EliteDangerousBinds, 
+                                                                      Helper.Enums.EliteDangerousDevicePriority.Primary.ToString(), 
+                                                                      vacantBinding.EliteDangerousAction, 
+                                                                      vacantBinding.EliteDangerousKeyValue);
+
+                // If Primary bind attempt fails, try to update Secondary bind ..
+                if (!updateStatus)
+                {
+                    updateStatus = this.UpdateVacantEliteDangerousBinding(vacantBinding.EliteDangerousBinds,
+                                                                          Helper.Enums.EliteDangerousDevicePriority.Secondary.ToString(),
+                                                                          vacantBinding.EliteDangerousAction,
+                                                                          vacantBinding.EliteDangerousKeyValue);
+                }
+                
+                if (updateStatus)
+                {
+                    globalEliteDangerousInternal = vacantBinding.EliteDangerousInternal;
+                    globalVoiceAttackProfileFilePath = vacantBinding.EliteDangerousBinds;
+                    bindsUpdated = true;
+                }
             }
 
             // Update internal reference ..
             if (bindsUpdated)
             {
                 string fileUpdatedTag = string.Format("[{0}.{1:yyyyMMddHmmss}]", Enums.FileUpdated.EdVard.ToString(), DateTime.Now);
-                this.UpdateBindsPresetName(fakeVoiceAttackProfileFilePath, fakeEliteDangerousInternal, fakeEliteDangerousInternal + fileUpdatedTag);
+                this.UpdateBindsPresetName(globalVoiceAttackProfileFilePath, globalEliteDangerousInternal, globalEliteDangerousInternal + fileUpdatedTag);
             }
 
             return bindsUpdated;
@@ -92,30 +108,44 @@
         /// <param name="devicePriority"></param>
         /// <param name="actionName"></param>
         /// <param name="keyvalue"></param>
-        private void UpdateVacantEliteDangerousBinding(string edbinds, string devicePriority, string actionName, string keyvalue)
+        /// <returns></returns>
+        private bool UpdateVacantEliteDangerousBinding(string edbinds, string devicePriority, string actionName, string keyvalue)
         {
             // Initialise ..
             const string VacantDeviceIndicator = "{NoDevice}";
+            bool success = false;
 
             var edb = Xml.ReadXDoc(edbinds);
 
-            // Update [Key Binding] for Elite Dangerous Action using Key Value  ..
-            edb.Descendants(devicePriority)
-               .Where(item => item.Parent.SafeElementName() == actionName &&
-                      item.SafeElementName() == devicePriority &&
-                      item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
-                      item.SafeAttributeValue(XMLKey) == string.Empty).FirstOrDefault()
-               .SetAttributeValue(XMLKey, Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue);
+            // Attempt update ..
+            try
+            {
+                // Update [Key Binding] for Elite Dangerous Action using Key Value  ..
+                edb.Descendants(devicePriority)
+                   .Where(item => item.Parent.SafeElementName() == actionName &&
+                          item.SafeElementName() == devicePriority &&
+                          item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
+                          item.SafeAttributeValue(XMLKey) == string.Empty).FirstOrDefault()
+                   .SetAttributeValue(XMLKey, Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue);
 
-            // Update [Device Type] for Elite Dangerous Action (must always follow key-binding update) ..
-            edb.Descendants(devicePriority)
-               .Where(item => item.Parent.SafeElementName() == actionName &&
-                      item.SafeElementName() == devicePriority &&
-                      item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
-                      item.SafeAttributeValue(XMLKey) == Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
-               .SetAttributeValue(XMLDevice, Enums.HumanGameInteraction.Keyboard.ToString());
+                // Update [Device Type] for Elite Dangerous Action (must always follow key-binding update) ..
+                edb.Descendants(devicePriority)
+                   .Where(item => item.Parent.SafeElementName() == actionName &&
+                          item.SafeElementName() == devicePriority &&
+                          item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
+                          item.SafeAttributeValue(XMLKey) == Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
+                   .SetAttributeValue(XMLDevice, Enums.HumanGameInteraction.Keyboard.ToString());
 
-            edb.Save(edbinds);
+                edb.Save(edbinds);
+
+                success = true;
+            }
+            catch (Exception)
+            {
+                success = false;
+            }
+
+            return success;
         }
 
         /// <summary>
