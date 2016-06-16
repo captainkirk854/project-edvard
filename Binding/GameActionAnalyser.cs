@@ -16,12 +16,10 @@
         /// </summary>
         /// <param name="eliteDangerousBinds"></param>
         /// <param name="voiceAttackProfile"></param>
+        /// <param name="actionExchange"></param>
         /// <returns></returns>
-        public static DataTable VoiceAttack(string eliteDangerousBinds, string voiceAttackProfile)
+        public static DataTable VoiceAttack(string eliteDangerousBinds, string voiceAttackProfile, GameActionExchanger actionExchange)
         {
-            // Initialise lookup dictionary for inter-game action references ..
-            GameActionExchanger actions = new GameActionExchanger();
-
             // Datatable to hold tabulated contents ..
             DataTable consolidatedaction = TableShape.ConsolidatedActions();
             string globalEliteDangerousBindsInternal = string.Empty;
@@ -36,7 +34,7 @@
                                        new
                                          {
                                             KeyEnumeration = va.Field<string>(Helper.Enums.Column.KeyEnumeration.ToString()),
-                                            EliteDangerousAction = actions.GetED(va.Field<string>(Helper.Enums.Column.KeyAction.ToString())),
+                                            EliteDangerousAction = actionExchange.GetED(va.Field<string>(Helper.Enums.Column.KeyAction.ToString())),
                                             Action = va.Field<string>(Helper.Enums.Column.KeyAction.ToString()),
                                             KeyValue = va.Field<string>(Helper.Enums.Column.KeyEnumerationValue.ToString()),
                                             KeyCode = va.Field<int>(Helper.Enums.Column.KeyEnumerationCode.ToString()),
@@ -226,14 +224,15 @@
         /// </summary>
         /// <param name="eliteDangerousBinds"></param>
         /// <param name="voiceAttackProfile"></param>
+        /// <param name="actionExchange"></param>
         /// <returns></returns>
-        public static DataTable EliteDangerous(string eliteDangerousBinds, string voiceAttackProfile)
+        public static DataTable EliteDangerous(string eliteDangerousBinds, string voiceAttackProfile, GameActionExchanger actionExchange)
         {
             // Datatable to hold tabulated contents ..
             DataTable reversebindableaction = TableShape.ReverseBindableVacantEDActions();
 
             // Analyse binding differences ..
-            var consolidatedaction = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile);
+            var consolidatedaction = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, actionExchange);
 
             // Initialise lookup dictionary for inter-game action references ..
             Mapper keyMapper = new Mapper(KeyHelper.Enums.InputKeyEnumType.WindowsForms);

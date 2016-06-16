@@ -4,6 +4,8 @@
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Security;
+    using System.Security.Permissions;
     using System.Threading;
 
     /// <summary>
@@ -11,6 +13,47 @@
     /// </summary>
     public static class Stockpile
     {
+        /// <summary>
+        /// Validates File Path
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static bool ValidateFilepath(string filePath)
+        {
+            // Initialise permissions environment ..
+            FileIOPermission permission = new FileIOPermission(PermissionState.None);
+            permission.AllFiles = FileIOPermissionAccess.PathDiscovery;
+            permission.Assert();
+            
+            // Test whether file path is valid ..
+            try 
+            { 
+                Path.GetFullPath(filePath);
+                Path.GetPathRoot(filePath);
+                Path.GetFileName(filePath);
+
+                // Reset permissions environment ..
+                CodeAccessPermission.RevertAssert(); 
+            }
+            catch
+            {
+                 //pathname/filename could not be parsed.
+                return false;
+            }
+
+            // Check read/write permission ..
+            FileIOPermission checkFile = new FileIOPermission(FileIOPermissionAccess.AllAccess, filePath);
+            try
+            {
+                checkFile.Demand();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Make numbered backup copy of file 
         /// </summary>

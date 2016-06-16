@@ -286,7 +286,14 @@
         private string GetInternalReference(ref XDocument xdoc)
         {
             //Initialise ..
-            return xdoc.Element(XMLRoot).SafeAttributeValue(XMLPresetName).Trim();
+            try
+            {
+                return xdoc.Element(XMLRoot).SafeAttributeValue(XMLPresetName).Trim();
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 }

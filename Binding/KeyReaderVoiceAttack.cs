@@ -217,7 +217,14 @@
         /// <returns></returns>
         private string GetInternalReference(ref XDocument xdoc)
         {
-            return xdoc.Element(XMLRoot).Element(XMLName).SafeElementValue().Trim();
+            try
+            {
+                return xdoc.Element(XMLRoot).Element(XMLName).SafeElementValue().Trim();
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>

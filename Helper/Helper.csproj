@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLineParser.cs" />
     <Compile Include="StatusCode.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Enums.cs" />
