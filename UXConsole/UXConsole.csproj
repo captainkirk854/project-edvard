@@ -7,8 +7,8 @@
     <ProjectGuid>{79546902-CFBA-4C14-A119-0FC3E72DAF11}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QuickRunner</RootNamespace>
-    <AssemblyName>QuickRunner</AssemblyName>
+    <RootNamespace>UXConsole</RootNamespace>
+    <AssemblyName>UXConsole</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>

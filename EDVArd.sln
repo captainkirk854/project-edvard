@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UX", "UX\UX.csproj", "{5880
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{696E228D-A175-4C0A-AFAB-7AD2E30E1965}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickRunner", "QuickRunner\QuickRunner.csproj", "{79546902-CFBA-4C14-A119-0FC3E72DAF11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UXConsole", "UXConsole\UXConsole.csproj", "{79546902-CFBA-4C14-A119-0FC3E72DAF11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binding", "Binding\Binding.csproj", "{08F8CC4B-45C2-4661-9F10-07094DCAE843}"
 EndProject

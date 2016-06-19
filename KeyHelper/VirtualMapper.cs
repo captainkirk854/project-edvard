@@ -64,7 +64,7 @@
             byte keyPressed = 0xff;
 
             //Parse input string as a System.Windows.Forms.Keys enum ..
-            System.Windows.Forms.Keys enumKey = Stockpile.ParseStringToEnum<System.Windows.Forms.Keys>(windowsFormsKeysEnum);
+            System.Windows.Forms.Keys enumKey = StockPile.ParseStringToEnum<System.Windows.Forms.Keys>(windowsFormsKeysEnum);
 
             // Set keyboard state(s) with optional modifiers ..
             if (shift)
@@ -98,7 +98,7 @@
         public static string GetUnicodeValueFromWindowsInputKeyEnumValue(string windowsInputKeyEnum)
         {
             //Parse input string as System.Windows.Input.Key enum ..
-            System.Windows.Input.Key enumKey = Stockpile.ParseStringToEnum<Key>(windowsInputKeyEnum);
+            System.Windows.Input.Key enumKey = StockPile.ParseStringToEnum<Key>(windowsInputKeyEnum);
 
             return GetUnicodeValueFromWindowsInputKeyEnum(enumKey);
         }
@@ -116,7 +116,7 @@
         public static string GetUnicodeValueFromWindowsFormsKeysEnumValue(string windowsFormsKeysEnum)
         {
             //Parse input string as a System.Windows.Forms.Keys enum ..
-            System.Windows.Forms.Keys enumKey = Stockpile.ParseStringToEnum<System.Windows.Forms.Keys>(windowsFormsKeysEnum);
+            System.Windows.Forms.Keys enumKey = StockPile.ParseStringToEnum<System.Windows.Forms.Keys>(windowsFormsKeysEnum);
 
             // Find its Windows Input key equivalent ..
             System.Windows.Input.Key inputKey = KeyInterop.KeyFromVirtualKey((int)enumKey);
