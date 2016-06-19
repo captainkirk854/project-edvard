@@ -27,6 +27,7 @@
             tag,
             analysis,
             backup,
+            help,
             sample
         }
 
@@ -72,6 +73,13 @@
             string argSample = commands.Parse(ArgOption.sample.ToString());
 
             // specials ..
+            if (Convert.ToBoolean(commands.Parse(ArgOption.help.ToString())))
+            {
+                ShowUsage();
+                PressIt();
+                Environment.Exit(0);
+            }
+
             if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == "desktop")) { argDirectoryPathBackup = userDesktop; }
             if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == "desktop")) { argDirectoryPathAnalysis = userDesktop; }
             if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == "desktop")) { argFilePathDictionaryWrite = userDesktop; }
@@ -244,6 +252,9 @@
                 Console.WriteLine(System.Environment.NewLine);
                 if (GenericIO.ValidateFilepath(argDirectoryPathAnalysis) && GenericIO.CreateDirectory(argDirectoryPathAnalysis, false))
                 {
+                    // Intro ..
+                    Console.WriteLine("Creating Synchronisation Analysis File(s) in {0}", argDirectoryPathAnalysis);
+
                     string csvCommands = Path.Combine(argDirectoryPathAnalysis, Commands);
                     string csvBindings = Path.Combine(argDirectoryPathAnalysis, Bindings);
                     string csvConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated);
@@ -289,7 +300,14 @@
         /// </summary>
         private static void ShowUsage()
         {
-            string usageInformation =
+            string Description = "EDVArd [Elite Dangerous/Voice Attack reader] " +
+                                 System.Environment.NewLine +
+                                 "                                            (c)2016 MarMaSoPHt854 " +
+                                 System.Environment.NewLine;
+
+            string HelpInformation =
+                                 Description +
+                                 System.Environment.NewLine +
                                  "Key " +
                                  System.Environment.NewLine +
                                  System.Environment.NewLine +
@@ -308,6 +326,8 @@
                                  System.Environment.NewLine +
                                  "  [optional]" +
                                  System.Environment.NewLine +
+                                 "  /" + ArgOption.help.ToString() + System.Environment.NewLine +
+                                 "           This help" + System.Environment.NewLine +
                                  "  /" + ArgOption.backup.ToString() + System.Environment.NewLine +
                                  "           Directory path for backup file(s)" + System.Environment.NewLine +
                                  "  /" + ArgOption.analysis.ToString() + System.Environment.NewLine +
@@ -317,9 +337,55 @@
                                  "  /" + ArgOption.write.ToString() + System.Environment.NewLine +
                                  "           File path to export action dictionary" + System.Environment.NewLine +
                                  "  /" + ArgOption.read.ToString() + System.Environment.NewLine +
-                                 "           File path to import action dictionary" + System.Environment.NewLine;
+                                 "           File path to import action dictionary";
 
-            Console.WriteLine(usageInformation);
+            string UsageExamples =
+                                 "Sample Usage" +
+                                 System.Environment.NewLine +
+                                 System.Environment.NewLine +
+                                 "/binds \"C:\\Elite Dangerous\\My.binds\" /vap C:\\HCSVoicePack\\My.vap /sync:twoway /analysis desktop /tag" +
+                                 System.Environment.NewLine +
+                                 "           Attempts bidirectional synchronisation, will tag affected file(s) and Analysis File(s) written to user desktop" + 
+                                 System.Environment.NewLine +
+                                 System.Environment.NewLine +
+                                 "/binds \"C:\\Elite Dangerous\\My.binds\" /vap C:\\HCSVoicePack\\My.vap /sync:oneway_to_vap /backup \"C:\\My Backups\"" +
+                                 System.Environment.NewLine +
+                                 "           Attempts update of Voice Attack Profile with backup of affected file" + 
+                                 System.Environment.NewLine +
+                                 System.Environment.NewLine +
+                                 "/binds \"C:\\Elite Dangerous\\My.binds\" /vap C:\\HCSVoicePack\\My.vap /sync:none /write \"C:\\My Actions\\Action001.xml\"" +
+                                 System.Environment.NewLine +
+                                 "           No update of either file type, but will export Action Dictionary as .xml file" +
+                                 System.Environment.NewLine +
+                                 System.Environment.NewLine +
+                                 "/binds \"C:\\Elite Dangerous\\My.binds\" /vap \"C:\\HCSVoicePack\\My.vap\" /sync:twoway /read \"C:\\My Actions\\Action001_modified.xml\" /tag" +
+                                 System.Environment.NewLine +
+                                 "           Attempts bidirectional synchronisation using a modified Action Dictionary to override internal and will tag affected file(s)" 
+                                 ;
+
+            string Disclaimer =
+                                 System.Environment.NewLine +
+                                 System.Environment.NewLine +
+                                 "Legalese" +
+                                 System.Environment.NewLine +
+                                 System.Environment.NewLine + 
+                                 "Software downloaded is provided 'as is' without warranty of any kind, either express or implied, including, but not limited to, " + System.Environment.NewLine +
+                                 "the implied warranties of fitness for a purpose, or the warranty of non-infringement." + System.Environment.NewLine +
+                                 System.Environment.NewLine + 
+                                 "Without limiting the foregoing, there is no warranty that: " + System.Environment.NewLine +
+                                    "  i.the software will meet your requirements" + System.Environment.NewLine +
+                                    " ii.the software will be uninterrupted, timely, secure or error-free" + System.Environment.NewLine +
+                                    "iii.the results that may be obtained from the use of the software will be effective, accurate or reliable" + System.Environment.NewLine +
+                                    " iv.the quality of the software will meet your expectations" + System.Environment.NewLine +
+                                    "  v.any errors in the software obtained will be corrected.";
+
+            Console.WriteLine(System.Environment.NewLine);
+            Console.WriteLine(HelpInformation);
+            Console.WriteLine(System.Environment.NewLine);
+            Console.WriteLine(UsageExamples);
+            Console.WriteLine(System.Environment.NewLine);
+            Console.WriteLine(Disclaimer);
+            Console.WriteLine(System.Environment.NewLine);
         }
 
         /// <summary>

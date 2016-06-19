@@ -287,9 +287,6 @@
             }
 
             csv.Close();
-
-            //Info ..
-            Console.WriteLine("CREATED {0}", csvFilepath);
         }
 
         /// <summary>
