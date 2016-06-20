@@ -167,7 +167,6 @@
             foreach (var xmlExtract in xmlExtracts)
             {
                 // Initialise ..
-                //// string modifierKeyEnumerationValue = StatusCode.NotApplicable;
                 string modifierKeyEnumerationValue = StatusCode.EmptyString;
                 int regularKeyCode = int.Parse(xmlExtract.KeyCode);
 
