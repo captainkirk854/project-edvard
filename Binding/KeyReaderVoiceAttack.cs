@@ -85,7 +85,6 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
                               where
                                     item.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                    item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.HumanGameInteraction.PressKey.ToString()
                               select
                                  new
@@ -155,7 +154,6 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
                               where
                                     item.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                    item.Element(XMLActionSequence).Element(XMLCommandAction) != null &&
                                     item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.HumanGameInteraction.PressKey.ToString()                   
                               select
                                  new // create anonymous type for every key code ..
