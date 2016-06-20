@@ -72,7 +72,7 @@
         }
 
         /// <summary>
-        /// Process Voice Attack Config File to return all possible bindable actions
+        /// Process Voice Attack Config File to summarise all possible Elite Dangerous specific Commands with key-bindable actions as defined by HCSVoicePacks
         /// </summary>
         /// <param name="xdoc"></param>
         /// <returns></returns>
@@ -81,26 +81,28 @@
             // Datatable to hold tabulated XML contents ..
             DataTable bindableactions = TableShape.BindableActions();
 
-            // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
-            var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
+            // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out to gather pertinent Element data and arrange in row(s) of anonymous types ..
+            var xmlExtracts = from item in xdoc.Descendants(XMLunsignedShort)
                               where
-                                    item.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.HumanGameInteraction.PressKey.ToString()
+                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
+                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.Interaction.ExecuteCommand.ToString()) &&
+                                    item.SafeElementValue() != string.Empty
                               select
                                  new
                                  {
-                                     Commandstring = item.Element(XMLCommandString).SafeElementValue()
+                                     Commandstring = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue()
                                  };
 
-            // insert anonymous type row data (with some additional values) into DataTable ..
-            foreach (var xmlExtract in xmlExtracts)
+            // insert anonymous type row data (with some additional values) into DataTable (.Distinct() required as some Commands have multiple (modifier) key codes)
+            foreach (var xmlExtract in xmlExtracts.Distinct()) 
             {
                 bindableactions.LoadDataRow(new object[] 
                                                 {
-                                                 Enums.Game.VoiceAttack.ToString(), //Context
-                                                 xmlExtract.Commandstring, //BindingAction
-                                                 StatusCode.NotApplicable, // Device priority
-                                                 Enums.HumanGameInteraction.Keyboard.ToString() // Device binding is applied to
+                                                    Enums.Game.VoiceAttack.ToString(), //Context
+                                                    xmlExtract.Commandstring, //BindingAction
+                                                    StatusCode.NotApplicable, // Device priority
+                                                    Enums.Interaction.Keyboard.ToString() // Device binding is applied to
                                                 }, 
                                                 false);
             }
@@ -110,7 +112,7 @@
         }
 
         /// <summary>
-        /// Process Voice Attack Profile looking for Elite Dangerous keyboard-specific bindings as defined by HCSVoicePacks
+        /// Process Voice Attack Config File to get details of all possible Elite Dangerous specific Commands with key-bindable actions as defined by HCSVoicePacks
         /// </summary>
         /// <remarks>
         ///   Format: XML
@@ -150,17 +152,19 @@
             // Datatable to hold tabulated XML contents ..
             DataTable keyactionbinder = TableShape.KeyActionBinder();
 
-            // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
-            var xmlExtracts = from item in xdoc.Descendants(XMLCommand)
+            // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out to gather pertinent Element data and arrange in row(s) of anonymous types ..
+            var xmlExtracts = from item in xdoc.Descendants(XMLunsignedShort)
                               where
-                                    item.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                    item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.HumanGameInteraction.PressKey.ToString()                   
+                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
+                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.Interaction.ExecuteCommand.ToString()) &&
+                                    item.SafeElementValue() != string.Empty
                               select
                                  new // create anonymous type for every key code ..
                                  {
-                                     Commandstring = item.Element(XMLCommandString).SafeElementValue(),
-                                     Id = item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionId).SafeElementValue(),
-                                     KeyCode = item.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLKeyCodes).Element(XMLunsignedShort).SafeElementValue()
+                                     Commandstring = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
+                                     Id = item.Parent.Parent.Element(XMLActionId).SafeElementValue(),
+                                     KeyCode = item.SafeElementValue()
                                  };
 
             // insert anonymous type row data (with some additional values) into DataTable ..
@@ -172,30 +176,35 @@
 
                 // Check for modifier key already present in VoiceAttack Profile for current Key Id ..
                 int modifierKeyCode = this.GetModifierKey(ref xdoc, xmlExtract.Id);
-                if (modifierKeyCode >= 0)
-                {
-                    // If modifier found, some additional probing of that segment of the XML tree required ..
-                    modifierKeyEnumerationValue = KeyMapper.GetValue(modifierKeyCode);
-                    regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.Id);
-                }
 
-                // Load final values into datatable ..
-                keyactionbinder.LoadDataRow(new object[] 
-                                                {
-                                                 Enums.Game.VoiceAttack.ToString(), //Context
-                                                 KeyMapper.KeyType.ToString(), //KeyEnumerationType
-                                                 xmlExtract.Commandstring, //BindingAction
-                                                 StatusCode.NotApplicable, //Priority
-                                                 KeyMapper.GetValue(regularKeyCode), //KeyGameValue
-                                                 KeyMapper.GetValue(regularKeyCode), //KeyEnumerationValue
-                                                 regularKeyCode.ToString(), //KeyEnumerationCode
-                                                 xmlExtract.Id, //KeyId
-                                                 modifierKeyEnumerationValue, //ModifierKeyGameValue
-                                                 modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
-                                                 modifierKeyCode, //ModifierKeyEnumerationCode
-                                                 xmlExtract.Id //ModifierKeyId
-                                                }, 
-                                                false);
+                // Ignore if current regular key code is actually a modifier key code ..
+                if (regularKeyCode != modifierKeyCode)
+                {
+                    if (modifierKeyCode >= 0)
+                    {
+                        // If modifier found, some additional probing of that segment of the XML tree required ..
+                        modifierKeyEnumerationValue = KeyMapper.GetValue(modifierKeyCode);
+                        regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.Id);
+                    }
+
+                    // Load final values into datatable ..
+                    keyactionbinder.LoadDataRow(new object[] 
+                                                    {
+                                                        Enums.Game.VoiceAttack.ToString(), //Context
+                                                        KeyMapper.KeyType.ToString(), //KeyEnumerationType
+                                                        xmlExtract.Commandstring, //BindingAction
+                                                        StatusCode.NotApplicable, //Priority
+                                                        KeyMapper.GetValue(regularKeyCode), //KeyGameValue
+                                                        KeyMapper.GetValue(regularKeyCode), //KeyEnumerationValue
+                                                        regularKeyCode.ToString(), //KeyEnumerationCode
+                                                        xmlExtract.Id, //KeyId
+                                                        modifierKeyEnumerationValue, //ModifierKeyGameValue
+                                                        modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
+                                                        modifierKeyCode, //ModifierKeyEnumerationCode
+                                                        xmlExtract.Id //ModifierKeyId
+                                                    },
+                                                    false);
+                }
             }
 
             // return Datatable ..

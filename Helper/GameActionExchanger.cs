@@ -9,8 +9,8 @@
     /// </summary>
     public class GameActionExchanger
     {
-        private const string EDCommandUndefined = "Elite Dangerous Command: Undefined";
-        private const string VACommandUndefined = "VoiceAttack Command: Undefined";
+        private const string EDCommandUndefined = "**unknown**";
+        private const string VACommandUndefined = "**unknown**";
         private Dictionary<string, string> relationship = new Dictionary<string, string>();
 
         /// <summary>
@@ -154,7 +154,7 @@
             }
             catch
             {
-                return EDCommandUndefined;
+                return VACommandUndefined;
             }
         }
 
@@ -179,7 +179,7 @@
             }
             
             // return with key value or default if null
-            return keyValue != null ? keyValue : VACommandUndefined;
+            return keyValue != null ? keyValue : EDCommandUndefined;
         }
 
         /// <summary>
@@ -215,8 +215,14 @@
         }
 
         /// <summary>
-        /// Get Elite Dangerous Key which has multiple Voice Attack Commands .. 
+        /// Get Elite Dangerous Key for multiple Voice Attack Commands .. 
         /// </summary>
+        /// <remarks>
+        ///  The following VoiceAttack Command to Elite Dangerous Key 
+        ///  associations are based on HCSVoicePack esoteric configuration
+        ///  and on inspection may not appear to make sense until seen in
+        ///  the wider setup context (e.g. ((40%)) = BackwardKey).
+        /// </remarks>
         /// <param name="commandVA"></param>
         /// <returns></returns>
         private string GetEDActionForDuplicateKeys(string commandVA)
@@ -234,6 +240,30 @@
 
                 case "((UI Previous))":
                     return "UI_Left";
+
+                case "((10%))":
+                    return "ForwardKey";
+
+                case "((20%))":
+                    return "ForwardKey";
+
+                case "((30%))":
+                    return "ForwardKey";
+
+                case "((40%))":
+                    return "BackwardKey";
+
+                case "((60%))":
+                    return "ForwardKey";
+
+                case "((70%))":
+                    return "ForwardKey";
+
+                case "((80%))":
+                    return "BackwardKey";
+
+                case "((90%))":
+                    return "BackwardKey";
 
                 default:
                     return null;

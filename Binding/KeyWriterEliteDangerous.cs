@@ -134,7 +134,7 @@
                           item.SafeElementName() == devicePriority &&
                           item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
                           item.SafeAttributeValue(XMLKey) == Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
-                   .SetAttributeValue(XMLDevice, Enums.HumanGameInteraction.Keyboard.ToString());
+                   .SetAttributeValue(XMLDevice, Enums.Interaction.Keyboard.ToString());
 
                 edb.Save(edbinds);
 

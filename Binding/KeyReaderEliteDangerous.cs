@@ -196,7 +196,7 @@
                 {
                     var xmlExtracts = from item in xdoc.Descendants(childNode.Name)
                                       where
-                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Helper.Enums.HumanGameInteraction.Keyboard.ToString() &&
+                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Helper.Enums.Interaction.Keyboard.ToString() &&
                                             item.Element(devicePriority).Attribute(XMLKey).Value.Contains(Helper.Enums.EliteDangerousBindingPrefix.Key_.ToString()) == true
                                       select
                                          new // create anonymous type for every key code ..

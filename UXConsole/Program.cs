@@ -9,6 +9,7 @@
 
     public class Program
     {
+        private const string VersionNumber = "1.000";
         private const string Commands = "EDVArd_Commands.csv";
         private const string Bindings = "EDVArd_Command_Bindings.csv";
         private const string Consolidated = "EDVArd_Consolidated_Bindings.csv";
@@ -94,6 +95,7 @@
                 }
                 else
                 {
+                    Console.WriteLine();
                     Console.WriteLine("Path to Elite Dangerous Binds (.binds) File must be valid!" + System.Environment.NewLine);
                     Console.WriteLine(" e.g. /binds {0}", Path.Combine(defaultEDBindingsDirectory, "Custom.binds"));
                     Console.WriteLine();
@@ -108,6 +110,7 @@
                 }
                 else
                 {
+                    Console.WriteLine();
                     Console.WriteLine("Path to Voice Attack Profile (.vap) File must be valid!" + System.Environment.NewLine);
                     Console.WriteLine(" e.g. /vap {0}", Path.Combine(defaultVAProfilesDirectory, "Custom.vap"));
                     Console.WriteLine();
@@ -128,7 +131,7 @@
             // Final Check ..
             if (!(File.Exists(eliteDangerousBinds) && File.Exists(voiceAttackProfile)))
             {
-                Console.WriteLine("One or more required file(s) is missing!");
+                Console.WriteLine("Required file(s) are missing!");
                 PressIt();
                 Environment.Exit(0);
             }
@@ -145,7 +148,17 @@
             KeyReader.KeyType = KeyHelper.Enums.InputKeyEnumType.WindowsForms; // [optional] sets key type enumeration to use
 
             // Initialise lookup dictionary for inter-game action references ..
-            GameActionExchanger actionExchange = new GameActionExchanger();
+            GameActionExchanger actionExchange = null;
+            try
+            {
+                actionExchange = new GameActionExchanger();
+            }
+            catch
+            {
+                Console.WriteLine("Action Exchange Dictionary is invalid");
+                PressIt();
+                Environment.Exit(0);
+            }
 
             // Optional arg: Dictionary export
             if (GenericIO.ValidateFilepath(argFilePathDictionaryWrite) && GenericIO.CreateDirectory(argFilePathDictionaryWrite, true))
@@ -154,7 +167,7 @@
             }
             else
             {
-                Console.WriteLine("option /{0}: bypassed", ArgOption.write.ToString());
+                Console.WriteLine("unused option: /{0}", ArgOption.write.ToString());
             }
 
             // Optional arg: Dictionary import ..
@@ -164,12 +177,12 @@
             }
             else
             {
-                Console.WriteLine("option /{0}: bypassed", ArgOption.read.ToString());
+                Console.WriteLine("unused option: /{0}", ArgOption.read.ToString());
             }
 
             if (!argCreateReferenceTag)
             {
-                Console.WriteLine("option /{0}: bypassed", ArgOption.tag.ToString());
+                Console.WriteLine("unused option: /{0}", ArgOption.tag.ToString());
             }
 
             //////////////////////////////////////////////////////////////////
@@ -199,7 +212,7 @@
                     }
                     else
                     {
-                        Console.WriteLine("option /{0}: bypassed", ArgOption.backup.ToString());
+                        Console.WriteLine("unused option: /{0}", ArgOption.backup.ToString());
                     }
 
                     // Attempt update ..
@@ -208,7 +221,7 @@
                 }
                 else
                 {
-                    Console.WriteLine("VoiceAttack Profile update: bypassed");
+                    Console.WriteLine("VoiceAttack Profile update: not selected");
                 }
 
                 // Reverse-synchronise any vacant Elite Dangerous Bindings (optional) ..
@@ -228,7 +241,7 @@
                     }
                     else
                     {
-                        Console.WriteLine("option /{0}: bypassed", ArgOption.backup.ToString());
+                        Console.WriteLine("unused option: /{0}", ArgOption.backup.ToString());
                     }
 
                     // Attempt update ..
@@ -237,7 +250,7 @@
                 }
                 else
                 {
-                    Console.WriteLine("Elite Dangerous Binds update: bypassed");
+                    Console.WriteLine("Elite Dangerous Binds update: not selected");
                 }
 
                 //////////////////////////////////////////////////////////////////
@@ -279,7 +292,7 @@
                 }
                 else
                 {
-                    Console.WriteLine("option /{0}: bypassed", ArgOption.analysis.ToString());
+                    Console.WriteLine("unused option: /{0}", ArgOption.analysis.ToString());
                 }
 
                 PressIt();
@@ -300,13 +313,15 @@
         /// </summary>
         private static void ShowUsage()
         {
-            string Description = "EDVArd [Elite Dangerous/Voice Attack reader] " +
+            string description = "EDVArd [Elite Dangerous/Voice Attack reader] " +
+                                 System.Environment.NewLine +
+                                 "                                            V" + VersionNumber +
                                  System.Environment.NewLine +
                                  "                                            (c)2016 MarMaSoPHt854 " +
                                  System.Environment.NewLine;
 
-            string HelpInformation =
-                                 Description +
+            string helpInformation =
+                                 description +
                                  System.Environment.NewLine +
                                  "Key " +
                                  System.Environment.NewLine +
@@ -339,13 +354,15 @@
                                  "  /" + ArgOption.read.ToString() + System.Environment.NewLine +
                                  "           File path to import action dictionary";
 
-            string UsageExamples =
+            string usageExamples =
                                  "Sample Usage" +
                                  System.Environment.NewLine +
                                  System.Environment.NewLine +
                                  "/binds \"C:\\Elite Dangerous\\My.binds\" /vap C:\\HCSVoicePack\\My.vap /sync:twoway /analysis desktop /tag" +
                                  System.Environment.NewLine +
-                                 "           Attempts bidirectional synchronisation, will tag affected file(s) and Analysis File(s) written to user desktop" + 
+                                 "           Attempts bidirectional synchronisation, will tag affected file(s) and Analysis File(s) written to user desktop" +
+                                 System.Environment.NewLine +
+                                 "            note: in all cases, the Elite Dangerous key binds are master. Only unbound actions(s) in the .binds file can be updated by this utility" +
                                  System.Environment.NewLine +
                                  System.Environment.NewLine +
                                  "/binds \"C:\\Elite Dangerous\\My.binds\" /vap C:\\HCSVoicePack\\My.vap /sync:oneway_to_vap /backup \"C:\\My Backups\"" +
@@ -360,10 +377,9 @@
                                  System.Environment.NewLine +
                                  "/binds \"C:\\Elite Dangerous\\My.binds\" /vap \"C:\\HCSVoicePack\\My.vap\" /sync:twoway /read \"C:\\My Actions\\Action001_modified.xml\" /tag" +
                                  System.Environment.NewLine +
-                                 "           Attempts bidirectional synchronisation using a modified Action Dictionary to override internal and will tag affected file(s)" 
-                                 ;
+                                 "           Attempts bidirectional synchronisation using a modified Action Dictionary to override internal and will tag affected file(s)";
 
-            string Disclaimer =
+            string disclaimer =
                                  System.Environment.NewLine +
                                  System.Environment.NewLine +
                                  "Legalese" +
@@ -380,11 +396,11 @@
                                     "  v.any errors in the software obtained will be corrected.";
 
             Console.WriteLine(System.Environment.NewLine);
-            Console.WriteLine(HelpInformation);
+            Console.WriteLine(helpInformation);
             Console.WriteLine(System.Environment.NewLine);
-            Console.WriteLine(UsageExamples);
+            Console.WriteLine(usageExamples);
             Console.WriteLine(System.Environment.NewLine);
-            Console.WriteLine(Disclaimer);
+            Console.WriteLine(disclaimer);
             Console.WriteLine(System.Environment.NewLine);
         }
 

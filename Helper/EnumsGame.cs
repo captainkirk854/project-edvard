@@ -17,10 +17,11 @@
         /// <summary>
         /// Enumeration of Game-interaction Indicator
         /// </summary>
-        public enum HumanGameInteraction
+        public enum Interaction
         {
             Keyboard, //Elite Dangerous
-            PressKey  //Voice Attack
+            PressKey,  //Voice Attack
+            ExecuteCommand // Voice Attack
         }
 
         /// <summary>
