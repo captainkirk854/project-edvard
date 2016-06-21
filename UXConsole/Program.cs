@@ -10,9 +10,11 @@
     public class Program
     {
         private const string VersionNumber = "1.000";
-        private const string Commands = "EDVArd_Commands.csv";
-        private const string Bindings = "EDVArd_Command_Bindings.csv";
-        private const string Consolidated = "EDVArd_Consolidated_Bindings.csv";
+        private const string Commands = "edvCommands";
+        private const string Bindings = "edvCommand_Bindings";
+        private const string Consolidated = "edvConsolidated_Bindings";
+        private const string CSV = "csv";
+        private const string HTM = "html";
         private const int NumberOfBackupsToKeep = 50;
 
         /// <summary>
@@ -27,6 +29,7 @@
             write,
             tag,
             analysis,
+            format,
             backup,
             help,
             sample
@@ -40,6 +43,8 @@
             twoway,
             oneway_to_binds,
             oneway_to_vap,
+            csv,
+            htm,
             none
         }
 
@@ -60,20 +65,21 @@
             // Parse Command Line arguments ..
             CommandLine commands = new CommandLine(args);
 
-            // mandatory ..
+            // Mandatory argument(s) ..
             string argFilePathBinds = commands.Parse(ArgOption.binds.ToString(), true);
             string argFilePathVap = commands.Parse(ArgOption.vap.ToString(), true);
             string argModeSync = commands.Parse(ArgOption.sync.ToString());
 
-            // optional ..
+            // Optional argument(s)..
             string argDirectoryPathBackup = commands.Parse(ArgOption.backup.ToString(), true);
             string argDirectoryPathAnalysis = commands.Parse(ArgOption.analysis.ToString(), true);
+            string argAnalysisFileFormat = commands.Parse(ArgOption.format.ToString());
             bool argCreateReferenceTag = Convert.ToBoolean(commands.Parse(ArgOption.tag.ToString()));
             string argFilePathDictionaryWrite = commands.Parse(ArgOption.write.ToString(), true);
             string argFilePathDictionaryRead = commands.Parse(ArgOption.read.ToString(), true);
             string argSample = commands.Parse(ArgOption.sample.ToString());
 
-            // specials ..
+            // Help Message ..
             if (Convert.ToBoolean(commands.Parse(ArgOption.help.ToString())))
             {
                 ShowUsage();
@@ -81,10 +87,12 @@
                 Environment.Exit(0);
             }
 
+            // Specials 
             if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == "desktop")) { argDirectoryPathBackup = userDesktop; }
             if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == "desktop")) { argDirectoryPathAnalysis = userDesktop; }
             if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == "desktop")) { argFilePathDictionaryWrite = userDesktop; }
-            if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == "desktop")) { argFilePathDictionaryRead = userDesktop; } 
+            if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == "desktop")) { argFilePathDictionaryRead = userDesktop; }
+            argAnalysisFileFormat = argAnalysisFileFormat == null ? ArgSubOption.csv.ToString() : argAnalysisFileFormat;
 
             // Determine file-type (user/sample) to be processed ..
             if (argSample == null)
@@ -266,29 +274,53 @@
                 if (GenericIO.ValidateFilepath(argDirectoryPathAnalysis) && GenericIO.CreateDirectory(argDirectoryPathAnalysis, false))
                 {
                     // Intro ..
-                    Console.WriteLine("Creating Synchronisation Analysis File(s) in {0}", argDirectoryPathAnalysis);
+                    Console.WriteLine("Creating Analysis File(s) in {0}", argDirectoryPathAnalysis);
 
-                    string csvCommands = Path.Combine(argDirectoryPathAnalysis, Commands);
-                    string csvBindings = Path.Combine(argDirectoryPathAnalysis, Bindings);
-                    string csvConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated);
+                    string csvCommands = Path.Combine(argDirectoryPathAnalysis, Commands + "." + CSV);
+                    string csvBindings = Path.Combine(argDirectoryPathAnalysis, Bindings + "." + CSV);
+                    string csvConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated + "." + CSV);
+
+                    string htmCommands = Path.Combine(argDirectoryPathAnalysis, Commands + "." + HTM);
+                    string htmBindings = Path.Combine(argDirectoryPathAnalysis, Bindings + "." + HTM);
+                    string htmConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated + "." + HTM);
 
                     KeyReaderEliteDangerous ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
                     KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
 
-                    // Create CSV listing all possible actions ..
+                    // Create table of all possible actions ..
                     DataTable elitedangerousCommands = ed.GetBindableCommands();
                     elitedangerousCommands.Merge(va.GetBindableCommands());
-                    elitedangerousCommands.CreateCSV(csvCommands);
 
-                    // Create CSV listing all bound actions ..
+                    // Create table of all bound actions ..
                     elitedangerousCommands = ed.GetBoundCommands();
                     elitedangerousCommands.Merge(va.GetBoundCommands());
-                    elitedangerousCommands.CreateCSV(csvBindings);
-
-                    // Create CSV listing all consolidated actions ..
+                    
+                    // Create table of all consolidated actions ..
                     DataTable consolidatedBindings = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, actionExchange);
                     consolidatedBindings = consolidatedBindings.Sort(Helper.Enums.Column.EliteDangerousAction.ToString() + " asc");
-                    consolidatedBindings.CreateCSV(csvConsolidatedBindings);
+
+                    // Create appropriate type of analysis file ..
+                    try
+                    {
+                        switch (StockPile.ParseStringToEnum<ArgSubOption>(argAnalysisFileFormat))
+                        {
+                            case ArgSubOption.csv:
+                                elitedangerousCommands.CreateCSV(csvCommands);
+                                elitedangerousCommands.CreateCSV(csvBindings);
+                                consolidatedBindings.CreateCSV(csvConsolidatedBindings);
+                                break;
+
+                            case ArgSubOption.htm:
+                                elitedangerousCommands.CreateHTML(htmCommands, Commands);
+                                elitedangerousCommands.CreateHTML(htmBindings, Bindings);
+                                consolidatedBindings.CreateHTML(htmConsolidatedBindings, Consolidated);
+                                break;
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("unknown analysis format: {0}", argAnalysisFileFormat);
+                    }
                 }
                 else
                 {
@@ -315,7 +347,7 @@
         {
             string description = "EDVArd [Elite Dangerous/Voice Attack reader] " +
                                  System.Environment.NewLine +
-                                 "                                            V" + VersionNumber +
+                                 "                                            v." + VersionNumber +
                                  System.Environment.NewLine +
                                  "                                            (c)2016 MarMaSoPHt854 " +
                                  System.Environment.NewLine;
@@ -347,6 +379,8 @@
                                  "           Directory path for backup file(s)" + System.Environment.NewLine +
                                  "  /" + ArgOption.analysis.ToString() + System.Environment.NewLine +
                                  "           Directory path for operational analysis file(s)" + System.Environment.NewLine +
+                                 "  /" + ArgOption.format.ToString() + System.Environment.NewLine +
+                                 "           File format for operational analysis file(s) (csv[default], htm)" + System.Environment.NewLine +
                                  "  /" + ArgOption.tag.ToString() + System.Environment.NewLine +
                                  "           Create reference tag in affected file(s)" + System.Environment.NewLine +
                                  "  /" + ArgOption.write.ToString() + System.Environment.NewLine +

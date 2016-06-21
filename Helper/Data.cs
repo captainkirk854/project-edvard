@@ -3,7 +3,9 @@
     using System;
     using System.Data;
     using System.IO;
-
+    using System.Text;
+    using System.Web;
+ 
     public static class Data
     {
         /// <summary>
@@ -249,22 +251,23 @@
         }
 
         /// <summary>
-        /// Create a CSV file
+        /// Create CSV from DataTable
         /// </summary>
         /// <param name="table"></param>
-        /// <param name="csvFilepath"></param>
-        public static void CreateCSV(this DataTable table, string csvFilepath)
+        /// <param name="filepath"></param>
+        public static void CreateCSV(this DataTable table, string filepath)
         {
             // Initialise ..
             const string Comma = ",";
             string column = string.Empty;
 
+            // File control ..
+            if (File.Exists(filepath)) { File.Delete(filepath); }
+            StreamWriter outfile = File.CreateText(filepath);
+
             // Get DataTable metrics ..
             int columnTotal = table.Columns.Count;
             int rowTotal = table.Rows.Count;
-
-            if (File.Exists(csvFilepath)) { File.Delete(csvFilepath); }
-            StreamWriter csv = File.CreateText(csvFilepath);
 
             // Create delimited list of column names .. 
             for (int columnIndex = 0; columnIndex < columnTotal; columnIndex++)
@@ -272,7 +275,7 @@
                 column += table.Columns[columnIndex].ToString() + Comma;
             }
 
-            csv.WriteLine(column);
+            outfile.WriteLine(column);
 
             // Create delimited list of row values ..
             for (int rowIndex = 0; rowIndex < rowTotal; rowIndex++)
@@ -283,10 +286,98 @@
                     dataRow += table.Rows[rowIndex][columnIndex].ToString() + Comma;
                 }
 
-                csv.WriteLine(dataRow);
+                outfile.WriteLine(dataRow);
             }
 
-            csv.Close();
+            outfile.Close();
+        }
+
+        /// <summary>
+        /// Create HTML from DataTable
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="filepath"></param>
+        /// <param name="title"></param>
+        public static void CreateHTML(this DataTable table, string filepath, string title = null)
+        {
+            // Initialise ..
+            StringBuilder html = new StringBuilder();
+
+            // File control ..
+            if (File.Exists(filepath)) { File.Delete(filepath); }
+            StreamWriter outfile = File.CreateText(filepath);
+
+            // Get DataTable metrics ..
+            int columnTotal = table.Columns.Count;
+            int rowTotal = table.Rows.Count;
+
+            // Html ..
+            html.Append("<html>");
+            html.Append(System.Environment.NewLine);
+
+            if (title != null)
+            {
+                html.Append("<title>");
+                html.Append(System.Environment.NewLine);
+                html.Append(title);
+                html.Append(System.Environment.NewLine);
+                html.Append("</title>");
+                html.Append(System.Environment.NewLine);
+            }
+
+            html.Append("<body>");
+            html.Append(System.Environment.NewLine);
+            html.Append("<table>");
+            html.Append(System.Environment.NewLine);
+
+            html.Append("<table border='1px' cellpadding='5' cellspacing='1'");
+            html.Append("style='border:solid 1px border-color:#F2F5FF; font-size: 10px; font-family:Calibri,Tahoma,Arial;'>");
+            html.Append(System.Environment.NewLine);
+
+            // Create delimited list of column names .. 
+            html.Append("<tr align='left' valign='top'>");
+            html.Append(System.Environment.NewLine);
+
+            for (int columnIndex = 0; columnIndex < columnTotal; columnIndex++)
+            {
+                html.Append("<th bgcolor=black>");
+                html.Append("<font color=white size=2px>");
+                html.Append(HttpUtility.HtmlEncode(table.Columns[columnIndex].ColumnName));
+                html.Append("</font>");
+                html.Append("</th>");
+                html.Append(System.Environment.NewLine);
+            }
+
+            html.Append("</tr>");
+            html.Append(System.Environment.NewLine);
+
+            // Create delimited list of row values ..
+            for (int rowIndex = 0; rowIndex < rowTotal; rowIndex++)
+            {
+                html.Append("<tr align='left' valign='top'>");
+                html.Append(System.Environment.NewLine);
+                for (int columnIndex = 0; columnIndex < columnTotal; columnIndex++)
+                {
+                    html.Append("<td bgcolor=lightgrey>");
+                    html.Append(HttpUtility.HtmlEncode(table.Rows[rowIndex][columnIndex].ToString()));
+                    html.Append("</td>");
+                    html.Append(System.Environment.NewLine);
+                }
+
+                html.Append("</tr>");
+                html.Append(System.Environment.NewLine);
+            }
+
+            html.Append("</table>");
+            html.Append(System.Environment.NewLine);
+            html.Append("</body>");
+            html.Append(System.Environment.NewLine);
+            html.Append("</html>");
+            html.Append(System.Environment.NewLine);
+
+            outfile.WriteLine(html);
+
+            outfile.Close();
         }
 
         /// <summary>
