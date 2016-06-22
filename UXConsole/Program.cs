@@ -79,6 +79,17 @@
             string argFilePathDictionaryRead = commands.Parse(ArgOption.read.ToString(), true);
             string argSample = commands.Parse(ArgOption.sample.ToString());
 
+            // Specials 
+            if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == "desktop")) { argDirectoryPathBackup = userDesktop; }
+            if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == "desktop")) { argDirectoryPathAnalysis = userDesktop; }
+            if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == "desktop")) { argFilePathDictionaryWrite = userDesktop; }
+            if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == "desktop")) { argFilePathDictionaryRead = userDesktop; }
+            argAnalysisFileFormat = argAnalysisFileFormat == null ? ArgSubOption.csv.ToString() : argAnalysisFileFormat;
+
+            ///////////////////////////////////////
+            // Argument Validation ...
+            ///////////////////////////////////////
+
             // Help Message ..
             if (Convert.ToBoolean(commands.Parse(ArgOption.help.ToString())))
             {
@@ -87,12 +98,19 @@
                 Environment.Exit(0);
             }
 
-            // Specials 
-            if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == "desktop")) { argDirectoryPathBackup = userDesktop; }
-            if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == "desktop")) { argDirectoryPathAnalysis = userDesktop; }
-            if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == "desktop")) { argFilePathDictionaryWrite = userDesktop; }
-            if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == "desktop")) { argFilePathDictionaryRead = userDesktop; }
-            argAnalysisFileFormat = argAnalysisFileFormat == null ? ArgSubOption.csv.ToString() : argAnalysisFileFormat;
+            // Processing mode ..
+            if (argModeSync == null || argModeSync == "true")
+            {
+                Console.WriteLine();
+                Console.WriteLine("A valid synchronisation mode must be selected!" + System.Environment.NewLine);
+                Console.WriteLine(" e.g.");
+                Console.WriteLine("     /{0} {1}", ArgOption.sync.ToString(), ArgSubOption.oneway_to_binds.ToString());
+                Console.WriteLine("     /{0} {1}", ArgOption.sync.ToString(), ArgSubOption.twoway.ToString());
+                Console.WriteLine();
+                ShowUsage();
+                PressIt();
+                Environment.Exit(0);
+            }
 
             // Determine file-type (user/sample) to be processed ..
             if (argSample == null)
@@ -105,7 +123,7 @@
                 {
                     Console.WriteLine();
                     Console.WriteLine("Path to Elite Dangerous Binds (.binds) File must be valid!" + System.Environment.NewLine);
-                    Console.WriteLine(" e.g. /binds {0}", Path.Combine(defaultEDBindingsDirectory, "Custom.binds"));
+                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.binds.ToString(), Path.Combine(defaultEDBindingsDirectory, "Custom.binds"));
                     Console.WriteLine();
                     ShowUsage();
                     PressIt();
@@ -120,7 +138,7 @@
                 {
                     Console.WriteLine();
                     Console.WriteLine("Path to Voice Attack Profile (.vap) File must be valid!" + System.Environment.NewLine);
-                    Console.WriteLine(" e.g. /vap {0}", Path.Combine(defaultVAProfilesDirectory, "Custom.vap"));
+                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.vap.ToString(), Path.Combine(defaultVAProfilesDirectory, "Custom.vap"));
                     Console.WriteLine();
                     ShowUsage();
                     PressIt();
@@ -288,16 +306,16 @@
                     KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
 
                     // Create table of all possible actions ..
-                    DataTable elitedangerousCommands = ed.GetBindableCommands();
-                    elitedangerousCommands.Merge(va.GetBindableCommands());
+                    DataTable elitedangerousAllCommands = ed.GetBindableCommands();
+                    elitedangerousAllCommands.Merge(va.GetBindableCommands());
 
                     // Create table of all bound actions ..
-                    elitedangerousCommands = ed.GetBoundCommands();
-                    elitedangerousCommands.Merge(va.GetBoundCommands());
+                    DataTable elitedangerousBoundCommands = ed.GetBoundCommands();
+                    elitedangerousBoundCommands.Merge(va.GetBoundCommands());
                     
                     // Create table of all consolidated actions ..
-                    DataTable consolidatedBindings = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, actionExchange);
-                    consolidatedBindings = consolidatedBindings.Sort(Helper.Enums.Column.EliteDangerousAction.ToString() + " asc");
+                    DataTable consolidatedBoundCommands = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, actionExchange);
+                    consolidatedBoundCommands = consolidatedBoundCommands.Sort(Helper.Enums.Column.EliteDangerousAction.ToString() + " asc");
 
                     // Create appropriate type of analysis file ..
                     try
@@ -305,15 +323,15 @@
                         switch (StockPile.ParseStringToEnum<ArgSubOption>(argAnalysisFileFormat))
                         {
                             case ArgSubOption.csv:
-                                elitedangerousCommands.CreateCSV(csvCommands);
-                                elitedangerousCommands.CreateCSV(csvBindings);
-                                consolidatedBindings.CreateCSV(csvConsolidatedBindings);
+                                elitedangerousAllCommands.CreateCSV(csvCommands);
+                                elitedangerousBoundCommands.CreateCSV(csvBindings);
+                                consolidatedBoundCommands.CreateCSV(csvConsolidatedBindings);
                                 break;
 
                             case ArgSubOption.htm:
-                                elitedangerousCommands.CreateHTML(htmCommands, Commands);
-                                elitedangerousCommands.CreateHTML(htmBindings, Bindings);
-                                consolidatedBindings.CreateHTML(htmConsolidatedBindings, Consolidated);
+                                elitedangerousAllCommands.CreateHTML(htmCommands, Commands);
+                                elitedangerousBoundCommands.CreateHTML(htmBindings, Bindings);
+                                consolidatedBoundCommands.CreateHTML(htmConsolidatedBindings, Consolidated);
                                 break;
                         }
                     }
