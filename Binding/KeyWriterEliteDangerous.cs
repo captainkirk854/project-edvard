@@ -117,32 +117,42 @@
 
             var edb = Xml.ReadXDoc(edbinds);
 
-            // Attempt update ..
-            try
+            // Check to see if Key_value already set on primary binding for Action (no need to set same binding on secondary) ..
+            var primaryKeyBindingIsSet = edb.Descendants(Enums.EliteDangerousDevicePriority.Primary.ToString())
+                                            .Where(item => item.Parent.SafeElementName() == actionName &&
+                                                   item.SafeElementName() == Enums.EliteDangerousDevicePriority.Primary.ToString() &&
+                                                   item.SafeAttributeValue(XMLDevice) == Enums.Interaction.Keyboard.ToString() &&
+                                                   item.SafeAttributeValue(XMLKey) == Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault();
+
+            // If not, attempt binding update ..
+            if (primaryKeyBindingIsSet == null)
             {
-                // Update [Key Binding] for Elite Dangerous Action using Key Value  ..
-                edb.Descendants(devicePriority)
-                   .Where(item => item.Parent.SafeElementName() == actionName &&
-                          item.SafeElementName() == devicePriority &&
-                          item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
-                          item.SafeAttributeValue(XMLKey) == string.Empty).FirstOrDefault()
-                   .SetAttributeValue(XMLKey, Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue);
+                try
+                {
+                    // Update [Key Binding] for Elite Dangerous Action using Key Value  ..
+                    edb.Descendants(devicePriority)
+                       .Where(item => item.Parent.SafeElementName() == actionName &&
+                              item.SafeElementName() == devicePriority &&
+                              item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
+                              item.SafeAttributeValue(XMLKey) == string.Empty).FirstOrDefault()
+                       .SetAttributeValue(XMLKey, Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue);
 
-                // Update [Device Type] for Elite Dangerous Action (must always follow key-binding update) ..
-                edb.Descendants(devicePriority)
-                   .Where(item => item.Parent.SafeElementName() == actionName &&
-                          item.SafeElementName() == devicePriority &&
-                          item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
-                          item.SafeAttributeValue(XMLKey) == Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
-                   .SetAttributeValue(XMLDevice, Enums.Interaction.Keyboard.ToString());
+                    // Update [Device Type] for Elite Dangerous Action (must always follow key-binding update) ..
+                    edb.Descendants(devicePriority)
+                       .Where(item => item.Parent.SafeElementName() == actionName &&
+                              item.SafeElementName() == devicePriority &&
+                              item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
+                              item.SafeAttributeValue(XMLKey) == Enums.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
+                       .SetAttributeValue(XMLDevice, Enums.Interaction.Keyboard.ToString());
 
-                edb.Save(edbinds);
+                    edb.Save(edbinds);
 
-                success = true;
-            }
-            catch (Exception)
-            {
-                success = false;
+                    success = true;
+                }
+                catch (Exception)
+                {
+                    success = false;
+                }
             }
 
             return success;
