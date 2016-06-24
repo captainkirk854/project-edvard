@@ -174,12 +174,12 @@
                                                 false);
                 }
 
-                // If not defined in Elite Dangerous binding file ..
+                // If not defined or binding space unavailable in Elite Dangerous binding file ..
                 if (!commandDefinedInEliteDangerousBindsFile)
                 {
                     // Append to DataTable
                     remapRequired = Helper.Enums.KeyUpdateRequired.YES_va_to_ed.ToString();
-                    rationale = string.Format("ED[{0}] not bound to a key", voiceattackBinding.EliteDangerousAction);
+                    rationale = string.Format("ED[{0}] not bound/bindable to a Key", voiceattackBinding.EliteDangerousAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
                                                  ////--------------------------------------------------------------------------

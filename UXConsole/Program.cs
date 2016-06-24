@@ -25,8 +25,8 @@
             binds,
             vap,
             sync,
-            read,
-            write,
+            import,
+            export,
             tag,
             analysis,
             format,
@@ -75,8 +75,8 @@
             string argDirectoryPathAnalysis = commands.Parse(ArgOption.analysis.ToString(), true);
             string argAnalysisFileFormat = commands.Parse(ArgOption.format.ToString());
             bool argCreateReferenceTag = Convert.ToBoolean(commands.Parse(ArgOption.tag.ToString()));
-            string argFilePathDictionaryWrite = commands.Parse(ArgOption.write.ToString(), true);
-            string argFilePathDictionaryRead = commands.Parse(ArgOption.read.ToString(), true);
+            string argFilePathDictionaryWrite = commands.Parse(ArgOption.export.ToString(), true);
+            string argFilePathDictionaryRead = commands.Parse(ArgOption.import.ToString(), true);
             string argSample = commands.Parse(ArgOption.sample.ToString());
 
             // Specials 
@@ -193,7 +193,7 @@
             }
             else
             {
-                Console.WriteLine("unused option: /{0}", ArgOption.write.ToString());
+                Console.WriteLine("unused option: /{0}", ArgOption.export.ToString());
             }
 
             // Optional arg: Dictionary import ..
@@ -203,7 +203,7 @@
             }
             else
             {
-                Console.WriteLine("unused option: /{0}", ArgOption.read.ToString());
+                Console.WriteLine("unused option: /{0}", ArgOption.import.ToString());
             }
 
             if (!argCreateReferenceTag)
@@ -401,9 +401,9 @@
                                  "           File format for operational analysis file(s) (csv[default], htm)" + System.Environment.NewLine +
                                  "  /" + ArgOption.tag.ToString() + System.Environment.NewLine +
                                  "           Create reference tag in affected file(s)" + System.Environment.NewLine +
-                                 "  /" + ArgOption.write.ToString() + System.Environment.NewLine +
+                                 "  /" + ArgOption.export.ToString() + System.Environment.NewLine +
                                  "           File path to export action dictionary" + System.Environment.NewLine +
-                                 "  /" + ArgOption.read.ToString() + System.Environment.NewLine +
+                                 "  /" + ArgOption.import.ToString() + System.Environment.NewLine +
                                  "           File path to import action dictionary";
 
             string usageExamples =
@@ -422,19 +422,19 @@
                                  "           Attempts update of Voice Attack Profile with backup of affected file" + 
                                  System.Environment.NewLine +
                                  System.Environment.NewLine +
-                                 "/binds \"C:\\Elite Dangerous\\My.binds\" /vap C:\\HCSVoicePack\\My.vap /sync:none /write \"C:\\My Actions\\Action001.xml\"" +
+                                 "/binds \"C:\\Elite Dangerous\\My.binds\" /vap C:\\HCSVoicePack\\My.vap /sync:none /export \"C:\\My Actions\\Action001.xml\"" +
                                  System.Environment.NewLine +
                                  "           No update of either file type, but will export Action Dictionary as .xml file" +
                                  System.Environment.NewLine +
                                  System.Environment.NewLine +
-                                 "/binds \"C:\\Elite Dangerous\\My.binds\" /vap \"C:\\HCSVoicePack\\My.vap\" /sync:twoway /read \"C:\\My Actions\\Action001_modified.xml\" /tag" +
+                                 "/binds \"C:\\Elite Dangerous\\My.binds\" /vap \"C:\\HCSVoicePack\\My.vap\" /sync:twoway /import \"C:\\My Actions\\Action001_modified.xml\" /tag" +
                                  System.Environment.NewLine +
-                                 "           Attempts bidirectional synchronisation using a modified Action Dictionary to override internal and will tag affected file(s)";
+                                 "           Attempts bidirectional synchronisation using a modified Action Dictionary to override internal dictionary, and will internally tag updated file(s)";
 
             string disclaimer =
                                  System.Environment.NewLine +
                                  System.Environment.NewLine +
-                                 "Legalese" +
+                                 "Disclaimer:" +
                                  System.Environment.NewLine +
                                  System.Environment.NewLine + 
                                  "Software downloaded is provided 'as is' without warranty of any kind, either express or implied, including, but not limited to, " + System.Environment.NewLine +
