@@ -53,8 +53,8 @@
         /// </summary>
         public enum KeyUpdateRequired
         {
-            YES_ed_to_va,
-            YES_va_to_ed,
+            YES_Elite_TO_VoiceAttack,
+            YES_VoiceAttack_TO_Elite,
             NO
         }
 

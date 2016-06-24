@@ -101,7 +101,7 @@
                         // Check for misaligned codes ..
                         if (elitedangerousBinding.KeyEnumerationCode > StatusCode.EmptyStringInt)
                         {
-                            remapRequired = Helper.Enums.KeyUpdateRequired.YES_ed_to_va.ToString();
+                            remapRequired = Helper.Enums.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString();
 
                             // Check for: misaligned key codes ..
                             if (elitedangerousBinding.KeyEnumerationCode != voiceattackBinding.KeyCode)
@@ -178,7 +178,7 @@
                 if (!commandDefinedInEliteDangerousBindsFile)
                 {
                     // Append to DataTable
-                    remapRequired = Helper.Enums.KeyUpdateRequired.YES_va_to_ed.ToString();
+                    remapRequired = Helper.Enums.KeyUpdateRequired.YES_VoiceAttack_TO_Elite.ToString();
                     rationale = string.Format("ED[{0}] not bound/bindable to a Key", voiceattackBinding.EliteDangerousAction);
                     consolidatedaction.LoadDataRow(new object[] 
                                                 {
@@ -239,7 +239,7 @@
 
             // Find defined Voice Attack commands where there is potential for update in EliteDangerous binds ..
             var vacantEliteDangerousBindings = from vac in consolidatedaction.AsEnumerable()
-                                               where vac.Field<string>(Helper.Enums.Column.KeyUpdateRequired.ToString()) == Helper.Enums.KeyUpdateRequired.YES_va_to_ed.ToString()
+                                               where vac.Field<string>(Helper.Enums.Column.KeyUpdateRequired.ToString()) == Helper.Enums.KeyUpdateRequired.YES_VoiceAttack_TO_Elite.ToString()
                                               select
                                                  new
                                                  {
