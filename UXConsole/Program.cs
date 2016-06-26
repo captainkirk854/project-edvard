@@ -188,7 +188,7 @@
             }
 
             // Optional arg: Dictionary export
-            if (GenericIO.ValidateFilepath(argFilePathDictionaryWrite) && GenericIO.CreateDirectory(argFilePathDictionaryWrite, true))
+            if (StockIO.ValidateFilepath(argFilePathDictionaryWrite) && StockIO.CreateDirectory(argFilePathDictionaryWrite, true))
             {
                 actionExchange.Export(argFilePathDictionaryWrite);
             }
@@ -230,9 +230,9 @@
                     Console.WriteLine("Attempting VoiceAttack Profile update ..");
 
                     // Backup ..
-                    if (GenericIO.ValidateFilepath(argDirectoryPathBackup))
+                    if (StockIO.ValidateFilepath(argDirectoryPathBackup))
                     {
-                        if (GenericIO.BackupFile(GenericIO.CopyFile(voiceAttackProfile, argDirectoryPathBackup), NumberOfBackupsToKeep, 3) == string.Empty)
+                        if (StockIO.BackupFile(StockIO.CopyFile(voiceAttackProfile, argDirectoryPathBackup), NumberOfBackupsToKeep, 3) == string.Empty)
                         {
                             Console.WriteLine("Backup attempt: failed");
                         }
@@ -259,9 +259,9 @@
                     Console.WriteLine("Attempting Elite Dangerous Binds update ..");
 
                     // Backup ..
-                    if (GenericIO.ValidateFilepath(argDirectoryPathBackup))
+                    if (StockIO.ValidateFilepath(argDirectoryPathBackup))
                     {
-                        if (GenericIO.BackupFile(GenericIO.CopyFile(eliteDangerousBinds, argDirectoryPathBackup), NumberOfBackupsToKeep, 3) == string.Empty)
+                        if (StockIO.BackupFile(StockIO.CopyFile(eliteDangerousBinds, argDirectoryPathBackup), NumberOfBackupsToKeep, 3) == string.Empty)
                         {
                             Console.WriteLine("Backup attempt: failed");
                         }
@@ -290,7 +290,7 @@
 
                 // Re-read Voice Attack Commands and Elite Dangerous Binds for analysis information ..
                 Console.WriteLine(System.Environment.NewLine);
-                if (GenericIO.ValidateFilepath(argDirectoryPathAnalysis) && GenericIO.CreateDirectory(argDirectoryPathAnalysis, false))
+                if (StockIO.ValidateFilepath(argDirectoryPathAnalysis) && StockIO.CreateDirectory(argDirectoryPathAnalysis, false))
                 {
                     // Intro ..
                     Console.WriteLine("Creating Analysis File(s) in {0}", argDirectoryPathAnalysis);
@@ -328,7 +328,7 @@
                     // Create appropriate type of analysis file ..
                     try
                     {
-                        switch (StockPile.ParseStringToEnum<ArgSubOption>(argAnalysisFileFormat))
+                        switch (StockThings.ParseStringToEnum<ArgSubOption>(argAnalysisFileFormat))
                         {
                             case ArgSubOption.csv:
                                 elitedangerousAllCommands.CreateCSV(csvCommands);

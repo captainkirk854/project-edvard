@@ -115,7 +115,7 @@
             const string VacantDeviceIndicator = "{NoDevice}";
             bool success = false;
 
-            var edb = Xml.ReadXDoc(edbinds);
+            var edb = StockXml.ReadXDoc(edbinds);
 
             // Check to see if Key_value already set on primary binding for Action (no need to set same binding on secondary) ..
             var primaryKeyBindingIsSet = edb.Descendants(Enums.EliteDangerousDevicePriority.Primary.ToString())
@@ -179,7 +179,7 @@
         /// <param name="updatedProfileName"></param>
         private void UpdateBindsPresetName(string edbinds, string presetName, string updatedPresetName)
         {
-            var edb = Xml.ReadXDoc(edbinds);
+            var edb = StockXml.ReadXDoc(edbinds);
  
             // Update attribute of root node ..
             edb.Root

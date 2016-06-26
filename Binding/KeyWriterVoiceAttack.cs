@@ -113,7 +113,7 @@
         /// <param name="keyCode"></param>
         private void InsertVoiceAttackModifierKeyCode(string vaprofile, string vakeyId, string keyCode)
         {
-            var vap = Xml.ReadXDoc(vaprofile);
+            var vap = StockXml.ReadXDoc(vaprofile);
 
             // Insert XMLunsignedShort XElement before existing one ..
             vap.Descendants(XMLunsignedShort)
@@ -149,7 +149,7 @@
         /// <param name="keyCode"></param>
         private void RemoveAnyOtherVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
         {
-            var vap = Xml.ReadXDoc(vaprofile);
+            var vap = StockXml.ReadXDoc(vaprofile);
 
             // Remove all XMLunsignedShort XElements ...
             vap.Descendants(XMLunsignedShort)
@@ -183,7 +183,7 @@
         /// <param name="keyCode"></param>
         private void UpdateVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
         {
-            var vap = Xml.ReadXDoc(vaprofile);
+            var vap = StockXml.ReadXDoc(vaprofile);
 
             // Update XMLunsignedShort XElement ..
             vap.Descendants(XMLunsignedShort)
@@ -208,7 +208,7 @@
         /// <param name="updatedProfileName"></param>
         private void UpdateVoiceAttackProfileName(string vaprofile, string profileName, string updatedProfileName)
         {
-            var vap = Xml.ReadXDoc(vaprofile);
+            var vap = StockXml.ReadXDoc(vaprofile);
 
             // Update XMLunsignedShort XMLName ..
             vap.Descendants(XMLName)

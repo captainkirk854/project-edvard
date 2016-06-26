@@ -43,15 +43,15 @@
   <ItemGroup>
     <Compile Include="CommandLine.cs" />
     <Compile Include="StatusCode.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="StockData.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="EnumsGame.cs" />
     <Compile Include="GameActionExchanger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StockPile.cs" />
+    <Compile Include="StockThings.cs" />
     <Compile Include="TableShape.cs" />
-    <Compile Include="GenericIO.cs" />
-    <Compile Include="Xml.cs" />
+    <Compile Include="StockIO.cs" />
+    <Compile Include="StockXml.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

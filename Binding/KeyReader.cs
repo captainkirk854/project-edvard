@@ -25,7 +25,7 @@
             this.cfgFilePath = cfgFilePath;
 
             // Load XDocument into memory for availability in any derived classes ..
-            this.xCfg = Xml.ReadXDoc(this.cfgFilePath);
+            this.xCfg = StockXml.ReadXDoc(this.cfgFilePath);
         }
 
         // KeyType Property

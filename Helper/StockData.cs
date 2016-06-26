@@ -6,7 +6,10 @@
     using System.Text;
     using System.Web;
  
-    public static class Data
+    /// <summary>
+    /// Data-related Helper Methods
+    /// </summary>
+    public static class StockData
     {
         /// <summary>
         /// Enumeration of supported statement types

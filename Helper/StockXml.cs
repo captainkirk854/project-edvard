@@ -2,12 +2,17 @@
 {
     using System.Xml.Linq;
 
-    public static class Xml
+    /// <summary>
+    /// XML-related Helper Methods
+    /// </summary>
+    public static class StockXml
     {
         /// <summary>
-        /// Extension method to provide XML element name 
-        /// - Avoids throwing a NullReference exception when XML element does not exist
+        /// Extension method to provide XML element name
         /// </summary>
+        /// <remarks>
+        /// Avoids throwing a NullReference exception when XML element does not exist
+        /// </remarks>
         /// <param name="element"></param>
         /// <returns></returns>
         public static string SafeElementName(this XElement element)
@@ -24,8 +29,10 @@
 
         /// <summary>
         /// Extension method to provide XML element value 
-        /// - Avoids throwing a NullReference exception when XML element does not exist
         /// </summary>
+        /// <remarks>
+        /// Avoids throwing a NullReference exception when XML element does not exist
+        /// </remarks>
         /// <param name="element"></param>
         /// <returns></returns>
         public static string SafeElementValue(this XElement element)
@@ -42,8 +49,10 @@
 
         /// <summary>
         /// Extension method to provide XML attribute name
-        /// - Avoids throwing a NullReference exception when XML attribute does not exist
         /// </summary>
+        /// <remarks>
+        /// Avoids throwing a NullReference exception when XML attribute does not exist
+        /// </remarks>
         /// <param name="element"></param>
         /// <param name="attributeName"></param>
         /// <returns></returns>
@@ -61,8 +70,10 @@
 
         /// <summary>
         /// Extension method to provide XML attribute value
-        /// - Avoids throwing a NullReference exception when XML attribute does not exist
         /// </summary>
+        /// <remarks>
+        /// Avoids throwing a NullReference exception when XML attribute does not exist
+        /// </remarks>
         /// <param name="element"></param>
         /// <param name="attributeName"></param>
         /// <returns></returns>

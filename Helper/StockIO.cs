@@ -7,9 +7,9 @@
     using System.Security.Permissions;
 
     /// <summary>
-    /// File-related Helpers
+    /// IO-related Helper Methods
     /// </summary>
-    public static class GenericIO
+    public static class StockIO
     {
         /// <summary>
         /// Validates File Path

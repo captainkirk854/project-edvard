@@ -5,9 +5,9 @@
     using System.Threading;
 
     /// <summary>
-    /// Miscellaneous Helpers
+    /// Miscellaneous Helper Methods
     /// </summary>
-    public static class StockPile
+    public static class StockThings
     {
         /// <summary>
         /// Get right-most part of string
