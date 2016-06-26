@@ -34,7 +34,7 @@
         }
    
         /// <summary>
-        /// Read all Voice Attack Commands mapped to Elite Dangerous Key-Bindable Actions into DataTable
+        /// Load Voice Attack Commands mapped to Elite Dangerous Key-Bindable Actions into DataTable
         /// </summary>
         /// <returns></returns>
         public DataTable GetBindableCommands()
@@ -53,7 +53,7 @@
         }
 
         /// <summary>
-        /// Read Voice Attack Key Bindings into DataTable
+        /// Load Voice Attack Key Bindings into DataTable
         /// </summary>
         /// <returns></returns>
         public DataTable GetBoundCommands()
@@ -72,7 +72,7 @@
         }
 
         /// <summary>
-        /// Process Voice Attack Config File to summarise all possible Elite Dangerous specific Commands with key-bindable actions as defined by HCSVoicePacks
+        /// Parse Voice Attack Config File to summarise all possible Elite Dangerous specific Commands with key-bindable actions as defined by HCSVoicePacks
         /// </summary>
         /// <param name="xdoc"></param>
         /// <returns></returns>
@@ -112,7 +112,7 @@
         }
 
         /// <summary>
-        /// Process Voice Attack Config File to get details of all possible Elite Dangerous specific Commands with key-bindable actions as defined by HCSVoicePacks
+        /// Parse Voice Attack Config File to get details of all possible Elite Dangerous specific Commands with key-bindable actions as defined by HCSVoicePacks
         /// </summary>
         /// <remarks>
         ///   Format: XML
@@ -163,7 +163,7 @@
                                  new // create anonymous type for every key code ..
                                  {
                                      Commandstring = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
-                                     Id = item.Parent.Parent.Element(XMLActionId).SafeElementValue(),
+                                     ActionId = item.Parent.Parent.Element(XMLActionId).SafeElementValue(),
                                      KeyCode = item.SafeElementValue()
                                  };
 
@@ -174,8 +174,8 @@
                 string modifierKeyEnumerationValue = StatusCode.EmptyString;
                 int regularKeyCode = int.Parse(xmlExtract.KeyCode);
 
-                // Check for modifier key already present in VoiceAttack Profile for current Key Id ..
-                int modifierKeyCode = this.GetModifierKey(ref xdoc, xmlExtract.Id);
+                // Check for modifier key already present in VoiceAttack Profile for current Action Id ..
+                int modifierKeyCode = this.GetModifierKey(ref xdoc, xmlExtract.ActionId);
 
                 // Ignore if current regular key code is actually a modifier key code ..
                 if (regularKeyCode != modifierKeyCode)
@@ -184,7 +184,7 @@
                     {
                         // If modifier found, some additional probing of that segment of the XML tree required ..
                         modifierKeyEnumerationValue = KeyMapper.GetValue(modifierKeyCode);
-                        regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.Id);
+                        regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.ActionId);
                     }
 
                     // Load final values into datatable ..
@@ -197,11 +197,11 @@
                                                         KeyMapper.GetValue(regularKeyCode), //KeyGameValue
                                                         KeyMapper.GetValue(regularKeyCode), //KeyEnumerationValue
                                                         regularKeyCode.ToString(), //KeyEnumerationCode
-                                                        xmlExtract.Id, //KeyId
+                                                        xmlExtract.ActionId, //KeyId
                                                         modifierKeyEnumerationValue, //ModifierKeyGameValue
                                                         modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
                                                         modifierKeyCode, //ModifierKeyEnumerationCode
-                                                        xmlExtract.Id //ModifierKeyId
+                                                        xmlExtract.ActionId //ModifierKeyId
                                                     },
                                                     false);
                 }
@@ -212,7 +212,7 @@
         }
 
         /// <summary>
-        /// Process Voice Attack Config File looking for internal reference
+        /// Parse Voice Attack Config File to find internal reference
         /// </summary>
         /// <remarks>
         ///   Format: XML
@@ -234,17 +234,17 @@
         }
 
         /// <summary>
-        /// Check if Modifier Key Code is present and return it if it is ..
+        /// Get (any) Modifier Key Code associated to Action Id
         /// </summary>
         /// <param name="xdoc"></param>
-        /// <param name="keyId"></param>
+        /// <param name="actionId"></param>
         /// <returns></returns>
-        private int GetModifierKey(ref XDocument xdoc, string keyId)
+        private int GetModifierKey(ref XDocument xdoc, string actionId)
         {
             // Count number of unsigned short elements (KeyCode) exist per ActionId ...
             var keyCodes = xdoc.Descendants(XMLunsignedShort)
                                     .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                                   item.Parent.Parent.Element(XMLActionId).Value == keyId)
+                                                   item.Parent.Parent.Element(XMLActionId).Value == actionId)
                                     .DescendantsAndSelf();
 
             var countOfKeyCode = keyCodes.Count();
@@ -252,7 +252,7 @@
             // Check to see if modifier already exists in VoiceAttack Profile ..
             if (countOfKeyCode > 1)
             {
-                // First value is Modifier Key Code ..
+                // First value is always Modifier Key Code ..
                 return int.Parse(keyCodes.FirstOrDefault().Value);
             }
             else
@@ -262,31 +262,23 @@
         }
 
         /// <summary>
-        /// Get regular (non-Modifier) Key Code when Modifier Key Code is present and return key code ..
+        /// Get regular (non-Modifier) Key Code associated to Action Id
         /// </summary>
         /// <param name="xdoc"></param>
-        /// <param name="keyId"></param>
+        /// <param name="actionId"></param>
         /// <returns></returns>
-        private int GetRegularKey(ref XDocument xdoc, string keyId)
+        private int GetRegularKey(ref XDocument xdoc, string actionId)
         {
             // Count number of unsigned short elements (KeyCode) exist per ActionId ...
             var keyCodes = xdoc.Descendants(XMLunsignedShort)
                                     .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                                   item.Parent.Parent.Element(XMLActionId).Value == keyId)
+                                                   item.Parent.Parent.Element(XMLActionId).Value == actionId)
                                     .DescendantsAndSelf();
 
             var countOfKeyCode = keyCodes.Count();
 
-            // Check to see if modifier already exists in VoiceAttack Profile ..
-            if (countOfKeyCode > 1)
-            {
-                // Last value is Regular Key Code ..
-                return int.Parse(keyCodes.LastOrDefault().Value);
-            }
-            else
-            {
-                return StatusCode.NotApplicableInt;
-            }
+            // Last value is always Regular Key Code ..
+            return int.Parse(keyCodes.LastOrDefault().Value);
         }
     }
 }
