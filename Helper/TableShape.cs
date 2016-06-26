@@ -145,5 +145,24 @@
 
             return table;
         }
+
+        /// <summary>
+        /// Define Associated Commands DataTable Structure
+        /// </summary>
+        /// <returns></returns>
+        public static DataTable AssociatedCommands()
+        {
+            // New DataTable ..
+            DataTable table = new DataTable();
+            table.TableName = "AssociatedCommands";
+
+            // Define its structure ..
+            table.Columns.Add(Enums.Column.VoiceAttackAction.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousAction.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.VoiceAttackCommand.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.BindingSynchronisationStatus.ToString(), typeof(string));
+
+            return table;
+        }
     }
 }

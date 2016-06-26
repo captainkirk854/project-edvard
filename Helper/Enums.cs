@@ -10,6 +10,7 @@
         /// </summary>
         public enum Column
         {
+            BindingSynchronisationStatus,
             Context,
             KeyEnumeration,
             KeyAction,
@@ -37,6 +38,7 @@
             EliteDangerousModifierKeyCode,
             EliteDangerousModifierKeyValue,
             EliteDangerousModifierKeyId,
+            VoiceAttackCommand,
             VoiceAttackProfile,
             VoiceAttackAction,
             VoiceAttackInternal,

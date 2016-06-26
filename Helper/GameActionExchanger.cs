@@ -1,10 +1,9 @@
 ﻿namespace Helper
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using System.Data;
-    using System;
 
     /// <summary>
     /// Dictionary with mappings between Elite Dangerous and Voice Attack Bindable Commands
@@ -33,7 +32,7 @@
             this.relationship.Add("((90%))", "BackwardKey");
             this.relationship.Add("((Next Fire Group))", "CycleFireGroupNext");
             this.relationship.Add("((Previous Fire Group))", "CycleFireGroupPrevious");
-            this.relationship.Add("((Cycle Next Hostile Ship))", "CycleNextHostileTarget" );
+            this.relationship.Add("((Cycle Next Hostile Ship))", "CycleNextHostileTarget");
             this.relationship.Add("((Cycle Next Subsystem))", "CycleNextSubsystem");
             this.relationship.Add("((Cycle Next Ship))", "CycleNextTarget");
             this.relationship.Add("((Cycle Previous Hostile Ship))", "CyclePreviousHostileTarget");

@@ -13,6 +13,7 @@
         private const string Commands = "edvCommands";
         private const string Bindings = "edvCommand_Bindings";
         private const string Consolidated = "edvConsolidated_Bindings";
+        private const string Associated = "edvAssociated_Commands";
         private const string CSV = "csv";
         private const string HTM = "html";
         private const int NumberOfBackupsToKeep = 50;
@@ -294,14 +295,18 @@
                     // Intro ..
                     Console.WriteLine("Creating Analysis File(s) in {0}", argDirectoryPathAnalysis);
 
+                    // Construct File paths ..
                     string csvCommands = Path.Combine(argDirectoryPathAnalysis, Commands + "." + CSV);
                     string csvBindings = Path.Combine(argDirectoryPathAnalysis, Bindings + "." + CSV);
                     string csvConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated + "." + CSV);
+                    string csvAssociatedCommandStrings = Path.Combine(argDirectoryPathAnalysis, Associated + "." + CSV);
 
                     string htmCommands = Path.Combine(argDirectoryPathAnalysis, Commands + "." + HTM);
                     string htmBindings = Path.Combine(argDirectoryPathAnalysis, Bindings + "." + HTM);
                     string htmConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated + "." + HTM);
+                    string htmAssociatedCommandStrings = Path.Combine(argDirectoryPathAnalysis, Associated + "." + HTM);
 
+                    // Read (updated) files ..
                     KeyReaderEliteDangerous ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
                     KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
 
@@ -317,6 +322,9 @@
                     DataTable consolidatedBoundCommands = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, actionExchange);
                     consolidatedBoundCommands = consolidatedBoundCommands.Sort(Helper.Enums.Column.EliteDangerousAction.ToString() + " asc");
 
+                    // Create table of related Command Strings ..
+                    DataTable associatedCommands = va.GetAssociatedCommandStrings(consolidatedBoundCommands);
+
                     // Create appropriate type of analysis file ..
                     try
                     {
@@ -326,12 +334,14 @@
                                 elitedangerousAllCommands.CreateCSV(csvCommands);
                                 elitedangerousBoundCommands.CreateCSV(csvBindings);
                                 consolidatedBoundCommands.CreateCSV(csvConsolidatedBindings);
+                                associatedCommands.CreateCSV(csvAssociatedCommandStrings);
                                 break;
 
                             case ArgSubOption.htm:
                                 elitedangerousAllCommands.CreateHTML(htmCommands, Commands);
                                 elitedangerousBoundCommands.CreateHTML(htmBindings, Bindings);
                                 consolidatedBoundCommands.CreateHTML(htmConsolidatedBindings, Consolidated);
+                                associatedCommands.CreateHTML(htmAssociatedCommandStrings);
                                 break;
                         }
                     }
