@@ -93,13 +93,18 @@
                 string elitedangerousAction = boundCommandRow[Enums.Column.EliteDangerousAction.ToString()].ToString();
                 string bindingSyncStatus = boundCommandRow[Enums.Column.KeyUpdateRequired.ToString()].ToString() == Enums.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
 
-                // Prevent duplicated informatiom from those commands with multiple Action Ids ..
+                // Ignore duplicate CommandStrings from those with multiple Action Ids ..
                 if (voiceattackCommandString != prevCommandString)
                 {
                     var associatedCommandStrings = this.GetCommandStringsFromCommandContext(ref this.xCfg, this.GetCommandIdFromActionId(ref this.xCfg, voiceattackActionId));
+                    
+                    string prevAssociatedCommandString = string.Empty;
                     foreach (var associatedCommandString in associatedCommandStrings)
                     {
-                        associatedCommands.LoadDataRow(new object[] 
+                        // Ignore any duplicate Associated CommandStrings ..
+                        if (associatedCommandString != prevAssociatedCommandString)
+                        {
+                            associatedCommands.LoadDataRow(new object[] 
                                                            {
                                                                 voiceattackCommandString,
                                                                 elitedangerousAction,
@@ -107,6 +112,9 @@
                                                                 bindingSyncStatus
                                                            },
                                                            false);
+                        }
+
+                        prevAssociatedCommandString = associatedCommandString;
                     }
                 }
 

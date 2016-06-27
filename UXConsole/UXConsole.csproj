@@ -65,6 +65,7 @@
     <None Include="Sample\ED02.binds" />
     <None Include="Sample\VA01.vap" />
     <None Include="Sample\VA02.vap" />
+    <None Include="Sample\VA03.vap" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Binding\Binding.csproj">

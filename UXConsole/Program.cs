@@ -152,7 +152,7 @@
 
                 // Point to project sample (not a resource as such) data ..
                 eliteDangerousBinds = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
-                voiceAttackProfile = GetProjectDirectory() + "\\Sample" + "\\VA02.vap";
+                voiceAttackProfile = GetProjectDirectory() + "\\Sample" + "\\VA03.vap";
             }
             
             // Final Check ..
