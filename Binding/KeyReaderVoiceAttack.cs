@@ -1,9 +1,10 @@
 ﻿namespace Binding
 {
-    using Helper;
     using System.Data;
+    using System.IO;
     using System.Linq;
     using System.Xml.Linq;
+    using Helper;
 
     /// <summary>
     /// Parse HCSVoicePacks Voice Attack Profile file
@@ -76,22 +77,24 @@
         /// <summary>
         /// Get other CommandStrings associated with CommandString
         /// </summary>
-        /// <param name="boundCommands"></param>
+        /// <param name="consolidatedBoundCommands"></param>
         /// <returns></returns>
-        public DataTable GetAssociatedCommandStrings(DataTable boundCommands)
+        public DataTable GetAssociatedCommandStrings(DataTable consolidatedBoundCommands)
         {
             // Initialise ..
             DataTable associatedCommands = TableShape.AssociatedCommands();
             string prevCommandString = string.Empty;
 
             // Find associated CommandStrings using CommandString ActionId ...
-            foreach (DataRow boundCommandRow in boundCommands.Select().OrderBy(orderingColumn => orderingColumn[Enums.Column.VoiceAttackAction.ToString()]))
+            foreach (DataRow consolidatedBoundCommandRow in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[Enums.Column.VoiceAttackAction.ToString()]))
             {
                 // Get required field information ..
-                string voiceattackCommandString = boundCommandRow[Enums.Column.VoiceAttackAction.ToString()].ToString();
-                string voiceattackActionId = boundCommandRow[Enums.Column.VoiceAttackKeyId.ToString()].ToString();
-                string elitedangerousAction = boundCommandRow[Enums.Column.EliteDangerousAction.ToString()].ToString();
-                string bindingSyncStatus = boundCommandRow[Enums.Column.KeyUpdateRequired.ToString()].ToString() == Enums.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
+                string voiceattackCommandString = consolidatedBoundCommandRow[Enums.Column.VoiceAttackAction.ToString()].ToString();
+                string voiceattackActionId = consolidatedBoundCommandRow[Enums.Column.VoiceAttackKeyId.ToString()].ToString();
+                string elitedangerousAction = consolidatedBoundCommandRow[Enums.Column.EliteDangerousAction.ToString()].ToString();
+                string bindingSyncStatus = consolidatedBoundCommandRow[Enums.Column.KeyUpdateRequired.ToString()].ToString() == Enums.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
+                string voiceattackFile = Path.GetFileName(consolidatedBoundCommandRow[Enums.Column.VoiceAttackProfile.ToString()].ToString());
+                string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommandRow[Enums.Column.EliteDangerousBinds.ToString()].ToString());
 
                 // Ignore duplicate CommandStrings from those with multiple Action Ids ..
                 if (voiceattackCommandString != prevCommandString)
@@ -109,7 +112,9 @@
                                                                 voiceattackCommandString,
                                                                 elitedangerousAction,
                                                                 associatedCommandString,
-                                                                bindingSyncStatus
+                                                                bindingSyncStatus,
+                                                                voiceattackFile,
+                                                                eliteDangerousFile
                                                            },
                                                            false);
                         }

@@ -161,6 +161,8 @@
             table.Columns.Add(Enums.Column.EliteDangerousAction.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.VoiceAttackCommand.ToString(), typeof(string));
             table.Columns.Add(Enums.Column.BindingSynchronisationStatus.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.VoiceAttackProfile.ToString(), typeof(string));
+            table.Columns.Add(Enums.Column.EliteDangerousBinds.ToString(), typeof(string));
 
             return table;
         }
