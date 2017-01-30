@@ -9,7 +9,7 @@
 
     public class Program
     {
-        private const string VersionNumber = "1.000";
+        private const string VersionNumber = "1.001";
         private const string Commands = "edvCommands";
         private const string Bindings = "edvCommand_Bindings";
         private const string Consolidated = "edvConsolidated_Bindings";

@@ -1,5 +1,7 @@
 ﻿namespace Helper
 {
+    using System;
+    using System.IO;
     using System.Xml.Linq;
 
     /// <summary>
@@ -93,11 +95,21 @@
         /// <summary>
         /// Read XML file as XDocument
         /// </summary>
+        /// <remarks>
+        /// Cannot ensured that XML file is encoded correctly (e.g an erroneous utf-16 reference) ..
+        /// > To prevent: System.Xml.XmlException ("There is no Unicode byte order mark. Cannot switch to Unicode")
+        /// > Read file into stream
+        /// > Let StreamReader detect encoding
+        /// > Create XDocument ..
+        /// </remarks>
         /// <param name="xmlFilePath"></param>
         /// <returns></returns>
         public static XDocument ReadXDoc(string xmlFilePath)
         {
-            return XDocument.Load(xmlFilePath);
+            using (StreamReader sr = new StreamReader(xmlFilePath, true))
+            {
+                return XDocument.Load(sr);
+            }
         }
     }
 }
