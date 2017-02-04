@@ -11,10 +11,10 @@
     public class KeyReader
     {
         // Initialise ..
-        protected readonly Mapper KeyMapper = new Mapper(KeyType);
+        protected readonly GameKeyAndSystemKeyConnector Keys = new GameKeyAndSystemKeyConnector(KeyType);
         protected string cfgFilePath = string.Empty;
         protected XDocument xCfg = new XDocument();
-        private static KeyHelper.Enums.InputKeyEnumType keyType = KeyHelper.Enums.InputKeyEnumType.WindowsForms; // Default startup value for KeyType Property ..
+        private static KeyHelper.EnumsKeyEnumType.InputKeyEnumType keyType = KeyHelper.EnumsKeyEnumType.InputKeyEnumType.WindowsForms; // Default startup value for KeyType Property ..
         
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyReader" /> class.
@@ -25,11 +25,11 @@
             this.cfgFilePath = cfgFilePath;
 
             // Load XDocument into memory for availability in any derived classes ..
-            this.xCfg = StockXml.ReadXDoc(this.cfgFilePath);
+            this.xCfg = HandleXml.ReadXDoc(this.cfgFilePath);
         }
 
         // KeyType Property
-        public static KeyHelper.Enums.InputKeyEnumType KeyType
+        public static KeyHelper.EnumsKeyEnumType.InputKeyEnumType KeyType
         {
             get { return keyType; }
 
@@ -43,7 +43,7 @@
         public void WriteKeyMap(string directoryPath)
         {
             directoryPath += "\\" + "KeyCodes" + KeyType.ToString() + ".csv";
-            this.KeyMapper.WriteKeyMap(directoryPath);  
+            this.Keys.WriteKeyMap(directoryPath);  
         }
     }
 }

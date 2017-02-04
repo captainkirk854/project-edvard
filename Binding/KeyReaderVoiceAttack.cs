@@ -46,10 +46,10 @@
             DataTable primary = this.GetBindableActions(ref this.xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(EnumsEdVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(EnumsEdVArd.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
             return primary;
@@ -65,10 +65,10 @@
             DataTable primary = this.GetKeyBindings(ref this.xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(EnumsEdVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(Enums.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(EnumsEdVArd.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
             return primary;
@@ -86,15 +86,15 @@
             string prevCommandString = string.Empty;
 
             // Find associated CommandStrings using CommandString ActionId ...
-            foreach (DataRow consolidatedBoundCommandRow in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[Enums.Column.VoiceAttackAction.ToString()]))
+            foreach (DataRow consolidatedBoundCommandRow in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[EnumsEdVArd.Column.VoiceAttackAction.ToString()]))
             {
                 // Get required field information ..
-                string voiceattackCommandString = consolidatedBoundCommandRow[Enums.Column.VoiceAttackAction.ToString()].ToString();
-                string voiceattackActionId = consolidatedBoundCommandRow[Enums.Column.VoiceAttackKeyId.ToString()].ToString();
-                string elitedangerousAction = consolidatedBoundCommandRow[Enums.Column.EliteDangerousAction.ToString()].ToString();
-                string bindingSyncStatus = consolidatedBoundCommandRow[Enums.Column.KeyUpdateRequired.ToString()].ToString() == Enums.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
-                string voiceattackFile = Path.GetFileName(consolidatedBoundCommandRow[Enums.Column.VoiceAttackProfile.ToString()].ToString());
-                string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommandRow[Enums.Column.EliteDangerousBinds.ToString()].ToString());
+                string voiceattackCommandString = consolidatedBoundCommandRow[EnumsEdVArd.Column.VoiceAttackAction.ToString()].ToString();
+                string voiceattackActionId = consolidatedBoundCommandRow[EnumsEdVArd.Column.VoiceAttackKeyId.ToString()].ToString();
+                string elitedangerousAction = consolidatedBoundCommandRow[EnumsEdVArd.Column.EliteDangerousAction.ToString()].ToString();
+                string bindingSyncStatus = consolidatedBoundCommandRow[EnumsEdVArd.Column.KeyUpdateRequired.ToString()].ToString() == EnumsEdVArd.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
+                string voiceattackFile = Path.GetFileName(consolidatedBoundCommandRow[EnumsEdVArd.Column.VoiceAttackProfile.ToString()].ToString());
+                string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommandRow[EnumsEdVArd.Column.EliteDangerousBinds.ToString()].ToString());
 
                 // Ignore duplicate CommandStrings from those with multiple Action Ids ..
                 if (voiceattackCommandString != prevCommandString)
@@ -143,8 +143,8 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLunsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.Interaction.ExecuteCommand.ToString()) &&
+                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsEdVArd.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsEdVArd.Interaction.ExecuteCommand.ToString()) &&
                                     item.SafeElementValue() != string.Empty
                               select
                                  new
@@ -157,10 +157,10 @@
             {
                 bindableactions.LoadDataRow(new object[] 
                                                 {
-                                                    Enums.Game.VoiceAttack.ToString(), //Context
+                                                    EnumsEdVArd.Game.VoiceAttack.ToString(), //Context
                                                     xmlExtract.Commandstring, //BindingAction
                                                     StatusCode.NotApplicable, // Device priority
-                                                    Enums.Interaction.Keyboard.ToString() // Device binding is applied to
+                                                    EnumsEdVArd.Interaction.Keyboard.ToString() // Device binding is applied to
                                                 }, 
                                                 false);
             }
@@ -282,8 +282,8 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLunsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Enums.Interaction.ExecuteCommand.ToString()) &&
+                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsEdVArd.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsEdVArd.Interaction.ExecuteCommand.ToString()) &&
                                     item.SafeElementValue() != string.Empty
                               select
                                  new // create anonymous type for every XMLunsignedShort matching criteria ..
@@ -309,19 +309,19 @@
                     if (modifierKeyCode >= 0)
                     {
                         // If modifier found, some additional probing of that segment of the XML tree required ..
-                        modifierKeyEnumerationValue = KeyMapper.GetValue(modifierKeyCode);
+                        modifierKeyEnumerationValue = Keys.GetKeyValue(modifierKeyCode);
                         regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.ActionId);
                     }
 
                     // Load final values into datatable ..
                     keyactionbinder.LoadDataRow(new object[] 
                                                     {
-                                                        Enums.Game.VoiceAttack.ToString(), //Context
-                                                        KeyMapper.KeyType.ToString(), //KeyEnumerationType
+                                                        EnumsEdVArd.Game.VoiceAttack.ToString(), //Context
+                                                        Keys.KeyType.ToString(), //KeyEnumerationType
                                                         xmlExtract.Commandstring, //BindingAction
                                                         StatusCode.NotApplicable, //Priority
-                                                        KeyMapper.GetValue(regularKeyCode), //KeyGameValue
-                                                        KeyMapper.GetValue(regularKeyCode), //KeyEnumerationValue
+                                                        Keys.GetKeyValue(regularKeyCode), //KeyGameValue
+                                                        Keys.GetKeyValue(regularKeyCode), //KeyEnumerationValue
                                                         regularKeyCode.ToString(), //KeyEnumerationCode
                                                         xmlExtract.ActionId, //KeyId
                                                         modifierKeyEnumerationValue, //ModifierKeyGameValue

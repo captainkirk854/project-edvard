@@ -9,7 +9,7 @@
     /// <summary>
     /// Data-related Helper Methods
     /// </summary>
-    public static class StockData
+    public static class HandleData
     {
         /// <summary>
         /// Enumeration of supported statement types

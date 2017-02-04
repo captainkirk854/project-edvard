@@ -7,7 +7,7 @@
     /// <summary>
     /// XML-related Helper Methods
     /// </summary>
-    public static class StockXml
+    public static class HandleXml
     {
         /// <summary>
         /// Extension method to provide XML element name

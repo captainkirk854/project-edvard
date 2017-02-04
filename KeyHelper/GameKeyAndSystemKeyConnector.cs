@@ -9,28 +9,28 @@
     /// <summary>
     /// Key Value/Code Mapping ..
     /// </summary>
-    public sealed class Mapper
+    public sealed class GameKeyAndSystemKeyConnector
     {
         // Initialise class-wide scope variables ..
-        private Dictionary<string, int> activeKeyEnum = new Dictionary<string, int>();
-        private GameKeyExchanger keyExchanger = new GameKeyExchanger();
-        private MapperDictionary keyEnum = new MapperDictionary();
+        private Dictionary<string, int> currentKeyEnumType = new Dictionary<string, int>();
+        private GameKeyAndSystemKeyDictionary gameKeys = new GameKeyAndSystemKeyDictionary();
+        private SystemKeyTypeDictionary systemKeys = new SystemKeyTypeDictionary();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Mapper"/> class
+        /// Initializes a new instance of the <see cref="GameKeyAndSystemKeyConnector"/> class
         /// </summary>
         /// <param name="keytype"></param>
-        public Mapper(Enums.InputKeyEnumType keytype)
+        public GameKeyAndSystemKeyConnector(EnumsKeyEnumType.InputKeyEnumType keytype)
         {
-            this.activeKeyEnum = this.keyEnum.Get(keytype);
-            this.keyExchanger.Initialise(Helper.Enums.Game.EliteDangerous);
+            this.currentKeyEnumType = this.systemKeys.Get(keytype);
+            this.gameKeys.Initialise(Helper.EnumsEdVArd.Game.EliteDangerous);
             this.KeyType = keytype;
         }
 
         /// <summary>
         /// Gets Key Type
         /// </summary>
-        public Enums.InputKeyEnumType KeyType
+        public EnumsKeyEnumType.InputKeyEnumType KeyType
         {
             get;
             private set;
@@ -42,14 +42,14 @@
         /// {Dictionary Key}
         /// <param name="keyCode"></param>
         /// <returns></returns>
-        public string GetValue(int keyCode)
+        public string GetKeyValue(int keyCode)
         {
             string keyValue = string.Empty;
 
             try
             {
                 // Attempt to pull out value from dictionary for KeyCode index ..
-                keyValue = this.activeKeyEnum.FirstOrDefault(x => x.Value == keyCode).Key;
+                keyValue = this.currentKeyEnumType.FirstOrDefault(x => x.Value == keyCode).Key;
 
                 // Force a throw null reference exception for unknown key-code ..
                 if (keyValue.Trim() == string.Empty || keyValue.Trim() == null) { }
@@ -64,45 +64,45 @@
         }
 
         /// <summary>
-        /// Get Elite Dangerous Binding Value
+        /// Get Elite Dangerous Binding Value from Key code
         /// </summary>
         /// <param name="keyCode"></param>
         /// <returns></returns>
-        public string GetEDBindingValue(int keyCode)
+        public string GetEliteDangerousKeyBinding(int keyCode)
         {
             // Initialise ..
             string keyValue = string.Empty;
-            string keyValueED = string.Empty;
+            string keyBinding = string.Empty; // Elite Dangerous key binding value
 
             // Attempt to pull out key value from dictionary using key code index ..
             try
             {
-                keyValue = this.activeKeyEnum.FirstOrDefault(x => x.Value == keyCode).Key;
+                keyValue = this.currentKeyEnumType.FirstOrDefault(x => x.Value == keyCode).Key;
 
                 // Force a throw null reference exception for unknown key-code ..
                 if (keyValue.Trim() == string.Empty || keyValue.Trim() == null) { }
 
                 // Compare keyValue with virtual key value ..                
-                string virtualKeyValue = VirtualMapper.GetUnicodeValueFromWindowsInputKeyEnumValueWithOptionalModifiers(keyValue, false, true, false);
+                string virtualKeyValue = VirtualKeyCodeDictionary.GetUnicodeValueFromWindowsInputKeyEnumValueWithOptionalModifiers(keyValue, false, true, false);
                 
                 // If they match, then current value is not a special character ..
                 if (keyValue == virtualKeyValue)
                 {
-                    keyValueED = keyValue;
+                    keyBinding = keyValue;
                 }
                 else
                 {
-                    // Test to see if KeyValue can be found in Exchange dictionary ...
+                    // Test to see if KeyValue can be found in game-keys dictionary ...
                     try
                     {
-                        string exchangekeyValue = this.keyExchanger.GetKey(keyValue);
+                        string exchangekeyValue = this.gameKeys.GetKey(keyValue);
                         if (exchangekeyValue != null)
                         {
-                            keyValueED = exchangekeyValue;
+                            keyBinding = exchangekeyValue;
                         }
                         else
                         {
-                            keyValueED = keyValue;
+                            keyBinding = keyValue;
                         }
                     }
                     catch
@@ -117,7 +117,7 @@
             }
 
             // Return ..
-            return keyValueED;
+            return keyBinding;
         }
 
         /// <summary>
@@ -126,11 +126,11 @@
         /// {Dictionary Value}
         /// <param name="keyValue"></param>
         /// <returns></returns>
-        public int GetKey(string keyValue)
+        public int GetKeyCode(string keyValue)
         {
             try
             {
-                return this.activeKeyEnum[keyValue];
+                return this.currentKeyEnumType[keyValue];
             }
             catch
             {
@@ -144,13 +144,13 @@
                     try
                     {
                         // Examine key at Exchange ..
-                        string exchangekeyValue = this.keyExchanger.GetValue(keyValue);
+                        string exchangekeyValue = this.gameKeys.GetValue(keyValue);
 
                         // If value from Exchange is different, something must have been found ..
                         if (exchangekeyValue != keyValue) 
                         {
                             // Perform recursive check and see if a code can be found using Exchange key value ..
-                            return this.GetKey(exchangekeyValue);
+                            return this.GetKeyCode(exchangekeyValue);
                         }
                         else
                         {
@@ -171,7 +171,7 @@
         /// </summary>
         public void DisplayKeyMap()
         {
-            foreach (KeyValuePair<string, int> kvp in this.activeKeyEnum)
+            foreach (KeyValuePair<string, int> kvp in this.currentKeyEnumType)
             {
                 Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
             }
@@ -187,7 +187,7 @@
             DataTable keyMap = TableShape.DefineKeyMap();
 
             // Loop through dictionary adding information to DataTable ..
-            foreach (KeyValuePair<string, int> kvp in this.activeKeyEnum)
+            foreach (KeyValuePair<string, int> kvp in this.currentKeyEnumType)
             {
                 keyMap.LoadDataRow(new object[] 
                                                 {

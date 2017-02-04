@@ -16,7 +16,8 @@
         private const string Associated = "edvAssociated_Commands";
         private const string CSV = "csv";
         private const string HTM = "html";
-        private const int NumberOfBackupsToKeep = 50;
+        private const int BackupCycle = 50;
+        private const int BackupFilenameLeftPadSize = 4;
 
         /// <summary>
         /// Enumeration of Arguments
@@ -51,14 +52,13 @@
 
         public static void Main(string[] args)
         {
-            //////////////////////////////////////////////////////////////////
-            // C O M M A N D  L I N E ..
-            //////////////////////////////////////////////////////////////////
+            #region [Command-Line Argument Initialisation]
 
-            // Binds and Profile ..
+            // Path and Keyword constants  ..
             string defaultEDBindingsDirectory = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%") + "\\Frontier Developments\\Elite Dangerous\\Options\\Bindings";
             string defaultVAProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
             string userDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
+            const string DesktopKeyword = "desktop";
 
             string eliteDangerousBinds = string.Empty;
             string voiceAttackProfile = string.Empty;
@@ -81,22 +81,19 @@
             string argSample = commands.Parse(ArgOption.sample.ToString());
 
             // Specials 
-            if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == "desktop")) { argDirectoryPathBackup = userDesktop; }
-            if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == "desktop")) { argDirectoryPathAnalysis = userDesktop; }
-            if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == "desktop")) { argFilePathDictionaryWrite = userDesktop; }
-            if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == "desktop")) { argFilePathDictionaryRead = userDesktop; }
+            if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == DesktopKeyword)) { argDirectoryPathBackup = userDesktop; }
+            if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == DesktopKeyword)) { argDirectoryPathAnalysis = userDesktop; }
+            if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == DesktopKeyword)) { argFilePathDictionaryWrite = userDesktop; }
+            if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == DesktopKeyword)) { argFilePathDictionaryRead = userDesktop; }
             argAnalysisFileFormat = argAnalysisFileFormat == null ? ArgSubOption.csv.ToString() : argAnalysisFileFormat;
+            #endregion
 
-            ///////////////////////////////////////
-            // Argument Validation ...
-            ///////////////////////////////////////
+            #region [Command-Line Argument Validation]
 
             // Help Message ..
             if (Convert.ToBoolean(commands.Parse(ArgOption.help.ToString())))
             {
-                ShowUsage();
-                PressIt();
-                Environment.Exit(0);
+                ConsistentExit();
             }
 
             // Processing mode ..
@@ -108,9 +105,7 @@
                 Console.WriteLine("     /{0} {1}", ArgOption.sync.ToString(), ArgSubOption.oneway_to_binds.ToString());
                 Console.WriteLine("     /{0} {1}", ArgOption.sync.ToString(), ArgSubOption.twoway.ToString());
                 Console.WriteLine();
-                ShowUsage();
-                PressIt();
-                Environment.Exit(0);
+                ConsistentExit();
             }
 
             // Determine file-type (user/sample) to be processed ..
@@ -126,9 +121,7 @@
                     Console.WriteLine("Path to Elite Dangerous Binds (.binds) File must be valid!" + System.Environment.NewLine);
                     Console.WriteLine(" e.g. /{0} {1}", ArgOption.binds.ToString(), Path.Combine(defaultEDBindingsDirectory, "Custom.binds"));
                     Console.WriteLine();
-                    ShowUsage();
-                    PressIt();
-                    Environment.Exit(0);
+                    ConsistentExit();
                 }
 
                 if (File.Exists(argFilePathVap))
@@ -141,9 +134,7 @@
                     Console.WriteLine("Path to Voice Attack Profile (.vap) File must be valid!" + System.Environment.NewLine);
                     Console.WriteLine(" e.g. /{0} {1}", ArgOption.vap.ToString(), Path.Combine(defaultVAProfilesDirectory, "Custom.vap"));
                     Console.WriteLine();
-                    ShowUsage();
-                    PressIt();
-                    Environment.Exit(0);
+                    ConsistentExit();
                 }
             }
             else
@@ -162,23 +153,18 @@
                 PressIt();
                 Environment.Exit(0);
             }
+            #endregion
 
-            //////////////////////////////////////////////////////////////////
-            // C O M M A N D  L I N E ..
-            //////////////////////////////////////////////////////////////////
+            #region [Initialision]
 
-            //////////////////////////////////////////////////////////////////
-            // I N I T I A L I S E ..
-            //////////////////////////////////////////////////////////////////
-
-            // Initialise key enum type to use ..
-            KeyReader.KeyType = KeyHelper.Enums.InputKeyEnumType.WindowsForms; // [optional] sets key type enumeration to use
+            // Set key type enumeration type to use ..
+            KeyReader.KeyType = KeyHelper.EnumsKeyEnumType.InputKeyEnumType.WindowsForms;
 
             // Initialise lookup dictionary for inter-game action references ..
-            GameActionExchanger actionExchange = null;
+            BindingAndCommandConnector keyLookup = null;
             try
             {
-                actionExchange = new GameActionExchanger();
+                keyLookup = new BindingAndCommandConnector();
             }
             catch
             {
@@ -188,9 +174,9 @@
             }
 
             // Optional arg: Dictionary export
-            if (StockIO.ValidateFilepath(argFilePathDictionaryWrite) && StockIO.CreateDirectory(argFilePathDictionaryWrite, true))
+            if (HandleIO.ValidateFilepath(argFilePathDictionaryWrite) && HandleIO.CreateDirectory(argFilePathDictionaryWrite, true))
             {
-                actionExchange.Export(argFilePathDictionaryWrite);
+                keyLookup.Export(argFilePathDictionaryWrite);
             }
             else
             {
@@ -200,7 +186,7 @@
             // Optional arg: Dictionary import ..
             if (File.Exists(argFilePathDictionaryRead))
             {
-                actionExchange.Import(argFilePathDictionaryRead);
+                keyLookup.Import(argFilePathDictionaryRead);
             }
             else
             {
@@ -211,17 +197,12 @@
             {
                 Console.WriteLine("unused option: /{0}", ArgOption.tag.ToString());
             }
+            #endregion
 
-            //////////////////////////////////////////////////////////////////
-            // I N I T I A L I S E ..
-            //////////////////////////////////////////////////////////////////
-
-            //////////////////////////////////////////////////////////////////
-            // U P D A T E ..
-            //////////////////////////////////////////////////////////////////
-            // Read and update EliteDangerous and VoiceAttack configuration(s) ..
+            #region [File Processing]
             try
             {
+                #region [Read and update VoiceAttack Configuration File]
                 // Update VoiceAttack Profile (optional) ..
                 if ((argModeSync == ArgSubOption.twoway.ToString()) || (argModeSync == ArgSubOption.oneway_to_vap.ToString()))
                 {
@@ -229,28 +210,20 @@
                     Console.WriteLine(System.Environment.NewLine);
                     Console.WriteLine("Attempting VoiceAttack Profile update ..");
 
-                    // Backup ..
-                    if (StockIO.ValidateFilepath(argDirectoryPathBackup))
-                    {
-                        if (StockIO.BackupFile(StockIO.CopyFile(voiceAttackProfile, argDirectoryPathBackup), NumberOfBackupsToKeep, 3) == string.Empty)
-                        {
-                            Console.WriteLine("Backup attempt: failed");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("unused option: /{0}", ArgOption.backup.ToString());
-                    }
+                    // Backup (optional) ..
+                    SequentialFileBackup(argDirectoryPathBackup, voiceAttackProfile);
 
-                    // Attempt update ..
+                    // Attempt synchronisation update ..
                     KeyWriterVoiceAttack newVoiceAttack = new KeyWriterVoiceAttack();
-                    Console.WriteLine("Voice Attack Profile: {0}", newVoiceAttack.Update(GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, actionExchange), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
+                    Console.WriteLine("Voice Attack Profile: {0}", newVoiceAttack.Update(GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
                 }
                 else
                 {
                     Console.WriteLine("VoiceAttack Profile update: not selected");
                 }
+                #endregion
 
+                #region [Read and update EliteDangerous Configuration File]
                 // Reverse-synchronise any vacant Elite Dangerous Bindings (optional) ..
                 if ((argModeSync == ArgSubOption.twoway.ToString()) || (argModeSync == ArgSubOption.oneway_to_binds.ToString()))
                 {
@@ -258,39 +231,23 @@
                     Console.WriteLine(System.Environment.NewLine);
                     Console.WriteLine("Attempting Elite Dangerous Binds update ..");
 
-                    // Backup ..
-                    if (StockIO.ValidateFilepath(argDirectoryPathBackup))
-                    {
-                        if (StockIO.BackupFile(StockIO.CopyFile(eliteDangerousBinds, argDirectoryPathBackup), NumberOfBackupsToKeep, 3) == string.Empty)
-                        {
-                            Console.WriteLine("Backup attempt: failed");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("unused option: /{0}", ArgOption.backup.ToString());
-                    }
+                    // Backup (optional) ..
+                    SequentialFileBackup(argDirectoryPathBackup, eliteDangerousBinds);
 
-                    // Attempt update ..
+                    // Attempt synchronisation update ..
                     KeyWriterEliteDangerous newEliteDangerous = new KeyWriterEliteDangerous();
-                    Console.WriteLine("Elite Dangerous Binds: {0}", newEliteDangerous.Update(GameActionAnalyser.EliteDangerous(eliteDangerousBinds, voiceAttackProfile, actionExchange), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
+                    Console.WriteLine("Elite Dangerous Binds: {0}", newEliteDangerous.Update(GameActionAnalyser.EliteDangerous(eliteDangerousBinds, voiceAttackProfile, keyLookup), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
                 }
                 else
                 {
                     Console.WriteLine("Elite Dangerous Binds update: not selected");
                 }
+                #endregion
 
-                //////////////////////////////////////////////////////////////////
-                // U P D A T E ..
-                //////////////////////////////////////////////////////////////////
-
-                //////////////////////////////////////////////////////////////////
-                //////// O P T I O N A L /////FINAL PROFILE AND BINDS STATUS//////
-                //////////////////////////////////////////////////////////////////
-
+                #region [Analysis]
                 // Re-read Voice Attack Commands and Elite Dangerous Binds for analysis information ..
                 Console.WriteLine(System.Environment.NewLine);
-                if (StockIO.ValidateFilepath(argDirectoryPathAnalysis) && StockIO.CreateDirectory(argDirectoryPathAnalysis, false))
+                if (HandleIO.ValidateFilepath(argDirectoryPathAnalysis) && HandleIO.CreateDirectory(argDirectoryPathAnalysis, false))
                 {
                     // Intro ..
                     Console.WriteLine("Creating Analysis File(s) in {0}", argDirectoryPathAnalysis);
@@ -319,8 +276,8 @@
                     elitedangerousBoundCommands.Merge(va.GetBoundCommands());
                     
                     // Create table of all consolidated actions ..
-                    DataTable consolidatedBoundCommands = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, actionExchange);
-                    consolidatedBoundCommands = consolidatedBoundCommands.Sort(Helper.Enums.Column.EliteDangerousAction.ToString() + " asc");
+                    DataTable consolidatedBoundCommands = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup);
+                    consolidatedBoundCommands = consolidatedBoundCommands.Sort(Helper.EnumsEdVArd.Column.EliteDangerousAction.ToString() + " asc");
 
                     // Create table of related Command Strings ..
                     DataTable associatedCommands = va.GetAssociatedCommandStrings(consolidatedBoundCommands);
@@ -328,7 +285,7 @@
                     // Create appropriate type of analysis file ..
                     try
                     {
-                        switch (StockThings.ParseStringToEnum<ArgSubOption>(argAnalysisFileFormat))
+                        switch (HandleStrings.ParseStringToEnum<ArgSubOption>(argAnalysisFileFormat))
                         {
                             case ArgSubOption.csv:
                                 elitedangerousAllCommands.CreateCSV(csvCommands);
@@ -354,11 +311,9 @@
                 {
                     Console.WriteLine("unused option: /{0}", ArgOption.analysis.ToString());
                 }
+                #endregion
 
                 PressIt();
-                //////////////////////////////////////////////////////////////////
-                //////// O P T I O N A L /////FINAL PROFILE AND BINDS STATUS//////
-                //////////////////////////////////////////////////////////////////
             }
             catch
             {
@@ -366,6 +321,7 @@
                 PressIt();
                 throw;
             }
+            #endregion
         }
 
         /// <summary>
@@ -457,6 +413,7 @@
                                     " iv.the quality of the software will meet your expectations" + System.Environment.NewLine +
                                     "  v.any errors in the software obtained will be corrected.";
 
+            // Display to user ..
             Console.WriteLine(System.Environment.NewLine);
             Console.WriteLine(helpInformation);
             Console.WriteLine(System.Environment.NewLine);
@@ -464,6 +421,38 @@
             Console.WriteLine(System.Environment.NewLine);
             Console.WriteLine(disclaimer);
             Console.WriteLine(System.Environment.NewLine);
+        }
+
+        /// <summary>
+        /// File Backup
+        /// </summary>
+        /// <param name="backupDirectory"></param>
+        /// <param name="filepath"></param>
+        private static void SequentialFileBackup(string backupDirectory, string filepath)
+        {
+            // Validate ..
+            if (HandleIO.ValidateFilepath(backupDirectory))
+            {
+                // Backup ..
+                if (HandleIO.BackupFile(HandleIO.CopyFile(filepath, backupDirectory), BackupCycle, BackupFilenameLeftPadSize) == string.Empty)
+                {
+                    Console.WriteLine("Backup attempt: failed");
+                }
+            }
+            else
+            {
+                Console.WriteLine("unused option: /{0}", ArgOption.backup.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Consistent Exit
+        /// </summary>
+        private static void ConsistentExit()
+        {
+            ShowUsage();
+            PressIt();
+            Environment.Exit(0);
         }
 
         /// <summary>

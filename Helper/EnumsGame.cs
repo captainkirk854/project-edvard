@@ -3,7 +3,7 @@
     /// <summary>
     /// Application-related Enumerations for Elite Dangerous and Voice Attack
     /// </summary>
-    public partial class Enums
+    public partial class EnumsEdVArd
     {
         /// <summary>
         /// Enumeration of Game Names 

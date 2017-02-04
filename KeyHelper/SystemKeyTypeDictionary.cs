@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class MapperDictionary
+    public class SystemKeyTypeDictionary
     {
         private Dictionary<string, int> keyEnum = new Dictionary<string, int>();
 
@@ -13,19 +13,19 @@
         /// </summary>
         /// <param name="keytype"></param>
         /// <returns></returns>
-        public Dictionary<string, int> Get(Enums.InputKeyEnumType keytype)
+        public Dictionary<string, int> Get(EnumsKeyEnumType.InputKeyEnumType keytype)
         {
             switch (keytype)
             {
-                case Enums.InputKeyEnumType.Console:
+                case EnumsKeyEnumType.InputKeyEnumType.Console:
                     this.keyEnum = this.Console();
                     break;
 
-                case Enums.InputKeyEnumType.WindowsForms:
+                case EnumsKeyEnumType.InputKeyEnumType.WindowsForms:
                     this.keyEnum = this.WindowsForms();
                     break;
 
-                case Enums.InputKeyEnumType.WindowsInput:
+                case EnumsKeyEnumType.InputKeyEnumType.WindowsInput:
                     this.keyEnum = this.WindowsInput();
                     break;
 

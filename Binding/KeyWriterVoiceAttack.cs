@@ -34,18 +34,18 @@
 
             // Find VoiceAttack commands which require remapping ..
             var consolidatedBindings = from cb in consolidatedActions.AsEnumerable()
-                                      where cb.Field<string>(Enums.Column.KeyUpdateRequired.ToString()) == Enums.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString()
+                                      where cb.Field<string>(EnumsEdVArd.Column.KeyUpdateRequired.ToString()) == EnumsEdVArd.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString()
                                      select
                                         new
                                             {
-                                                VoiceAttackInternal = cb.Field<string>(Enums.Column.VoiceAttackInternal.ToString()),
-                                                VoiceAttackProfile = cb.Field<string>(Enums.Column.VoiceAttackProfile.ToString()),
-                                                VoiceAttackAction = cb.Field<string>(Enums.Column.VoiceAttackAction.ToString()),
-                                                VoiceAttackKeyId = cb.Field<string>(Enums.Column.VoiceAttackKeyId.ToString()),
-                                                VoiceAttackKeyCode = cb.Field<string>(Enums.Column.VoiceAttackKeyCode.ToString()),
-                                                VoiceAttackModifierKeyCode = cb.Field<string>(Enums.Column.VoiceAttackModifierKeyCode.ToString()),
-                                                EliteDangerousKeyCode = cb.Field<string>(Enums.Column.EliteDangerousKeyCode.ToString()),
-                                                EliteDangerousModifierKeyCode = cb.Field<string>(Enums.Column.EliteDangerousModifierKeyCode.ToString())
+                                                VoiceAttackInternal = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackInternal.ToString()),
+                                                VoiceAttackProfile = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackProfile.ToString()),
+                                                VoiceAttackAction = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackAction.ToString()),
+                                                VoiceAttackKeyId = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackKeyId.ToString()),
+                                                VoiceAttackKeyCode = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackKeyCode.ToString()),
+                                                VoiceAttackModifierKeyCode = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackModifierKeyCode.ToString()),
+                                                EliteDangerousKeyCode = cb.Field<string>(EnumsEdVArd.Column.EliteDangerousKeyCode.ToString()),
+                                                EliteDangerousModifierKeyCode = cb.Field<string>(EnumsEdVArd.Column.EliteDangerousModifierKeyCode.ToString())
                                             };
 
             // Perform key code value update(s) for those commands that require it ..
@@ -113,7 +113,7 @@
         /// <param name="keyCode"></param>
         private void InsertVoiceAttackModifierKeyCode(string vaprofile, string vakeyId, string keyCode)
         {
-            var vap = StockXml.ReadXDoc(vaprofile);
+            var vap = HandleXml.ReadXDoc(vaprofile);
 
             // Insert XMLunsignedShort XElement before existing one ..
             vap.Descendants(XMLunsignedShort)
@@ -149,7 +149,7 @@
         /// <param name="keyCode"></param>
         private void RemoveAnyOtherVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
         {
-            var vap = StockXml.ReadXDoc(vaprofile);
+            var vap = HandleXml.ReadXDoc(vaprofile);
 
             // Remove all XMLunsignedShort XElements ...
             vap.Descendants(XMLunsignedShort)
@@ -183,7 +183,7 @@
         /// <param name="keyCode"></param>
         private void UpdateVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
         {
-            var vap = StockXml.ReadXDoc(vaprofile);
+            var vap = HandleXml.ReadXDoc(vaprofile);
 
             // Update XMLunsignedShort XElement ..
             vap.Descendants(XMLunsignedShort)
@@ -208,7 +208,7 @@
         /// <param name="updatedProfileName"></param>
         private void UpdateVoiceAttackProfileName(string vaprofile, string profileName, string updatedProfileName)
         {
-            var vap = StockXml.ReadXDoc(vaprofile);
+            var vap = HandleXml.ReadXDoc(vaprofile);
 
             // Update XMLunsignedShort XMLName ..
             vap.Descendants(XMLName)

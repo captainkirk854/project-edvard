@@ -7,22 +7,22 @@
     /// <summary>
     /// Dictionary of Key Bindings
     /// </summary>
-    public class GameKeyExchanger
+    public class GameKeyAndSystemKeyDictionary
     {
         private Dictionary<string, string> relationship = new Dictionary<string, string>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameKeyExchanger"/> class
+        /// Initializes a new instance of the <see cref="GameKeyAndSystemKeyDictionary"/> class
         /// </summary>
-        public GameKeyExchanger()
+        public GameKeyAndSystemKeyDictionary()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameKeyExchanger"/> class
+        /// Initializes a new instance of the <see cref="GameKeyAndSystemKeyDictionary"/> class
         /// </summary>
         /// <param name="game"></param>
-        public GameKeyExchanger(Helper.Enums.Game game)
+        public GameKeyAndSystemKeyDictionary(Helper.EnumsEdVArd.Game game)
         {
             this.Initialise(game);
         }
@@ -31,9 +31,9 @@
         /// Initialise Mapping Dictionary for certain Game Keys: [Game -> WindowsForm]
         /// </summary>
         /// <param name="game"></param>
-        public void Initialise(Helper.Enums.Game game)
+        public void Initialise(Helper.EnumsEdVArd.Game game)
         {
-            if (game == Helper.Enums.Game.EliteDangerous)
+            if (game == Helper.EnumsEdVArd.Game.EliteDangerous)
             {
                 this.relationship.Add("0", "D0");
                 this.relationship.Add("1", "D1");
@@ -84,6 +84,7 @@
                 this.relationship.Add("Equals", "Oemplus");
                 this.relationship.Add("Slash", "Oem5");
                 this.relationship.Add("Semicolon", "Oem1");
+                this.relationship.Add("SemiColon", "Oem1");
                 this.relationship.Add("Hash", "Oem7");
                 this.relationship.Add("ForwardSlash", "OemQuestion");
                 this.relationship.Add("Tilde", "OemTilde");
