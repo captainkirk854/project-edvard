@@ -46,7 +46,6 @@
     <Compile Include="HandleData.cs" />
     <Compile Include="EnumsEdVArd.cs" />
     <Compile Include="EnumsGame.cs" />
-    <Compile Include="BindingAndCommandConnector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HandleStrings.cs" />
     <Compile Include="TableShape.cs" />

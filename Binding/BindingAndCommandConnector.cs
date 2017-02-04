@@ -1,4 +1,4 @@
-﻿namespace Helper
+﻿namespace Binding
 {
     using System;
     using System.Collections.Generic;
@@ -25,7 +25,7 @@
         /// </remarks>
         public BindingAndCommandConnector()
         {
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((0%))", "SetSpeedZero");
             this.relationship.Add("((10%))", "ForwardKey");
             this.relationship.Add("((20%))", "ForwardKey");
@@ -43,7 +43,7 @@
             this.relationship.Add("((50% Reverse))", "SetSpeedMinus50");
             this.relationship.Add("((75% Reverse))", "SetSpeedMinus75");
             this.relationship.Add("((100% Reverse))", "SetSpeedMinus100");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Hardpoints))", "DeployHardpointToggle");
             this.relationship.Add("((Heatsink))", "DeployHeatSink");
             this.relationship.Add("((Chaff))", "FireChaffLauncher");
@@ -53,13 +53,13 @@
             this.relationship.Add("((Afterburners))", "UseBoostJuice");
             this.relationship.Add("((Shield Cell))", "UseShieldCell");
             this.relationship.Add("((Lights))", "ShipSpotLightToggle");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Comms Panel))", "FocusCommsPanel");
             this.relationship.Add("((Left Panel))", "FocusLeftPanel");
             this.relationship.Add("((Right Panel))", "FocusRightPanel");
             this.relationship.Add("((Role Panel))", "FocusRolePanel"); // not sure if this is right as it doesn't exist
             this.relationship.Add("((SRV Panel))", "UIFocus_Buggy");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((UI Cancel))", "UI_Back");
             this.relationship.Add("((UI Down))", "UI_Down");
             this.relationship.Add("((UI Left))", "UI_Left");
@@ -69,52 +69,52 @@
             this.relationship.Add("((UI Accept))", "UI_Select");
             this.relationship.Add("((UI Up))", "UI_Up");
             this.relationship.Add("((UI Okay))", "UIFocus");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Power To Engines))", "IncreaseEnginesPower");
             this.relationship.Add("((Power To Systems))", "IncreaseSystemsPower");
             this.relationship.Add("((Power To Weapons))", "IncreaseWeaponsPower");
             this.relationship.Add("((Balance Power))", "ResetPowerDistribution");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Next Fire Group))", "CycleFireGroupNext");
             this.relationship.Add("((Previous Fire Group))", "CycleFireGroupPrevious");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Cycle Next Hostile Ship))", "CycleNextHostileTarget");
             this.relationship.Add("((Cycle Next Subsystem))", "CycleNextSubsystem");
             this.relationship.Add("((Cycle Next Ship))", "CycleNextTarget");
             this.relationship.Add("((Cycle Previous Hostile Ship))", "CyclePreviousHostileTarget");
             this.relationship.Add("((Cycle Previous Subsystem))", "CyclePreviousSubsystem");
             this.relationship.Add("((Cycle Previous Ship))", "CyclePreviousTarget");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Radar))", "FocusRadarPanel");
             this.relationship.Add("((Decrease Sensor Range))", "RadarDecreaseRange");
             this.relationship.Add("((Decrease Sensor Range Max))", "RadarDecreaseRange");
             this.relationship.Add("((Increase Sensor Range))", "RadarIncreaseRange");
             this.relationship.Add("((Increase Sensor Range Max))", "RadarIncreaseRange");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Select Highest Threat))", "SelectHighestThreat");
             this.relationship.Add("((Select Target Ahead))", "SelectTarget");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Galaxy Map))", "GalaxyMapOpen");
             this.relationship.Add("((System Map))", "SystemMapOpen");
             this.relationship.Add("((Next Route System))", "TargetNextRouteSystem");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Wingman 1))", "TargetWingman0");
             this.relationship.Add("((Wingman 2))", "TargetWingman1");
             this.relationship.Add("((Wingman 3))", "TargetWingman2");
             this.relationship.Add("((Wingman NavLock))", "WingNavLock");
             this.relationship.Add("((Wingmans Target))", "SelectTargetsTarget");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Supercruise))", "Supercruise");
             this.relationship.Add("((Jump Drive))", "HyperSuperCombination");
             this.relationship.Add("((Departure 30m))", "VerticalThrustersButton");
             this.relationship.Add("((Planet departure))", "VerticalThrustersButton");
             this.relationship.Add("((Take Off))", "VerticalThrustersButton");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Flight Assist))", "ToggleFlightAssist");
             this.relationship.Add("((Look Ahead))", "HeadLookReset");
             this.relationship.Add("((Oculus Reset))", "HMDReset");
             this.relationship.Add("((External Camera))", "PhotoCameraToggle");
-            //-----------------------------------------------------------------------------------------------------
+            ////-----------------------------------------------------------------------------------------------------
         }
 
         /// <summary>

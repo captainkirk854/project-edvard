@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindingAndCommandConnector.cs" />
     <Compile Include="GameActionAnalyser.cs" />
     <Compile Include="IKeyReader.cs" />
     <Compile Include="IKeyWriter.cs" />

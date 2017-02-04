@@ -256,26 +256,26 @@
                                                      EliteDangerousBinds = vac.Field<string>(Helper.EnumsEdVArd.Column.EliteDangerousBinds.ToString())
                                                  };
 
-            foreach (var vEDBind in vacantEliteDangerousBindings)
+            foreach (var vacantEliteDangerousBinding in vacantEliteDangerousBindings)
             {
                 reverseBindableActions.LoadDataRow(new object[] 
                                                 {
                                                  ////--------------------------------------------------------------------------
-                                                 vEDBind.KeyEnumeration, //KeyEnumeration
-                                                 vEDBind.EliteDangerousAction, //EliteDangerousAction
-                                                 vEDBind.VoiceAttackAction, //VoiceAttackAction
+                                                 vacantEliteDangerousBinding.KeyEnumeration, //KeyEnumeration
+                                                 vacantEliteDangerousBinding.EliteDangerousAction, //EliteDangerousAction
+                                                 vacantEliteDangerousBinding.VoiceAttackAction, //VoiceAttackAction
                                                  ////--------------------------------------------------------------------------
-                                                 vEDBind.VoiceAttackKeyValue, //VoiceAttackKeyValue
-                                                 vEDBind.VoiceAttackKeyCode, //VoiceAttackKeyCode
-                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vEDBind.VoiceAttackKeyCode)), //EliteDangerousKeyValue
-                                                 vEDBind.VoiceAttackModifierKeyValue, //VoiceAttackModifierKeyValue
-                                                 vEDBind.VoiceAttackModifierKeyCode, //VoiceAttackModifierKeyCode
-                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vEDBind.VoiceAttackModifierKeyCode)), //EliteDangerousModifierKeyValue
+                                                 vacantEliteDangerousBinding.VoiceAttackKeyValue, //VoiceAttackKeyValue
+                                                 vacantEliteDangerousBinding.VoiceAttackKeyCode, //VoiceAttackKeyCode
+                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vacantEliteDangerousBinding.VoiceAttackKeyCode)), //EliteDangerousKeyValue
+                                                 vacantEliteDangerousBinding.VoiceAttackModifierKeyValue, //VoiceAttackModifierKeyValue
+                                                 vacantEliteDangerousBinding.VoiceAttackModifierKeyCode, //VoiceAttackModifierKeyCode
+                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vacantEliteDangerousBinding.VoiceAttackModifierKeyCode)), //EliteDangerousModifierKeyValue
                                                  ////--------------------------------------------------------------------------
-                                                 vEDBind.VoiceAttackInternal, //VoiceAttackInternal
-                                                 vEDBind.VoiceAttackProfile, //VoiceAttackProfile
-                                                 vEDBind.EliteDangerousInternal, //EliteDangerousInternal
-                                                 vEDBind.EliteDangerousBinds //EliteDangerousBinds
+                                                 vacantEliteDangerousBinding.VoiceAttackInternal, //VoiceAttackInternal
+                                                 vacantEliteDangerousBinding.VoiceAttackProfile, //VoiceAttackProfile
+                                                 vacantEliteDangerousBinding.EliteDangerousInternal, //EliteDangerousInternal
+                                                 vacantEliteDangerousBinding.EliteDangerousBinds //EliteDangerousBinds
                                                 },
                                                 false);
             }
