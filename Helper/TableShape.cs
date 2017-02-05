@@ -166,5 +166,17 @@
 
             return table;
         }
+
+        public static DataTable AllVoiceCommands()
+        {
+            // New DataTable ..
+            DataTable table = new DataTable();
+            table.TableName = "AllVoiceCommands";
+
+            table.Columns.Add(EnumsInternal.Column.VoiceAttackCategory.ToString(), typeof(string));
+            table.Columns.Add(EnumsInternal.Column.VoiceAttackCommand.ToString(), typeof(string));
+
+            return table;
+        }
     }
 }

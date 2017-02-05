@@ -25,7 +25,8 @@
         private const string XMLKeyCodes = "KeyCodes";
         private const string XMLContext = "Context";
         private const string XMLUnsignedShort = "unsignedShort";
-        private const string XMLKeybindingsCategory = "Keybindings";
+        private const string XMLCategoryKeybindings = "Keybindings";
+        private const string XMLCategoryEducation = "education";
         
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyBindingReaderVoiceAttack" /> class.
@@ -75,7 +76,7 @@
         }
 
         /// <summary>
-        /// Get other CommandStrings associated with CommandString
+        /// Get other CommandStrings associated with a particular CommandString
         /// </summary>
         /// <param name="consolidatedBoundCommands"></param>
         /// <returns></returns>
@@ -86,15 +87,15 @@
             string prevCommandString = string.Empty;
 
             // Find associated CommandStrings using CommandString ActionId ...
-            foreach (DataRow consolidatedBoundCommandRow in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[EnumsInternal.Column.VoiceAttackAction.ToString()]))
+            foreach (DataRow consolidatedBoundCommand in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[EnumsInternal.Column.VoiceAttackAction.ToString()]))
             {
                 // Get required field information ..
-                string voiceattackCommandString = consolidatedBoundCommandRow[EnumsInternal.Column.VoiceAttackAction.ToString()].ToString();
-                string voiceattackActionId = consolidatedBoundCommandRow[EnumsInternal.Column.VoiceAttackKeyId.ToString()].ToString();
-                string elitedangerousAction = consolidatedBoundCommandRow[EnumsInternal.Column.EliteDangerousAction.ToString()].ToString();
-                string bindingSyncStatus = consolidatedBoundCommandRow[EnumsInternal.Column.KeyUpdateRequired.ToString()].ToString() == EnumsInternal.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
-                string voiceattackFile = Path.GetFileName(consolidatedBoundCommandRow[EnumsInternal.Column.VoiceAttackProfile.ToString()].ToString());
-                string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommandRow[EnumsInternal.Column.EliteDangerousBinds.ToString()].ToString());
+                string voiceattackCommandString = consolidatedBoundCommand[EnumsInternal.Column.VoiceAttackAction.ToString()].ToString();
+                string voiceattackActionId = consolidatedBoundCommand[EnumsInternal.Column.VoiceAttackKeyId.ToString()].ToString();
+                string elitedangerousAction = consolidatedBoundCommand[EnumsInternal.Column.EliteDangerousAction.ToString()].ToString();
+                string bindingSyncStatus = consolidatedBoundCommand[EnumsInternal.Column.KeyUpdateRequired.ToString()].ToString() == EnumsInternal.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
+                string voiceattackFile = Path.GetFileName(consolidatedBoundCommand[EnumsInternal.Column.VoiceAttackProfile.ToString()].ToString());
+                string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommand[EnumsInternal.Column.EliteDangerousBinds.ToString()].ToString());
 
                 // Ignore duplicate CommandStrings from those with multiple Action Ids ..
                 if (voiceattackCommandString != prevCommandString)
@@ -130,6 +131,32 @@
         }
 
         /// <summary>
+        /// Get CommandStrings for all Categories and load into DataTable ..
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetCommandStringsForAllCategories()
+        {
+            // Datatable to hold tabulated XML contents ..
+            DataTable allVoiceCommands = TableShape.AllVoiceCommands();
+
+            // Get anonymous type row data (as object types) ..
+            var CommandStrings = this.GetCommandStringsForCommandCategory(ref this.xCfg, this.GetAllCommandCategories(ref this.xCfg));
+
+            // insert object's row data into DataTable being able to access its two fields as the anonymous type CommandString is declared as a 'dynamic' type ..
+            foreach (dynamic CommandString in CommandStrings)
+            {
+                allVoiceCommands.LoadDataRow(new object[] 
+                                                {
+                                                    CommandString.CommandCategory,
+                                                    CommandString.CommandString
+                                                },
+                                            false);
+            }
+
+            return allVoiceCommands;
+        }
+
+        /// <summary>
         /// Parse Voice Attack Config File to get all Command Strings with actions already bound to keys
         /// </summary>
         /// <param name="xdoc"></param>
@@ -142,7 +169,7 @@
             // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out to gather pertinent Element data and arrange in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
                               where
-                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLKeybindingsCategory &&
+                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                     (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.PressKey.ToString() ||
                                      item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.ExecuteCommand.ToString()) &&
                                      item.SafeElementValue() != string.Empty
@@ -167,6 +194,71 @@
 
             // return Datatable ..
             return bindableactions;
+        }
+
+        /// <summary>
+        /// Parse Voice Attack Config File to get Command String associated to an ActionId of a different Command
+        /// </summary>
+        /// <remarks>
+        ///   Format: XML
+        ///             o <Profile/>
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        ///                      !_<CommandString/>* = Spoken Command  <--------¬
+        ///                      !_<Category/> == <value/> ----------------------
+        /// </remarks>
+        /// <param name="xdoc"></param>
+        /// <param name="commandCategories"></param>
+        /// <returns></returns>
+        private System.Collections.Generic.IEnumerable<object> GetCommandStringsForCommandCategory(ref XDocument xdoc, System.Collections.Generic.IEnumerable<string> commandCategories)
+        {
+            // Create list of required anonymous type .. 
+            var xmlExtracts = new[] { new { CommandCategory = "", CommandString = "" } }.ToList();
+            xmlExtracts.Clear();
+
+            // Get Command String(s) for each Command Category ..
+            foreach (var commandCategory in commandCategories)
+            {
+                // traverse config XML, return Command String(s) associated to each Category ..
+                var commandStrings = from item in xdoc.Descendants(XMLCategory)
+                                     where
+                                           item.Parent.Element(XMLCategory).SafeElementValue() == commandCategory
+                                     select
+                                        new // create anonymous type ..
+                                        {
+                                            CommandCategory = item.Parent.Element(XMLCategory).SafeElementValue(),
+                                            CommandString = item.Parent.Element(XMLCommandString).SafeElementValue()
+                                        };
+
+                // Add all resultant command strings to list ..
+                foreach (var commandString in commandStrings)
+                {
+                    xmlExtracts.Add(commandString);
+                }
+            }
+
+            return xmlExtracts;
+        }
+
+        /// <summary>
+        /// Parse Voice Attack Config File to get a distinct list of Command Categories
+        /// </summary>
+        /// <remarks>
+        ///   Format: XML
+        ///             o <Profile/>
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        ///                      !_<Category/>
+        /// </remarks>
+        /// <param name="xdoc"></param>
+        /// <returns></returns>
+        private System.Collections.Generic.IEnumerable<string> GetAllCommandCategories(ref XDocument xdoc)
+        {
+            var xmlExtracts = from item in xdoc.Descendants(XMLCategory)
+                              select
+                                    item.Parent.Element(XMLCategory).SafeElementValue();
+
+            return xmlExtracts.Distinct();
         }
 
         /// <summary>
@@ -196,7 +288,7 @@
             // traverse config XML to <unsignedShort> nodes, return first (and only) ancestral Command Id where Action Id is ancestor of <unsignedShort> ..
             var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
                               where
-                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLKeybindingsCategory &&
+                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                     item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue() == commandActionId &&
                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == EnumsInternal.Interaction.PressKey.ToString()
                               select
@@ -230,7 +322,7 @@
             // traverse config XML, return first (and only) Command String where descendant Context = Action Id ..
             var xmlExtracts = from item in xdoc.Descendants(XMLContext)
                               where
-                                    item.Parent.Parent.Parent.Element(XMLCategory).Value != XMLKeybindingsCategory &&
+                                    item.Parent.Parent.Parent.Element(XMLCategory).Value != XMLCategoryKeybindings &&
                                     item.SafeElementValue() == commandActionId
                               select
                                      item.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue();
@@ -282,7 +374,7 @@
             // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out to gather pertinent Element data and arrange in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
                               where
-                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLKeybindingsCategory &&
+                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.PressKey.ToString() ||
                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.ExecuteCommand.ToString()) &&
                                     item.SafeElementValue() != string.Empty
@@ -370,7 +462,7 @@
         {
             // Count number of unsigned short elements (KeyCode) exist per ActionId ...
             var keyCodes = xdoc.Descendants(XMLUnsignedShort)
-                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLKeybindingsCategory &&
+                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                                    item.Parent.Parent.Element(XMLCommandActionId).Value == commandActionId)
                                     .DescendantsAndSelf();
 
@@ -398,7 +490,7 @@
         {
             // Count number of unsigned short elements (KeyCode) exist per ActionId ...
             var keyCodes = xdoc.Descendants(XMLUnsignedShort)
-                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLKeybindingsCategory &&
+                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                                    item.Parent.Parent.Element(XMLCommandActionId).Value == commandActionId)
                                     .DescendantsAndSelf();
 

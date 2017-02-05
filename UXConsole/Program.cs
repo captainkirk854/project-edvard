@@ -19,6 +19,7 @@
         private const string Bindings = "edvCommand_Bindings";
         private const string Consolidated = "edvConsolidated_Bindings";
         private const string Associated = "edvAssociated_Commands";
+        private const string AllCommands = "edvAll_Commands";
         private static readonly string DefaultEliteDangerousBindingsDirectory = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%") + "\\Frontier Developments\\Elite Dangerous\\Options\\Bindings";
         private static readonly string DefaultVoiceAttackProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
         private static readonly string UserDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
@@ -254,11 +255,13 @@
                     string csvBindings = Path.Combine(argDirectoryPathAnalysis, Bindings + "." + CSV);
                     string csvConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated + "." + CSV);
                     string csvAssociatedCommandStrings = Path.Combine(argDirectoryPathAnalysis, Associated + "." + CSV);
+                    string csvAllCommandStrings = Path.Combine(argDirectoryPathAnalysis, AllCommands + "." + CSV);
 
                     string htmCommands = Path.Combine(argDirectoryPathAnalysis, Commands + "." + HTM);
                     string htmBindings = Path.Combine(argDirectoryPathAnalysis, Bindings + "." + HTM);
                     string htmConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated + "." + HTM);
                     string htmAssociatedCommandStrings = Path.Combine(argDirectoryPathAnalysis, Associated + "." + HTM);
+                    string htmAllCommandStrings = Path.Combine(argDirectoryPathAnalysis, AllCommands + "." + HTM);
 
                     // Read (updated) files ..
                     KeyBindingReaderEliteDangerous ed = new KeyBindingReaderEliteDangerous(eliteDangerousBinds);
@@ -279,6 +282,9 @@
                     // Create table of related Command Strings ..
                     DataTable associatedCommands = va.GetAssociatedCommandStrings(consolidatedBoundCommands);
 
+                    // Create table of all Command Strings ..
+                    DataTable allCommands = va.GetCommandStringsForAllCategories();
+
                     // Create appropriate type of analysis file ..
                     try
                     {
@@ -289,6 +295,7 @@
                                 elitedangerousBoundCommands.CreateCSV(csvBindings);
                                 consolidatedBoundCommands.CreateCSV(csvConsolidatedBindings);
                                 associatedCommands.CreateCSV(csvAssociatedCommandStrings);
+                                allCommands.CreateCSV(csvAllCommandStrings);
                                 break;
 
                             case ArgSubOption.htm:
@@ -296,6 +303,7 @@
                                 elitedangerousBoundCommands.CreateHTML(htmBindings, Bindings);
                                 consolidatedBoundCommands.CreateHTML(htmConsolidatedBindings, Consolidated);
                                 associatedCommands.CreateHTML(htmAssociatedCommandStrings);
+                                allCommands.CreateHTML(htmAllCommandStrings);
                                 break;
                         }
                     }
