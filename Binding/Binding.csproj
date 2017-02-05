@@ -39,15 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BindingAndCommandConnector.cs" />
-    <Compile Include="GameActionAnalyser.cs" />
-    <Compile Include="IKeyReader.cs" />
-    <Compile Include="IKeyWriter.cs" />
-    <Compile Include="KeyReader.cs" />
-    <Compile Include="KeyReaderEliteDangerous.cs" />
-    <Compile Include="KeyReaderVoiceAttack.cs" />
-    <Compile Include="KeyWriterEliteDangerous.cs" />
-    <Compile Include="KeyWriterVoiceAttack.cs" />
+    <Compile Include="KeyBindingAndCommandConnector.cs" />
+    <Compile Include="KeyBindingAnalyser.cs" />
+    <Compile Include="IKeyBindingReader.cs" />
+    <Compile Include="IKeyBindingWriter.cs" />
+    <Compile Include="KeyBindingReader.cs" />
+    <Compile Include="KeyBindingReaderEliteDangerous.cs" />
+    <Compile Include="KeyBindingReaderVoiceAttack.cs" />
+    <Compile Include="KeyBindingWriterEliteDangerous.cs" />
+    <Compile Include="KeyBindingWriterVoiceAttack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tag.cs" />
   </ItemGroup>

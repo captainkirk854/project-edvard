@@ -9,7 +9,7 @@
     /// <summary>
     /// Parse Elite Dangerous Binds file
     /// </summary>
-    public class KeyReaderEliteDangerous : KeyReader, IKeyReader
+    public class KeyBindingReaderEliteDangerous : KeyBindingReader, IKeyBindingReader
     {
         //Initialise ..
         private const string XMLRoot = "Root";
@@ -18,14 +18,14 @@
         private const string XMLDevice = "Device";
         private const string XMLModifier = "Modifier";
         private const string D = "+";
-        private GameKeyAndSystemKeyDictionary gameKeys = new GameKeyAndSystemKeyDictionary(Helper.EnumsEdVArd.Game.EliteDangerous);
+        private GameKeyAndSystemKeyDictionary gameKeys = new GameKeyAndSystemKeyDictionary(Helper.EnumsInternal.Game.EliteDangerous);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyReaderEliteDangerous" /> class.
+        /// Initializes a new instance of the <see cref="KeyBindingReaderEliteDangerous" /> class.
         /// Base class constructor loads config.file as XDocument (this.xCfg)
         /// </summary>
         /// <param name="cfgFilePath"></param>
-        public KeyReaderEliteDangerous(string cfgFilePath) : base(cfgFilePath) 
+        public KeyBindingReaderEliteDangerous(string cfgFilePath) : base(cfgFilePath) 
         { 
         }
         
@@ -39,10 +39,10 @@
             DataTable primary = this.GetBindableActions(ref xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(Helper.EnumsEdVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(Helper.EnumsInternal.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(Helper.EnumsEdVArd.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(Helper.EnumsInternal.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
@@ -55,17 +55,17 @@
         public DataTable GetBoundCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetKeyBindings(ref xCfg, Helper.EnumsEdVArd.EliteDangerousDevicePriority.Primary);
-            DataTable secondary = this.GetKeyBindings(ref xCfg, Helper.EnumsEdVArd.EliteDangerousDevicePriority.Secondary);
+            DataTable primary = this.GetKeyBindings(ref xCfg, Helper.EnumsInternal.EliteDangerousDevicePriority.Primary);
+            DataTable secondary = this.GetKeyBindings(ref xCfg, Helper.EnumsInternal.EliteDangerousDevicePriority.Secondary);
 
             // Merge ..
             primary.Merge(secondary);
 
             // Add column ..
-            primary.AddDefaultColumn(Helper.EnumsEdVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(Helper.EnumsInternal.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(Helper.EnumsEdVArd.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(Helper.EnumsInternal.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
@@ -79,7 +79,7 @@
         private DataTable GetBindableActions(ref XDocument xdoc)
         {
             // Initialise ..
-            string[] devicePriority = { Helper.EnumsEdVArd.EliteDangerousDevicePriority.Primary.ToString(), Helper.EnumsEdVArd.EliteDangerousDevicePriority.Secondary.ToString() };
+            string[] devicePriority = { Helper.EnumsInternal.EliteDangerousDevicePriority.Primary.ToString(), Helper.EnumsInternal.EliteDangerousDevicePriority.Secondary.ToString() };
 
             // Datatable to hold tabulated XML contents ..
             DataTable bindableactions = TableShape.BindableActions();
@@ -121,7 +121,7 @@
                     {
                         bindableactions.LoadDataRow(new object[] 
                                                         {
-                                                         Helper.EnumsEdVArd.Game.EliteDangerous.ToString(), //Context
+                                                         Helper.EnumsInternal.Game.EliteDangerous.ToString(), //Context
                                                          xmlExtract.BindingAction, //BindingAction
                                                          xmlExtract.Priority, // Device priority
                                                          xmlExtract.DeviceType // Device binding applied to
@@ -179,7 +179,7 @@
         /// <param name="xdoc"></param>
         /// <param name="devicepriority"></param>
         /// <returns></returns>
-        private DataTable GetKeyBindings(ref XDocument xdoc, Helper.EnumsEdVArd.EliteDangerousDevicePriority devicepriority)
+        private DataTable GetKeyBindings(ref XDocument xdoc, Helper.EnumsInternal.EliteDangerousDevicePriority devicepriority)
         {
             // Initialise ..
             string devicePriority = devicepriority.ToString();
@@ -196,8 +196,8 @@
                 {
                     var xmlExtracts = from item in xdoc.Descendants(childNode.Name)
                                       where
-                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Helper.EnumsEdVArd.Interaction.Keyboard.ToString() &&
-                                            item.Element(devicePriority).Attribute(XMLKey).Value.Contains(Helper.EnumsEdVArd.EliteDangerousBindingPrefix.Key_.ToString()) == true
+                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Helper.EnumsInternal.Interaction.Keyboard.ToString() &&
+                                            item.Element(devicePriority).Attribute(XMLKey).Value.Contains(Helper.EnumsInternal.EliteDangerousBindingPrefix.Key_.ToString()) == true
                                       select
                                          new // create anonymous type for every key code ..
                                          {
@@ -251,7 +251,7 @@
                         // Load final values into datatable ..
                         keyactionbinder.LoadDataRow(new object[] 
                                                         {
-                                                         Helper.EnumsEdVArd.Game.EliteDangerous.ToString(), //Context
+                                                         Helper.EnumsInternal.Game.EliteDangerous.ToString(), //Context
                                                          Keys.KeyType.ToString(), //KeyEnumerationType
                                                          childNode.Name, //BindingAction
                                                          xmlExtract.xmlNode_DevicePriority, //Priority 

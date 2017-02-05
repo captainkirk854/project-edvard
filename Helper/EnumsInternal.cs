@@ -3,7 +3,7 @@
     /// <summary>
     /// Application related Enumerations
     /// </summary>
-    public partial class EnumsEdVArd
+    public partial class EnumsInternal
     {
         /// <summary>
         /// Enumeration of Table Columns

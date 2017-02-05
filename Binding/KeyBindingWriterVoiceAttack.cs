@@ -9,7 +9,7 @@
     /// <summary>
     /// Update Voice Attack Profile Command(s) with new Key Codes
     /// </summary>
-    public class KeyWriterVoiceAttack : IKeyWriter
+    public class KeyBindingWriterVoiceAttack : IKeyBindingWriter
     {
         // Initialise ..
         private const string XMLName = "Name";
@@ -34,18 +34,18 @@
 
             // Find VoiceAttack commands which require remapping ..
             var consolidatedBindings = from cb in consolidatedActions.AsEnumerable()
-                                      where cb.Field<string>(EnumsEdVArd.Column.KeyUpdateRequired.ToString()) == EnumsEdVArd.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString()
+                                      where cb.Field<string>(EnumsInternal.Column.KeyUpdateRequired.ToString()) == EnumsInternal.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString()
                                      select
                                         new
                                             {
-                                                VoiceAttackInternal = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackInternal.ToString()),
-                                                VoiceAttackProfile = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackProfile.ToString()),
-                                                VoiceAttackAction = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackAction.ToString()),
-                                                VoiceAttackKeyId = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackKeyId.ToString()),
-                                                VoiceAttackKeyCode = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackKeyCode.ToString()),
-                                                VoiceAttackModifierKeyCode = cb.Field<string>(EnumsEdVArd.Column.VoiceAttackModifierKeyCode.ToString()),
-                                                EliteDangerousKeyCode = cb.Field<string>(EnumsEdVArd.Column.EliteDangerousKeyCode.ToString()),
-                                                EliteDangerousModifierKeyCode = cb.Field<string>(EnumsEdVArd.Column.EliteDangerousModifierKeyCode.ToString())
+                                                VoiceAttackInternal = cb.Field<string>(EnumsInternal.Column.VoiceAttackInternal.ToString()),
+                                                VoiceAttackProfile = cb.Field<string>(EnumsInternal.Column.VoiceAttackProfile.ToString()),
+                                                VoiceAttackAction = cb.Field<string>(EnumsInternal.Column.VoiceAttackAction.ToString()),
+                                                VoiceAttackKeyId = cb.Field<string>(EnumsInternal.Column.VoiceAttackKeyId.ToString()),
+                                                VoiceAttackKeyCode = cb.Field<string>(EnumsInternal.Column.VoiceAttackKeyCode.ToString()),
+                                                VoiceAttackModifierKeyCode = cb.Field<string>(EnumsInternal.Column.VoiceAttackModifierKeyCode.ToString()),
+                                                EliteDangerousKeyCode = cb.Field<string>(EnumsInternal.Column.EliteDangerousKeyCode.ToString()),
+                                                EliteDangerousModifierKeyCode = cb.Field<string>(EnumsInternal.Column.EliteDangerousModifierKeyCode.ToString())
                                             };
 
             // Perform key code value update(s) for those commands that require it ..

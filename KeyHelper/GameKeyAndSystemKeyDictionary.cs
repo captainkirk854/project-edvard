@@ -22,7 +22,7 @@
         /// Initializes a new instance of the <see cref="GameKeyAndSystemKeyDictionary"/> class
         /// </summary>
         /// <param name="game"></param>
-        public GameKeyAndSystemKeyDictionary(Helper.EnumsEdVArd.Game game)
+        public GameKeyAndSystemKeyDictionary(Helper.EnumsInternal.Game game)
         {
             this.Initialise(game);
         }
@@ -31,9 +31,9 @@
         /// Initialise Mapping Dictionary for certain Game Keys: [Game -> WindowsForm]
         /// </summary>
         /// <param name="game"></param>
-        public void Initialise(Helper.EnumsEdVArd.Game game)
+        public void Initialise(Helper.EnumsInternal.Game game)
         {
-            if (game == Helper.EnumsEdVArd.Game.EliteDangerous)
+            if (game == Helper.EnumsInternal.Game.EliteDangerous)
             {
                 this.relationship.Add("0", "D0");
                 this.relationship.Add("1", "D1");

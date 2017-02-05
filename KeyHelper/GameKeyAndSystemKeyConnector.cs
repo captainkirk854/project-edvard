@@ -23,7 +23,7 @@
         public GameKeyAndSystemKeyConnector(EnumsKeyEnumType.InputKeyEnumType keytype)
         {
             this.currentKeyEnumType = this.systemKeys.Get(keytype);
-            this.gameKeys.Initialise(Helper.EnumsEdVArd.Game.EliteDangerous);
+            this.gameKeys.Initialise(Helper.EnumsInternal.Game.EliteDangerous);
             this.KeyType = keytype;
         }
 

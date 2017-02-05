@@ -8,7 +8,7 @@
     /// <summary>
     /// Dictionary with mappings between Elite Dangerous Bindings and Voice Attack Commands
     /// </summary>
-    public class BindingAndCommandConnector
+    public class KeyBindingAndCommandConnector
     {
         private const string UnknownBinding = "Unknown Binding";
         private const string UnknownCommand = "Unknown Command";
@@ -17,13 +17,13 @@
         private Dictionary<string, string> relationship = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindingAndCommandConnector" /> class.
+        /// Initializes a new instance of the <see cref="KeyBindingAndCommandConnector" /> class.
         /// </summary>
         /// <remarks>
         /// A dictionary of Voice Attack Action Term {key} : Elite Dangerous Action Term {value}
         /// Note: There is a many-to-one relationship between VoiceAttack Commands and an Elite Dangerous Action
         /// </remarks>
-        public BindingAndCommandConnector()
+        public KeyBindingAndCommandConnector()
         {
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((0%))", "SetSpeedZero");

@@ -158,13 +158,13 @@
             #region [Initialision]
 
             // Set key type enumeration type to use ..
-            KeyReader.KeyType = KeyHelper.EnumsKeyEnumType.InputKeyEnumType.WindowsForms;
+            KeyBindingReader.KeyType = KeyHelper.EnumsKeyEnumType.InputKeyEnumType.WindowsForms;
 
             // Initialise lookup dictionary for inter-game action references ..
-            BindingAndCommandConnector keyLookup = null;
+            KeyBindingAndCommandConnector keyLookup = null;
             try
             {
-                keyLookup = new BindingAndCommandConnector();
+                keyLookup = new KeyBindingAndCommandConnector();
             }
             catch
             {
@@ -214,8 +214,8 @@
                     SequentialFileBackup(argDirectoryPathBackup, voiceAttackProfile);
 
                     // Attempt synchronisation update ..
-                    KeyWriterVoiceAttack newVoiceAttack = new KeyWriterVoiceAttack();
-                    Console.WriteLine("Voice Attack Profile: {0}", newVoiceAttack.Update(GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
+                    KeyBindingWriterVoiceAttack newVoiceAttack = new KeyBindingWriterVoiceAttack();
+                    Console.WriteLine("Voice Attack Profile: {0}", newVoiceAttack.Update(KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
                 }
                 else
                 {
@@ -235,8 +235,8 @@
                     SequentialFileBackup(argDirectoryPathBackup, eliteDangerousBinds);
 
                     // Attempt synchronisation update ..
-                    KeyWriterEliteDangerous newEliteDangerous = new KeyWriterEliteDangerous();
-                    Console.WriteLine("Elite Dangerous Binds: {0}", newEliteDangerous.Update(GameActionAnalyser.EliteDangerous(eliteDangerousBinds, voiceAttackProfile, keyLookup), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
+                    KeyBindingWriterEliteDangerous newEliteDangerous = new KeyBindingWriterEliteDangerous();
+                    Console.WriteLine("Elite Dangerous Binds: {0}", newEliteDangerous.Update(KeyBindingAnalyser.EliteDangerous(eliteDangerousBinds, voiceAttackProfile, keyLookup), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
                 }
                 else
                 {
@@ -264,8 +264,8 @@
                     string htmAssociatedCommandStrings = Path.Combine(argDirectoryPathAnalysis, Associated + "." + HTM);
 
                     // Read (updated) files ..
-                    KeyReaderEliteDangerous ed = new KeyReaderEliteDangerous(eliteDangerousBinds);
-                    KeyReaderVoiceAttack va = new KeyReaderVoiceAttack(voiceAttackProfile);
+                    KeyBindingReaderEliteDangerous ed = new KeyBindingReaderEliteDangerous(eliteDangerousBinds);
+                    KeyBindingReaderVoiceAttack va = new KeyBindingReaderVoiceAttack(voiceAttackProfile);
 
                     // Create table of all possible actions ..
                     DataTable elitedangerousAllCommands = ed.GetBindableCommands();
@@ -276,8 +276,8 @@
                     elitedangerousBoundCommands.Merge(va.GetBoundCommands());
                     
                     // Create table of all consolidated actions ..
-                    DataTable consolidatedBoundCommands = GameActionAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup);
-                    consolidatedBoundCommands = consolidatedBoundCommands.Sort(Helper.EnumsEdVArd.Column.EliteDangerousAction.ToString() + " asc");
+                    DataTable consolidatedBoundCommands = KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup);
+                    consolidatedBoundCommands = consolidatedBoundCommands.Sort(Helper.EnumsInternal.Column.EliteDangerousAction.ToString() + " asc");
 
                     // Create table of related Command Strings ..
                     DataTable associatedCommands = va.GetAssociatedCommandStrings(consolidatedBoundCommands);

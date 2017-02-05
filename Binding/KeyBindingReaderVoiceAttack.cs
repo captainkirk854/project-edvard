@@ -9,7 +9,7 @@
     /// <summary>
     /// Parse HCSVoicePacks Voice Attack Profile file
     /// </summary>
-    public class KeyReaderVoiceAttack : KeyReader, IKeyReader
+    public class KeyBindingReaderVoiceAttack : KeyBindingReader, IKeyBindingReader
     {
         // Initialise ..
         private const string XMLRoot = "Profile";
@@ -28,11 +28,11 @@
         private const string KeybindingCategoryHCSVoicePack = "Keybindings";
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyReaderVoiceAttack" /> class.
+        /// Initializes a new instance of the <see cref="KeyBindingReaderVoiceAttack" /> class.
         /// Base class constructor loads config.file as XDocument (this.xCfg)
         /// </summary>
         /// <param name="cfgFilePath"></param>
-        public KeyReaderVoiceAttack(string cfgFilePath) : base(cfgFilePath)
+        public KeyBindingReaderVoiceAttack(string cfgFilePath) : base(cfgFilePath)
         {
         }
    
@@ -46,10 +46,10 @@
             DataTable primary = this.GetBindableActions(ref this.xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(EnumsEdVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(EnumsInternal.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(EnumsEdVArd.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(EnumsInternal.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
             return primary;
@@ -65,10 +65,10 @@
             DataTable primary = this.GetKeyBindings(ref this.xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(EnumsEdVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(EnumsInternal.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(EnumsEdVArd.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(EnumsInternal.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
             return primary;
@@ -86,15 +86,15 @@
             string prevCommandString = string.Empty;
 
             // Find associated CommandStrings using CommandString ActionId ...
-            foreach (DataRow consolidatedBoundCommandRow in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[EnumsEdVArd.Column.VoiceAttackAction.ToString()]))
+            foreach (DataRow consolidatedBoundCommandRow in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[EnumsInternal.Column.VoiceAttackAction.ToString()]))
             {
                 // Get required field information ..
-                string voiceattackCommandString = consolidatedBoundCommandRow[EnumsEdVArd.Column.VoiceAttackAction.ToString()].ToString();
-                string voiceattackActionId = consolidatedBoundCommandRow[EnumsEdVArd.Column.VoiceAttackKeyId.ToString()].ToString();
-                string elitedangerousAction = consolidatedBoundCommandRow[EnumsEdVArd.Column.EliteDangerousAction.ToString()].ToString();
-                string bindingSyncStatus = consolidatedBoundCommandRow[EnumsEdVArd.Column.KeyUpdateRequired.ToString()].ToString() == EnumsEdVArd.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
-                string voiceattackFile = Path.GetFileName(consolidatedBoundCommandRow[EnumsEdVArd.Column.VoiceAttackProfile.ToString()].ToString());
-                string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommandRow[EnumsEdVArd.Column.EliteDangerousBinds.ToString()].ToString());
+                string voiceattackCommandString = consolidatedBoundCommandRow[EnumsInternal.Column.VoiceAttackAction.ToString()].ToString();
+                string voiceattackActionId = consolidatedBoundCommandRow[EnumsInternal.Column.VoiceAttackKeyId.ToString()].ToString();
+                string elitedangerousAction = consolidatedBoundCommandRow[EnumsInternal.Column.EliteDangerousAction.ToString()].ToString();
+                string bindingSyncStatus = consolidatedBoundCommandRow[EnumsInternal.Column.KeyUpdateRequired.ToString()].ToString() == EnumsInternal.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
+                string voiceattackFile = Path.GetFileName(consolidatedBoundCommandRow[EnumsInternal.Column.VoiceAttackProfile.ToString()].ToString());
+                string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommandRow[EnumsInternal.Column.EliteDangerousBinds.ToString()].ToString());
 
                 // Ignore duplicate CommandStrings from those with multiple Action Ids ..
                 if (voiceattackCommandString != prevCommandString)
@@ -143,8 +143,8 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLunsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsEdVArd.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsEdVArd.Interaction.ExecuteCommand.ToString()) &&
+                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.ExecuteCommand.ToString()) &&
                                     item.SafeElementValue() != string.Empty
                               select
                                  new
@@ -157,10 +157,10 @@
             {
                 bindableactions.LoadDataRow(new object[] 
                                                 {
-                                                    EnumsEdVArd.Game.VoiceAttack.ToString(), //Context
+                                                    EnumsInternal.Game.VoiceAttack.ToString(), //Context
                                                     xmlExtract.Commandstring, //BindingAction
                                                     StatusCode.NotApplicable, // Device priority
-                                                    EnumsEdVArd.Interaction.Keyboard.ToString() // Device binding is applied to
+                                                    EnumsInternal.Interaction.Keyboard.ToString() // Device binding is applied to
                                                 }, 
                                                 false);
             }
@@ -282,8 +282,8 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLunsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsEdVArd.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsEdVArd.Interaction.ExecuteCommand.ToString()) &&
+                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.ExecuteCommand.ToString()) &&
                                     item.SafeElementValue() != string.Empty
                               select
                                  new // create anonymous type for every XMLunsignedShort matching criteria ..
@@ -316,7 +316,7 @@
                     // Load final values into datatable ..
                     keyactionbinder.LoadDataRow(new object[] 
                                                     {
-                                                        EnumsEdVArd.Game.VoiceAttack.ToString(), //Context
+                                                        EnumsInternal.Game.VoiceAttack.ToString(), //Context
                                                         Keys.KeyType.ToString(), //KeyEnumerationType
                                                         xmlExtract.Commandstring, //BindingAction
                                                         StatusCode.NotApplicable, //Priority

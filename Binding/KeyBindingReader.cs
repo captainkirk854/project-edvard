@@ -8,7 +8,7 @@
     /// <summary>
     /// Base Key-Bindings Reader Class
     /// </summary>
-    public class KeyReader
+    public class KeyBindingReader
     {
         // Initialise ..
         protected readonly GameKeyAndSystemKeyConnector Keys = new GameKeyAndSystemKeyConnector(KeyType);
@@ -17,10 +17,10 @@
         private static KeyHelper.EnumsKeyEnumType.InputKeyEnumType keyType = KeyHelper.EnumsKeyEnumType.InputKeyEnumType.WindowsForms; // Default startup value for KeyType Property ..
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyReader" /> class.
+        /// Initializes a new instance of the <see cref="KeyBindingReader" /> class.
         /// </summary>
         /// <param name="cfgFilePath"></param>
-        public KeyReader(string cfgFilePath)
+        public KeyBindingReader(string cfgFilePath)
         {
             this.cfgFilePath = cfgFilePath;
 

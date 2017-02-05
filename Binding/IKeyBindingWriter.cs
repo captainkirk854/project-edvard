@@ -2,7 +2,7 @@
 {
     using System.Data;
 
-    public interface IKeyWriter
+    public interface IKeyBindingWriter
     {
         bool Update(DataTable consolidatedkeybindings, bool updateChangeTag);
     }

@@ -2,7 +2,7 @@
 {
     using System.Data;
 
-    public interface IKeyReader
+    public interface IKeyBindingReader
     {
         DataTable GetBindableCommands();
 
