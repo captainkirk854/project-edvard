@@ -10,14 +10,18 @@
     public class Program
     {
         private const string VersionNumber = "1.001";
-        private const string Commands = "edvCommands";
-        private const string Bindings = "edvCommand_Bindings";
-        private const string Consolidated = "edvConsolidated_Bindings";
-        private const string Associated = "edvAssociated_Commands";
+        private const string DesktopKeyword = "desktop";
+        private static readonly string defaultEliteDangerousBindingsDirectory = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%") + "\\Frontier Developments\\Elite Dangerous\\Options\\Bindings";
+        private static readonly string defaultVoiceAttackProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
+        private static readonly string userDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
         private const string CSV = "csv";
         private const string HTM = "html";
         private const int BackupCycle = 50;
         private const int BackupFilenameLeftPadSize = 4;
+        private const string Commands = "edvCommands";
+        private const string Bindings = "edvCommand_Bindings";
+        private const string Consolidated = "edvConsolidated_Bindings";
+        private const string Associated = "edvAssociated_Commands";
 
         /// <summary>
         /// Enumeration of Arguments
@@ -53,13 +57,6 @@
         public static void Main(string[] args)
         {
             #region [Command-Line Argument Initialisation]
-
-            // Path and Keyword constants  ..
-            string defaultEDBindingsDirectory = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%") + "\\Frontier Developments\\Elite Dangerous\\Options\\Bindings";
-            string defaultVAProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
-            string userDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
-            const string DesktopKeyword = "desktop";
-
             string eliteDangerousBinds = string.Empty;
             string voiceAttackProfile = string.Empty;
 
@@ -119,7 +116,7 @@
                 {
                     Console.WriteLine();
                     Console.WriteLine("Path to Elite Dangerous Binds (.binds) File must be valid!" + System.Environment.NewLine);
-                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.binds.ToString(), Path.Combine(defaultEDBindingsDirectory, "Custom.binds"));
+                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.binds.ToString(), Path.Combine(defaultEliteDangerousBindingsDirectory, "Custom.binds"));
                     Console.WriteLine();
                     ConsistentExit();
                 }
@@ -132,18 +129,18 @@
                 {
                     Console.WriteLine();
                     Console.WriteLine("Path to Voice Attack Profile (.vap) File must be valid!" + System.Environment.NewLine);
-                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.vap.ToString(), Path.Combine(defaultVAProfilesDirectory, "Custom.vap"));
+                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.vap.ToString(), Path.Combine(defaultVoiceAttackProfilesDirectory, "Custom.vap"));
                     Console.WriteLine();
                     ConsistentExit();
                 }
             }
             else
             {
-                Console.WriteLine("Using sample data ..");
+                Console.WriteLine("Using internal test data ..");
 
                 // Point to project sample (not a resource as such) data ..
-                eliteDangerousBinds = GetProjectDirectory() + "\\Sample" + "\\ED01.binds";
-                voiceAttackProfile = GetProjectDirectory() + "\\Sample" + "\\VA03.vap";
+                eliteDangerousBinds = GetVisualStudioProjectBaseDirectory() + "\\Sample" + "\\ED01.binds";
+                voiceAttackProfile = GetVisualStudioProjectBaseDirectory() + "\\Sample" + "\\VA03.vap";
             }
             
             // Final Check ..
@@ -456,12 +453,12 @@
         }
 
         /// <summary>
-        /// Crude way of getting current Visual Studio project directory
+        /// Crude way of getting current Visual Studio project base directory
         /// </summary>
         /// <returns></returns>
-        private static string GetProjectDirectory()
+        private static string GetVisualStudioProjectBaseDirectory()
         {
-            return AppDomain.CurrentDomain.BaseDirectory.Replace("Debug", string.Empty).Replace("bin", string.Empty).Replace("\\\\\\", string.Empty);
+            return AppDomain.CurrentDomain.BaseDirectory.Replace("Debug", string.Empty).Replace("Release", string.Empty).Replace("bin", string.Empty).Replace("\\\\\\", string.Empty);
         }
 
         /// <summary>

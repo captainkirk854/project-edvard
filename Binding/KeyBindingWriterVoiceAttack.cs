@@ -111,16 +111,16 @@
         /// <param name="vaprofile"></param>
         /// <param name="vakeyId"></param>
         /// <param name="keyCode"></param>
-        private void InsertVoiceAttackModifierKeyCode(string vaprofile, string vakeyId, string keyCode)
+        private void InsertVoiceAttackModifierKeyCode(string profileFilepath, string vakeyId, string keyCode)
         {
-            var vap = HandleXml.ReadXDoc(vaprofile);
+            var vap = HandleXml.ReadXDoc(profileFilepath);
 
             // Insert XMLunsignedShort XElement before existing one ..
             vap.Descendants(XMLunsignedShort)
                .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId).FirstOrDefault()
                .AddBeforeSelf(new XElement(XMLunsignedShort, keyCode));
 
-            vap.Save(vaprofile);
+            vap.Save(profileFilepath);
         }
 
         /// <summary>
@@ -147,16 +147,16 @@
         /// <param name="vaprofile"></param>
         /// <param name="vakeyId"></param>
         /// <param name="keyCode"></param>
-        private void RemoveAnyOtherVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
+        private void RemoveAnyOtherVoiceAttackKeyCode(string profileFilepath, string vakeyId, string keyCode)
         {
-            var vap = HandleXml.ReadXDoc(vaprofile);
+            var vap = HandleXml.ReadXDoc(profileFilepath);
 
             // Remove all XMLunsignedShort XElements ...
             vap.Descendants(XMLunsignedShort)
                .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId && item.Value != keyCode)
                .Remove();
 
-            vap.Save(vaprofile);
+            vap.Save(profileFilepath);
         }
 
         /// <summary>
@@ -178,19 +178,19 @@
         ///                                    |_<unsignedShort/>[*]
         ///                      !_<Category/> = Keybindings
         /// </remarks>
-        /// <param name="vaprofile"></param>
+        /// <param name="profileFilepath"></param>
         /// <param name="vakeyId"></param>
         /// <param name="keyCode"></param>
-        private void UpdateVoiceAttackKeyCode(string vaprofile, string vakeyId, string keyCode)
+        private void UpdateVoiceAttackKeyCode(string profileFilepath, string vakeyId, string keyCode)
         {
-            var vap = HandleXml.ReadXDoc(vaprofile);
+            var vap = HandleXml.ReadXDoc(profileFilepath);
 
             // Update XMLunsignedShort XElement ..
             vap.Descendants(XMLunsignedShort)
                .Where(item => item.Parent.Parent.Element(XMLActionId).Value == vakeyId).FirstOrDefault()
                .SetValue(keyCode);
 
-            vap.Save(vaprofile);
+            vap.Save(profileFilepath);
         }
 
         /// <summary>
@@ -203,19 +203,19 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         /// </remarks>
-        /// <param name="vaprofile"></param>
+        /// <param name="profileFilepath"></param>
         /// <param name="profileName"></param>
         /// <param name="updatedProfileName"></param>
-        private void UpdateVoiceAttackProfileName(string vaprofile, string profileName, string updatedProfileName)
+        private void UpdateVoiceAttackProfileName(string profileFilepath, string profileName, string updatedProfileName)
         {
-            var vap = HandleXml.ReadXDoc(vaprofile);
+            var vap = HandleXml.ReadXDoc(profileFilepath);
 
             // Update XMLunsignedShort XMLName ..
             vap.Descendants(XMLName)
                .Where(item => item.SafeElementValue() == profileName).FirstOrDefault()
                .SetValue(updatedProfileName);
 
-            vap.Save(vaprofile);
+            vap.Save(profileFilepath);
         }
     }
 }
