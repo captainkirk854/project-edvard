@@ -11,9 +11,6 @@
     {
         private const string VersionNumber = "1.001";
         private const string DesktopKeyword = "desktop";
-        private static readonly string defaultEliteDangerousBindingsDirectory = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%") + "\\Frontier Developments\\Elite Dangerous\\Options\\Bindings";
-        private static readonly string defaultVoiceAttackProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
-        private static readonly string userDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
         private const string CSV = "csv";
         private const string HTM = "html";
         private const int BackupCycle = 50;
@@ -22,6 +19,9 @@
         private const string Bindings = "edvCommand_Bindings";
         private const string Consolidated = "edvConsolidated_Bindings";
         private const string Associated = "edvAssociated_Commands";
+        private static readonly string DefaultEliteDangerousBindingsDirectory = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%") + "\\Frontier Developments\\Elite Dangerous\\Options\\Bindings";
+        private static readonly string DefaultVoiceAttackProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
+        private static readonly string UserDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
 
         /// <summary>
         /// Enumeration of Arguments
@@ -78,10 +78,10 @@
             string argSample = commands.Parse(ArgOption.sample.ToString());
 
             // Specials 
-            if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == DesktopKeyword)) { argDirectoryPathBackup = userDesktop; }
-            if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == DesktopKeyword)) { argDirectoryPathAnalysis = userDesktop; }
-            if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == DesktopKeyword)) { argFilePathDictionaryWrite = userDesktop; }
-            if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == DesktopKeyword)) { argFilePathDictionaryRead = userDesktop; }
+            if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == DesktopKeyword)) { argDirectoryPathBackup = UserDesktop; }
+            if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == DesktopKeyword)) { argDirectoryPathAnalysis = UserDesktop; }
+            if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == DesktopKeyword)) { argFilePathDictionaryWrite = UserDesktop; }
+            if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == DesktopKeyword)) { argFilePathDictionaryRead = UserDesktop; }
             argAnalysisFileFormat = argAnalysisFileFormat == null ? ArgSubOption.csv.ToString() : argAnalysisFileFormat;
             #endregion
 
@@ -116,7 +116,7 @@
                 {
                     Console.WriteLine();
                     Console.WriteLine("Path to Elite Dangerous Binds (.binds) File must be valid!" + System.Environment.NewLine);
-                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.binds.ToString(), Path.Combine(defaultEliteDangerousBindingsDirectory, "Custom.binds"));
+                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.binds.ToString(), Path.Combine(DefaultEliteDangerousBindingsDirectory, "Custom.binds"));
                     Console.WriteLine();
                     ConsistentExit();
                 }
@@ -129,7 +129,7 @@
                 {
                     Console.WriteLine();
                     Console.WriteLine("Path to Voice Attack Profile (.vap) File must be valid!" + System.Environment.NewLine);
-                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.vap.ToString(), Path.Combine(defaultVoiceAttackProfilesDirectory, "Custom.vap"));
+                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.vap.ToString(), Path.Combine(DefaultVoiceAttackProfilesDirectory, "Custom.vap"));
                     Console.WriteLine();
                     ConsistentExit();
                 }
