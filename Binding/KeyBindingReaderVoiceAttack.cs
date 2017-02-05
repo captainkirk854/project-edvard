@@ -148,7 +148,8 @@
                 allVoiceCommands.LoadDataRow(new object[] 
                                                 {
                                                     CommandString.CommandCategory,
-                                                    CommandString.CommandString
+                                                    CommandString.CommandString,
+                                                    CommandString.ActionType
                                                 },
                                             false);
             }
@@ -171,6 +172,8 @@
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                     (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.KeyUp.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.KeyDown.ToString() ||
                                      item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.ExecuteCommand.ToString()) &&
                                      item.SafeElementValue() != string.Empty
                               select
@@ -197,7 +200,7 @@
         }
 
         /// <summary>
-        /// Parse Voice Attack Config File to get Command String associated to an ActionId of a different Command
+        /// Parse Voice Attack Config File to get Command String(s) associated to Command Categories
         /// </summary>
         /// <remarks>
         ///   Format: XML
@@ -205,7 +208,11 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      !_<CommandString/>* = Spoken Command  <--------¬
-        ///                      !_<Category/> == <value/> ----------------------
+        ///                      !_<Category/>* = <value/>
+        ///                      |_<ActionSequence/> 
+        ///                         !_[some] <CommandAction/>
+        ///                                   |_<ActionType/>* = <value/>
+        ///                  
         /// </remarks>
         /// <param name="xdoc"></param>
         /// <param name="commandCategories"></param>
@@ -213,7 +220,7 @@
         private System.Collections.Generic.IEnumerable<object> GetCommandStringsForCommandCategory(ref XDocument xdoc, System.Collections.Generic.IEnumerable<string> commandCategories)
         {
             // Create list of required anonymous type .. 
-            var xmlExtracts = new[] { new { CommandCategory = "", CommandString = "" } }.ToList();
+            var xmlExtracts = new[] { new { CommandString = string.Empty, CommandCategory = string.Empty, ActionType = string.Empty } }.ToList();
             xmlExtracts.Clear();
 
             // Get Command String(s) for each Command Category ..
@@ -226,8 +233,9 @@
                                      select
                                         new // create anonymous type ..
                                         {
+                                            CommandString = item.Parent.Element(XMLCommandString).SafeElementValue(),
                                             CommandCategory = item.Parent.Element(XMLCategory).SafeElementValue(),
-                                            CommandString = item.Parent.Element(XMLCommandString).SafeElementValue()
+                                            ActionType = item.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).SafeElementValue()
                                         };
 
                 // Add all resultant command strings to list ..
@@ -274,7 +282,7 @@
         ///                      |_<ActionSequence/>                       |
         ///                        !_[some] <CommandAction/>               |
         ///                                 !_<Id/> ------------------------
-        ///                                 |_<ActionType/> = PressKey
+        ///                                 |_<ActionType/> = PressKey/KeyUp/KeyDown
         ///                                 |_<KeyCodes/>
         ///                                   (|_<unsignedShort/> = when modifier present)
         ///                                    |_<unsignedShort/>
@@ -290,7 +298,9 @@
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                     item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue() == commandActionId &&
-                                    item.Parent.Parent.Element(XMLActionType).SafeElementValue() == EnumsInternal.Interaction.PressKey.ToString()
+                                    (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == EnumsInternal.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == EnumsInternal.Interaction.KeyUp.ToString() ||
+                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == EnumsInternal.Interaction.KeyDown.ToString())
                               select
                                     item.Parent.Parent.Parent.Parent.Element(XMLCommandId).SafeElementValue();
 
@@ -343,7 +353,7 @@
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>*
-        ///                                 |_<ActionType/> = PressKey
+        ///                                 |_<ActionType/> = PressKey/KeyUp/KeyDown
         ///                                 |_<KeyCodes/>
         ///                                   (|_<unsignedShort/> = when modifier present)
         ///                                    |_<unsignedShort/>*
@@ -376,6 +386,8 @@
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.PressKey.ToString() ||
+                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.KeyUp.ToString() ||
+                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.KeyDown.ToString() ||
                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.ExecuteCommand.ToString()) &&
                                     item.SafeElementValue() != string.Empty
                               select

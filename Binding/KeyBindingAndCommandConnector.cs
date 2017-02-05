@@ -10,8 +10,8 @@
     /// </summary>
     public class KeyBindingAndCommandConnector
     {
-        private const string UnknownBinding = "Unknown Binding";
-        private const string UnknownCommand = "Unknown Command";
+        private const string UnknownBinding = "*Unknown Binding";
+        private const string UnknownCommand = "*Unknown Command";
 
         // Create dictionary which allows case-insensitive keys/value queries ..
         private Dictionary<string, string> relationship = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
@@ -44,21 +44,26 @@
             this.relationship.Add("((75% Reverse))", "SetSpeedMinus75");
             this.relationship.Add("((100% Reverse))", "SetSpeedMinus100");
             ////-----------------------------------------------------------------------------------------------------
+            this.relationship.Add("((Supercruise))", "Supercruise");
+            this.relationship.Add("((Jump Drive))", "HyperSuperCombination");
+            this.relationship.Add("((Departure 30m))", "VerticalThrustersButton");
+            this.relationship.Add("((Planet departure))", "VerticalThrustersButton");
+            this.relationship.Add("((Take Off))", "VerticalThrustersButton");
+            ////-----------------------------------------------------------------------------------------------------
+            this.relationship.Add("((Afterburners))", "UseBoostJuice");
+            this.relationship.Add("((Chaff))", "FireChaffLauncher");
+            this.relationship.Add("((Cargo Scoop))", "ToggleCargoScoop");
             this.relationship.Add("((Hardpoints))", "DeployHardpointToggle");
             this.relationship.Add("((Heatsink))", "DeployHeatSink");
-            this.relationship.Add("((Chaff))", "FireChaffLauncher");
-            this.relationship.Add("((Silent Running))", "ToggleButtonUpInput");
-            this.relationship.Add("((Cargo Scoop))", "ToggleCargoScoop");
             this.relationship.Add("((Landing Gear))", "LandingGearToggle");
-            this.relationship.Add("((Afterburners))", "UseBoostJuice");
-            this.relationship.Add("((Shield Cell))", "UseShieldCell");
             this.relationship.Add("((Lights))", "ShipSpotLightToggle");
+            this.relationship.Add("((Shield Cell))", "UseShieldCell");
+            this.relationship.Add("((Silent Running))", "ToggleButtonUpInput");
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Comms Panel))", "FocusCommsPanel");
             this.relationship.Add("((Left Panel))", "FocusLeftPanel");
             this.relationship.Add("((Right Panel))", "FocusRightPanel");
-            this.relationship.Add("((Role Panel))", "FocusRolePanel"); // not sure if this is right as it doesn't exist
-            this.relationship.Add("((SRV Panel))", "UIFocus_Buggy");
+            this.relationship.Add("((Role Panel))", "FocusRadarPanel");
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((UI Cancel))", "UI_Back");
             this.relationship.Add("((UI Down))", "UI_Down");
@@ -70,33 +75,34 @@
             this.relationship.Add("((UI Up))", "UI_Up");
             this.relationship.Add("((UI Okay))", "UIFocus");
             ////-----------------------------------------------------------------------------------------------------
+            this.relationship.Add("((Balance Power))", "ResetPowerDistribution");
             this.relationship.Add("((Power To Engines))", "IncreaseEnginesPower");
             this.relationship.Add("((Power To Systems))", "IncreaseSystemsPower");
             this.relationship.Add("((Power To Weapons))", "IncreaseWeaponsPower");
-            this.relationship.Add("((Balance Power))", "ResetPowerDistribution");
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Next Fire Group))", "CycleFireGroupNext");
             this.relationship.Add("((Previous Fire Group))", "CycleFireGroupPrevious");
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Cycle Next Hostile Ship))", "CycleNextHostileTarget");
-            this.relationship.Add("((Cycle Next Subsystem))", "CycleNextSubsystem");
             this.relationship.Add("((Cycle Next Ship))", "CycleNextTarget");
+            this.relationship.Add("((Cycle Next Subsystem))", "CycleNextSubsystem");
             this.relationship.Add("((Cycle Previous Hostile Ship))", "CyclePreviousHostileTarget");
-            this.relationship.Add("((Cycle Previous Subsystem))", "CyclePreviousSubsystem");
             this.relationship.Add("((Cycle Previous Ship))", "CyclePreviousTarget");
+            this.relationship.Add("((Cycle Previous Subsystem))", "CyclePreviousSubsystem");
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Radar))", "FocusRadarPanel");
             this.relationship.Add("((Decrease Sensor Range))", "RadarDecreaseRange");
             this.relationship.Add("((Decrease Sensor Range Max))", "RadarDecreaseRange");
             this.relationship.Add("((Increase Sensor Range))", "RadarIncreaseRange");
             this.relationship.Add("((Increase Sensor Range Max))", "RadarIncreaseRange");
-            ////-----------------------------------------------------------------------------------------------------
-            this.relationship.Add("((Select Highest Threat))", "SelectHighestThreat");
-            this.relationship.Add("((Select Target Ahead))", "SelectTarget");
+            /// ((Discovery Scanner)) (MouseAction)
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Galaxy Map))", "GalaxyMapOpen");
             this.relationship.Add("((System Map))", "SystemMapOpen");
             this.relationship.Add("((Next Route System))", "TargetNextRouteSystem");
+            ////-----------------------------------------------------------------------------------------------------
+            this.relationship.Add("((Select Highest Threat))", "SelectHighestThreat");
+            this.relationship.Add("((Select Target Ahead))", "SelectTarget");
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Wingman 1))", "TargetWingman0");
             this.relationship.Add("((Wingman 2))", "TargetWingman1");
@@ -104,16 +110,24 @@
             this.relationship.Add("((Wingman NavLock))", "WingNavLock");
             this.relationship.Add("((Wingmans Target))", "SelectTargetsTarget");
             ////-----------------------------------------------------------------------------------------------------
-            this.relationship.Add("((Supercruise))", "Supercruise");
-            this.relationship.Add("((Jump Drive))", "HyperSuperCombination");
-            this.relationship.Add("((Departure 30m))", "VerticalThrustersButton");
-            this.relationship.Add("((Planet departure))", "VerticalThrustersButton");
-            this.relationship.Add("((Take Off))", "VerticalThrustersButton");
+            this.relationship.Add("((Fighter Attack Posture))", "OrderAggressiveBehaviour");
+            this.relationship.Add("((Fighter Defence Posture))", "OrderDefensiveBehaviour");
+            this.relationship.Add("((Fighter Focus Target))", "OrderFocusTarget");
+            this.relationship.Add("((Fighter Follow Me))", "OrderFollow");
+            this.relationship.Add("((Fighter Hold Fire))", "OrderHoldFire");
+            this.relationship.Add("((Fighter Hold Position))", "OrderHoldPosition");
+            this.relationship.Add("((Fighter Recall))", "???");
+            this.relationship.Add("((Fighter Recovery))", "???");
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Flight Assist))", "ToggleFlightAssist");
             this.relationship.Add("((Look Ahead))", "HeadLookReset");
             this.relationship.Add("((Oculus Reset))", "HMDReset");
             this.relationship.Add("((External Camera))", "PhotoCameraToggle");
+            ////-----------------------------------------------------------------------------------------------------
+            this.relationship.Add("((SRV Panel))", "UIFocus_Buggy");
+            this.relationship.Add("((Handbrake Off))", "AutoBreakBuggyButton");
+            this.relationship.Add("((Handbrake On))", "AutoBreakBuggyButton");
+            this.relationship.Add("((SRV Dismiss/Recall))", "RecallDismissShip");
             ////-----------------------------------------------------------------------------------------------------
         }
 

@@ -21,6 +21,8 @@
         {
             Keyboard, //Elite Dangerous
             PressKey,  //Voice Attack
+            KeyUp, // Voice Attack
+            KeyDown, // Voice  Attack
             ExecuteCommand // Voice Attack
         }
 

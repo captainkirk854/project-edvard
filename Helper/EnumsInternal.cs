@@ -39,6 +39,7 @@
             EliteDangerousModifierKeyId,
             EliteDangerousModifierKeyValue,
             VoiceAttackAction,
+            VoiceAttackActionType,
             VoiceAttackCategory,
             VoiceAttackCommand,
             VoiceAttackInternal,

@@ -175,6 +175,7 @@
 
             table.Columns.Add(EnumsInternal.Column.VoiceAttackCategory.ToString(), typeof(string));
             table.Columns.Add(EnumsInternal.Column.VoiceAttackCommand.ToString(), typeof(string));
+            table.Columns.Add(EnumsInternal.Column.VoiceAttackActionType.ToString(), typeof(string));
 
             return table;
         }
