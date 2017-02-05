@@ -21,7 +21,7 @@
         private const string XMLActionSequence = "ActionSequence";
         private const string XMLCommandAction = "CommandAction";
         private const string XMLActionType = "ActionType";
-        private const string XMLActionId = "Id";
+        private const string XMLCommandActionId = "Id";
         private const string XMLKeyCodes = "KeyCodes";
         private const string XMLContext = "Context";
         private const string XMLunsignedShort = "unsignedShort";
@@ -99,7 +99,7 @@
                 // Ignore duplicate CommandStrings from those with multiple Action Ids ..
                 if (voiceattackCommandString != prevCommandString)
                 {
-                    var associatedCommandStrings = this.GetCommandStringsFromCommandContext(ref this.xCfg, this.GetCommandIdFromActionId(ref this.xCfg, voiceattackActionId));
+                    var associatedCommandStrings = this.GetCommandStringsFromCommandActionContext(ref this.xCfg, this.GetCommandIdFromCommandActionId(ref this.xCfg, voiceattackActionId));
                     
                     string prevAssociatedCommandString = string.Empty;
                     foreach (var associatedCommandString in associatedCommandStrings)
@@ -177,7 +177,7 @@
         ///             o <Profile/>
         ///               |_ <Commands/>
         ///                  |_ <Command/>
-        ///                      |_<Id/> <---------------------------------¬
+        ///                      |_<Id/>* <--------------------------------¬
         ///                      !_<CommandString/> = ((<action name/>))   |
         ///                      |_<ActionSequence/>                       |
         ///                        !_[some] <CommandAction/>               |
@@ -191,13 +191,13 @@
         /// <param name="xdoc"></param>
         /// <param name="actionId"></param>
         /// <returns></returns>
-        private string GetCommandIdFromActionId(ref XDocument xdoc, string actionId)
+        private string GetCommandIdFromCommandActionId(ref XDocument xdoc, string commandActionId)
         {
             // traverse config XML to <unsignedShort> nodes, return first (and only) ancestral Command Id where Action Id is ancestor of <unsignedShort> ..
             var xmlExtracts = from item in xdoc.Descendants(XMLunsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                    item.Parent.Parent.Element(XMLActionId).SafeElementValue() == actionId
+                                    item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue() == commandActionId
                               select
                                      item.Parent.Parent.Parent.Parent.Element(XMLCommandId).SafeElementValue();
 
@@ -213,7 +213,7 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<CommandString/> = Spoken Command  <---------¬           
+        ///                      !_<CommandString/>* = Spoken Command  <--------¬           
         ///                      |_<ActionSequence/>                            |
         ///                        !_[some] <CommandAction/>                    |
         ///                                 |_<KeyCodes/>                       |
@@ -224,7 +224,7 @@
         /// <param name="xdoc"></param>
         /// <param name="contextId"></param>
         /// <returns></returns>
-        private System.Collections.Generic.IEnumerable<string> GetCommandStringsFromCommandContext(ref XDocument xdoc, string contextId)
+        private System.Collections.Generic.IEnumerable<string> GetCommandStringsFromCommandActionContext(ref XDocument xdoc, string contextId)
         {
             // traverse config XML, return first (and only) Command Id where Action Id is descendant ..
             var xmlExtracts = from item in xdoc.Descendants(XMLContext)
@@ -246,18 +246,18 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<CommandString/> = ((<action name/>))
+        ///                      !_<CommandString/>* = ((<action name/>))
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
-        ///                                 !_<Id/>
+        ///                                 !_<Id/>*
         ///                                 |_<ActionType/> = PressKey
         ///                                 |_<KeyCodes/>
         ///                                   (|_<unsignedShort/> = when modifier present)
-        ///                                    |_<unsignedShort/>
+        ///                                    |_<unsignedShort/>*
         ///                      !_<Category/> = Keybindings
         ///                             
         /// Keys Bindings: 
-        ///                VA uses actual key codes (as opposed to key value). 
+        ///                VoiceAttack uses system key codes (as opposed to key value). 
         ///                Actions directly mappable to Elite Dangerous have been defined by HCSVoicePacks using: 
         ///                 o Command.Category = Keybindings
         ///                 o Command.CommandString values which are pre- and post-fixed using '((' and '))'
@@ -289,7 +289,7 @@
                                  new // create anonymous type for every XMLunsignedShort matching criteria ..
                                  {
                                      Commandstring = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
-                                     ActionId = item.Parent.Parent.Element(XMLActionId).SafeElementValue(),
+                                     CommandActionId = item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue(),
                                      KeyCode = item.SafeElementValue()
                                  };
 
@@ -301,7 +301,7 @@
                 int regularKeyCode = int.Parse(xmlExtract.KeyCode);
 
                 // Check for modifier key already present in VoiceAttack Profile for current Action Id ..
-                int modifierKeyCode = this.GetModifierKey(ref xdoc, xmlExtract.ActionId);
+                int modifierKeyCode = this.GetModifierKey(ref xdoc, xmlExtract.CommandActionId);
 
                 // Ignore if current regular key code is actually a modifier key code ..
                 if (regularKeyCode != modifierKeyCode)
@@ -310,7 +310,7 @@
                     {
                         // If modifier found, some additional probing of that segment of the XML tree required ..
                         modifierKeyEnumerationValue = Keys.GetKeyValue(modifierKeyCode);
-                        regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.ActionId);
+                        regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.CommandActionId);
                     }
 
                     // Load final values into datatable ..
@@ -323,11 +323,11 @@
                                                         Keys.GetKeyValue(regularKeyCode), //KeyGameValue
                                                         Keys.GetKeyValue(regularKeyCode), //KeyEnumerationValue
                                                         regularKeyCode.ToString(), //KeyEnumerationCode
-                                                        xmlExtract.ActionId, //KeyId
+                                                        xmlExtract.CommandActionId, //KeyId
                                                         modifierKeyEnumerationValue, //ModifierKeyGameValue
                                                         modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
                                                         modifierKeyCode, //ModifierKeyEnumerationCode
-                                                        xmlExtract.ActionId //ModifierKeyId
+                                                        xmlExtract.CommandActionId //ModifierKeyId
                                                     },
                                                     false);
                 }
@@ -360,17 +360,17 @@
         }
 
         /// <summary>
-        /// Get (any) Modifier Key Code associated to Action Id
+        /// Get (any) Modifier Key Code associated to Command Action Id
         /// </summary>
         /// <param name="xdoc"></param>
-        /// <param name="actionId"></param>
+        /// <param name="commandActionId"></param>
         /// <returns></returns>
-        private int GetModifierKey(ref XDocument xdoc, string actionId)
+        private int GetModifierKey(ref XDocument xdoc, string commandActionId)
         {
             // Count number of unsigned short elements (KeyCode) exist per ActionId ...
             var keyCodes = xdoc.Descendants(XMLunsignedShort)
                                     .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                                   item.Parent.Parent.Element(XMLActionId).Value == actionId)
+                                                   item.Parent.Parent.Element(XMLCommandActionId).Value == commandActionId)
                                     .DescendantsAndSelf();
 
             var countOfKeyCode = keyCodes.Count();
@@ -388,17 +388,17 @@
         }
 
         /// <summary>
-        /// Get regular (non-Modifier) Key Code associated to Action Id
+        /// Get regular (non-Modifier) Key Code associated to Command Action Id
         /// </summary>
         /// <param name="xdoc"></param>
-        /// <param name="actionId"></param>
+        /// <param name="commandActionId"></param>
         /// <returns></returns>
-        private int GetRegularKey(ref XDocument xdoc, string actionId)
+        private int GetRegularKey(ref XDocument xdoc, string commandActionId)
         {
             // Count number of unsigned short elements (KeyCode) exist per ActionId ...
             var keyCodes = xdoc.Descendants(XMLunsignedShort)
                                     .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == KeybindingCategoryHCSVoicePack &&
-                                                   item.Parent.Parent.Element(XMLActionId).Value == actionId)
+                                                   item.Parent.Parent.Element(XMLCommandActionId).Value == commandActionId)
                                     .DescendantsAndSelf();
 
             var countOfKeyCode = keyCodes.Count();

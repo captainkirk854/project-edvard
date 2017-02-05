@@ -97,19 +97,20 @@
         /// </summary>
         /// <remarks>
         /// Cannot ensure that XML file is encoded correctly (e.g an erroneous utf-16 reference) ..
-        /// http://stackoverflow.com/questions/4568811/loading-xml-with-encoding-utf-16-using-xdocument
-        /// To prevent: System.Xml.XmlException ("There is no Unicode byte order mark. Cannot switch to Unicode")
-        ///  > Read file into stream
-        ///  > Let StreamReader detect encoding
-        ///  > Create XDocument ..
+        /// To prevent: System.Xml.XmlException ("There is no Unicode byte order mark. Cannot switch to Unicode"):
+        ///  > http://stackoverflow.com/questions/4568811/loading-xml-with-encoding-utf-16-using-xdocument
         /// </remarks>
         /// <param name="xmlFilePath"></param>
         /// <returns></returns>
         public static XDocument ReadXDoc(string xmlFilePath)
         {
-            using (StreamReader sr = new StreamReader(xmlFilePath, true))
+            try
             {
-                return XDocument.Load(sr);
+                return XDocument.Load(xmlFilePath);
+            }
+            catch
+            {
+               return XDocument.Parse(System.IO.File.ReadAllText(xmlFilePath));
             }
         }
     }
