@@ -24,7 +24,7 @@
         public GameKeyAndSystemKeyConnector(KeyEnum.Type keytype)
         {
             this.currentKeyEnumType = this.systemKeys.Get(keytype);
-            this.gameKeys.Initialise(Items.Game.Name.EliteDangerous);
+            this.gameKeys.Initialise(Items.Application.Name.EliteDangerous);
             this.KeyType = keytype;
         }
 
@@ -182,6 +182,7 @@
         /// Write Key Enumeration Dictionary as CSV
         /// </summary>
         /// <param name="directoryPath"></param>
+        /// <param name="fileName"></param>
         public void WriteKeyMap(string directoryPath, string fileName)
         {
             // Create DataTable with correct structure ..

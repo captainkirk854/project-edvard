@@ -55,7 +55,7 @@
 
                 // Try to update Primary bind ..
                 updateStatus = this.UpdateVacantEliteDangerousBinding(vacantBinding.EliteDangerousBinds, 
-                                                                      Game.EliteDangerousDevicePriority.Primary.ToString(), 
+                                                                      Application.EliteDangerousDevicePriority.Primary.ToString(), 
                                                                       vacantBinding.EliteDangerousAction, 
                                                                       vacantBinding.EliteDangerousKeyValue);
 
@@ -63,7 +63,7 @@
                 if (!updateStatus)
                 {
                     updateStatus = this.UpdateVacantEliteDangerousBinding(vacantBinding.EliteDangerousBinds,
-                                                                          Game.EliteDangerousDevicePriority.Secondary.ToString(),
+                                                                          Application.EliteDangerousDevicePriority.Secondary.ToString(),
                                                                           vacantBinding.EliteDangerousAction,
                                                                           vacantBinding.EliteDangerousKeyValue);
                 }
@@ -119,11 +119,11 @@
             var edb = HandleXml.ReadXDoc(edbinds);
 
             // Check to see if Key_value already set on primary binding for Action (no need to set same binding on secondary) ..
-            var primaryKeyBindingIsSet = edb.Descendants(Game.EliteDangerousDevicePriority.Primary.ToString())
+            var primaryKeyBindingIsSet = edb.Descendants(Application.EliteDangerousDevicePriority.Primary.ToString())
                                             .Where(item => item.Parent.SafeElementName() == actionName &&
-                                                   item.SafeElementName() == Game.EliteDangerousDevicePriority.Primary.ToString() &&
-                                                   item.SafeAttributeValue(XMLDevice) == Game.Interaction.Keyboard.ToString() &&
-                                                   item.SafeAttributeValue(XMLKey) == Game.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault();
+                                                   item.SafeElementName() == Application.EliteDangerousDevicePriority.Primary.ToString() &&
+                                                   item.SafeAttributeValue(XMLDevice) == Application.Interaction.Keyboard.ToString() &&
+                                                   item.SafeAttributeValue(XMLKey) == Application.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault();
 
             // If not, attempt binding update ..
             if (primaryKeyBindingIsSet == null)
@@ -136,15 +136,15 @@
                               item.SafeElementName() == devicePriority &&
                               item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
                               item.SafeAttributeValue(XMLKey) == string.Empty).FirstOrDefault()
-                       .SetAttributeValue(XMLKey, Game.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue);
+                       .SetAttributeValue(XMLKey, Application.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue);
 
                     // Update [Device Type] for Elite Dangerous Action (must always follow key-binding update) ..
                     edb.Descendants(devicePriority)
                        .Where(item => item.Parent.SafeElementName() == actionName &&
                               item.SafeElementName() == devicePriority &&
                               item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
-                              item.SafeAttributeValue(XMLKey) == Game.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
-                       .SetAttributeValue(XMLDevice, Game.Interaction.Keyboard.ToString());
+                              item.SafeAttributeValue(XMLKey) == Application.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
+                       .SetAttributeValue(XMLDevice, Application.Interaction.Keyboard.ToString());
 
                     edb.Save(edbinds);
 

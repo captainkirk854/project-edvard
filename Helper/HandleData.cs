@@ -302,12 +302,13 @@
         /// Create HTML from DataTable
         /// </summary>
         /// <param name="table"></param>
-        /// <param name="filepath"></param>
-        /// <param name="title"></param>
-        public static void CreateHTM(this DataTable table, string directoryPath, string fileName, string title = null)
+        /// <param name="directoryPath"></param>
+        /// <param name="fileName"></param>
+        public static void CreateHTM(this DataTable table, string directoryPath, string fileName)
         {
             // Initialise ..
             string filepath = Path.Combine(directoryPath, fileName + "." + Edvard.FileType.htm.ToString());
+            string title = fileName;
             StringBuilder html = new StringBuilder();
 
             // File control ..

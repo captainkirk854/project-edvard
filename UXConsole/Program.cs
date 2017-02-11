@@ -14,11 +14,7 @@
         private const string DesktopKeyword = "desktop";
         private const int BackupCycle = 50;
         private const int BackupFilenameLeftPadSize = 4;
-        private const string Commands = "edvCommands";
-        private const string Bindings = "edvCommand_Bindings";
-        private const string Consolidated = "edvConsolidated_Bindings";
-        private const string Associated = "edvAssociated_Commands";
-        private const string AllCommands = "edvAll_Commands";
+
         private static readonly string DefaultEliteDangerousBindingsDirectory = Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%") + "\\Frontier Developments\\Elite Dangerous\\Options\\Bindings";
         private static readonly string DefaultVoiceAttackProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
         private static readonly string UserDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
@@ -217,27 +213,27 @@
                 {
                     Console.WriteLine("Preparing analysis data ..");
 
-                    // Read (updated) files ..
-                    KeyBindingReaderEliteDangerous ed = new KeyBindingReaderEliteDangerous(eliteDangerousBinds);
-                    KeyBindingReaderVoiceAttack va = new KeyBindingReaderVoiceAttack(voiceAttackProfile);
+                    // Read (updated) file(s) ..
+                    KeyBindingReaderEliteDangerous eliteDangerous = new KeyBindingReaderEliteDangerous(eliteDangerousBinds);
+                    KeyBindingReaderVoiceAttack voiceAttack = new KeyBindingReaderVoiceAttack(voiceAttackProfile);
 
-                    // Create table of all possible actions ..
-                    DataTable elitedangerousAllCommands = ed.GetBindableCommands();
-                    elitedangerousAllCommands.Merge(va.GetBindableCommands());
+                    // Get all bindable action(s) ..
+                    DataTable bindableEliteDangerous = eliteDangerous.GetBindableCommands();
+                    DataTable bindableVoiceAttack = voiceAttack.GetBindableCommands();
 
-                    // Create table of all bound actions ..
-                    DataTable elitedangerousBoundCommands = ed.GetBoundCommands();
-                    elitedangerousBoundCommands.Merge(va.GetBoundCommands());
-                    
-                    // Create table of all consolidated actions ..
-                    DataTable consolidatedBoundCommands = KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup);
-                    consolidatedBoundCommands = consolidatedBoundCommands.Sort(Items.Edvard.Column.EliteDangerousAction.ToString() + " asc");
+                    // Get all bound action(s) ..
+                    DataTable boundEliteDangerous = eliteDangerous.GetBoundCommands();
+                    DataTable boundVoiceAttack = voiceAttack.GetBoundCommands();
 
-                    // Create table of related Command Strings ..
-                    DataTable associatedCommands = va.GetAssociatedCommandStrings(consolidatedBoundCommands);
+                    // Get consolidated action(s) ..
+                    DataTable consolidatedBoundActions = KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup);
+                    consolidatedBoundActions = consolidatedBoundActions.Sort(Items.Edvard.Column.EliteDangerousAction.ToString() + " asc");
 
-                    // Create table of all Command Strings ..
-                    DataTable allCommands = va.GetCommandStringsForAllCategories();
+                    // Get associated Voice Attack Command String(s) for bound action(s) ..
+                    DataTable associatedVoiceAttackCommands = voiceAttack.GetAssociatedCommandStrings(consolidatedBoundActions);
+
+                    // Get all possible Voice Attack Command String(s) ..
+                    DataTable allVoiceAttackCommands = voiceAttack.GetCommandStringsForAllCategories();
 
                     // Create appropriate type of analysis file ..
                     try
@@ -247,19 +243,23 @@
                         switch (HandleStrings.ParseStringToEnum<Edvard.ArgSubOption>(argAnalysisFileFormat))
                         {
                             case Edvard.ArgSubOption.csv:
-                                elitedangerousAllCommands.CreateCSV(argDirectoryPathAnalysis, Commands);
-                                elitedangerousBoundCommands.CreateCSV(argDirectoryPathAnalysis, Bindings);
-                                consolidatedBoundCommands.CreateCSV(argDirectoryPathAnalysis, Consolidated);
-                                associatedCommands.CreateCSV(argDirectoryPathAnalysis, Associated);
-                                allCommands.CreateCSV(argDirectoryPathAnalysis, AllCommands);
+                                bindableEliteDangerous.CreateCSV(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + '.' + Edvard.AnalysisFile.BindableActions.ToString());
+                                bindableVoiceAttack.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + '.' + Edvard.AnalysisFile.BindableActions.ToString());
+                                boundEliteDangerous.CreateCSV(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + '.' + Edvard.AnalysisFile.BoundActions.ToString());
+                                boundVoiceAttack.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + '.' + Edvard.AnalysisFile.BoundActions.ToString());
+                                consolidatedBoundActions.CreateCSV(argDirectoryPathAnalysis, Edvard.AnalysisFile.ConsolidatedActions.ToString());
+                                associatedVoiceAttackCommands.CreateCSV(argDirectoryPathAnalysis, Edvard.AnalysisFile.VoiceAttackCommandsForBoundActions.ToString());
+                                allVoiceAttackCommands.CreateCSV(argDirectoryPathAnalysis, Edvard.AnalysisFile.VoiceAttackCommandsComplete.ToString());
                                 break;
 
                             case Edvard.ArgSubOption.htm:
-                                elitedangerousAllCommands.CreateHTM(argDirectoryPathAnalysis, Commands, Commands);
-                                elitedangerousBoundCommands.CreateHTM(argDirectoryPathAnalysis, Bindings, Bindings);
-                                consolidatedBoundCommands.CreateHTM(argDirectoryPathAnalysis, Consolidated, Consolidated);
-                                associatedCommands.CreateHTM(argDirectoryPathAnalysis, Associated, Associated);
-                                allCommands.CreateHTM(argDirectoryPathAnalysis, AllCommands, AllCommands);
+                                bindableEliteDangerous.CreateHTM(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + '.' + Edvard.AnalysisFile.BindableActions.ToString());
+                                bindableVoiceAttack.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + '.' + Edvard.AnalysisFile.BindableActions.ToString());
+                                boundEliteDangerous.CreateHTM(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + '.' + Edvard.AnalysisFile.BoundActions.ToString());
+                                boundVoiceAttack.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + '.' + Edvard.AnalysisFile.BoundActions.ToString());
+                                consolidatedBoundActions.CreateHTM(argDirectoryPathAnalysis, Edvard.AnalysisFile.ConsolidatedActions.ToString());
+                                associatedVoiceAttackCommands.CreateHTM(argDirectoryPathAnalysis, Edvard.AnalysisFile.VoiceAttackCommandsForBoundActions.ToString());
+                                allVoiceAttackCommands.CreateHTM(argDirectoryPathAnalysis, Edvard.AnalysisFile.VoiceAttackCommandsComplete.ToString());
                                 break;
                         }
                     }
@@ -285,6 +285,7 @@
             #endregion
         }
 
+        #region UsageInfo
         /// <summary>
         /// Command Line Usage Information
         /// </summary>
@@ -383,6 +384,7 @@
             Console.WriteLine(disclaimer);
             Console.WriteLine(System.Environment.NewLine);
         }
+        #endregion
 
         /// <summary>
         /// File Backup

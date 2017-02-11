@@ -3,10 +3,10 @@
     /// <summary>
     /// Edvard-related Enumerations for Elite Dangerous and Voice Attack
     /// </summary>
-    public class Game
+    public class Application
     {
         /// <summary>
-        /// Enumeration of Name Names 
+        /// Enumeration of Applications Names 
         /// </summary>
         public enum Name
         {

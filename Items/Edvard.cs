@@ -106,5 +106,14 @@
             htm,
             csv
         }
+
+        public enum AnalysisFile
+        {
+            BindableActions,
+            BoundActions,
+            ConsolidatedActions,
+            VoiceAttackCommandsForBoundActions,
+            VoiceAttackCommandsComplete
+        }
     }
 }

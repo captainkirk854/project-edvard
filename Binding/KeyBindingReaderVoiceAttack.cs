@@ -172,10 +172,10 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
-                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.KeyUp.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.KeyDown.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.ExecuteCommand.ToString()) &&
+                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.KeyUp.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.KeyDown.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.ExecuteCommand.ToString()) &&
                                      item.SafeElementValue() != string.Empty
                               select
                                  new
@@ -188,10 +188,10 @@
             {
                 bindableactions.LoadDataRow(new object[] 
                                                 {
-                                                    Game.Name.VoiceAttack.ToString(), //Context
+                                                    Application.Name.VoiceAttack.ToString(), //Context
                                                     xmlExtract.CommandString, //BindingAction
                                                     StatusCode.NotApplicable, // Device priority
-                                                    Game.Interaction.Keyboard.ToString() // Device binding is applied to
+                                                    Application.Interaction.Keyboard.ToString() // Device binding is applied to
                                                 }, 
                                                 false);
             }
@@ -299,9 +299,9 @@
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                     item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue() == commandActionId &&
-                                    (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Game.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Game.Interaction.KeyUp.ToString() ||
-                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Game.Interaction.KeyDown.ToString())
+                                    (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyUp.ToString() ||
+                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyDown.ToString())
                               select
                                     item.Parent.Parent.Parent.Parent.Element(XMLCommandId).SafeElementValue();
 
@@ -386,10 +386,10 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
-                                   (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.PressKey.ToString() ||
-                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.KeyUp.ToString() ||
-                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.KeyDown.ToString() ||
-                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.ExecuteCommand.ToString()) &&
+                                   (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.PressKey.ToString() ||
+                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.KeyUp.ToString() ||
+                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.KeyDown.ToString() ||
+                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.ExecuteCommand.ToString()) &&
                                     item.SafeElementValue() != string.Empty
                               select
                                  new // create anonymous type for every XMLunsignedShort matching criteria ..
@@ -422,7 +422,7 @@
                     // Load final values into datatable ..
                     binderKeyAction.LoadDataRow(new object[] 
                                                     {
-                                                        Game.Name.VoiceAttack.ToString(), //Context
+                                                        Application.Name.VoiceAttack.ToString(), //Context
                                                         Keys.KeyType.ToString(), //KeyEnumerationType
                                                         xmlExtract.Commandstring, //BindingAction
                                                         StatusCode.NotApplicable, //Priority

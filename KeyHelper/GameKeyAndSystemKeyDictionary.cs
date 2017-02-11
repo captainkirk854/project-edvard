@@ -23,7 +23,7 @@
         /// Initializes a new instance of the <see cref="GameKeyAndSystemKeyDictionary"/> class
         /// </summary>
         /// <param name="game"></param>
-        public GameKeyAndSystemKeyDictionary(Items.Game.Name game)
+        public GameKeyAndSystemKeyDictionary(Items.Application.Name game)
         {
             this.Initialise(game);
         }
@@ -32,9 +32,9 @@
         /// Initialise Mapping Dictionary for certain Name Keys: [Name -> WindowsForm]
         /// </summary>
         /// <param name="game"></param>
-        public void Initialise(Items.Game.Name game)
+        public void Initialise(Items.Application.Name game)
         {
-            if (game == Items.Game.Name.EliteDangerous)
+            if (game == Items.Application.Name.EliteDangerous)
             {
                 this.relationship.Add("0", "D0");
                 this.relationship.Add("1", "D1");

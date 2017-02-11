@@ -40,7 +40,7 @@
         /// <summary>
         /// Write currently enumerated Key Type to CSV File
         /// </summary>
-        /// <param name="directoryPath"></param>
+        /// <param name="keyMapDirectoryPath"></param>
         public void WriteKeyTypes(string keyMapDirectoryPath)
         {
             string keyMapFileName = "KeyCodes" + KeyType.ToString();
