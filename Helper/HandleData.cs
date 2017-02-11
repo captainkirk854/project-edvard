@@ -5,6 +5,7 @@
     using System.IO;
     using System.Text;
     using System.Web;
+    using Items;
  
     /// <summary>
     /// Data-related Helper Methods
@@ -257,11 +258,13 @@
         /// Create CSV from DataTable
         /// </summary>
         /// <param name="table"></param>
-        /// <param name="filepath"></param>
-        public static void CreateCSV(this DataTable table, string filepath)
+        /// <param name="directoryPath"></param>
+        /// <param name="fileName"></param>
+        public static void CreateCSV(this DataTable table, string directoryPath, string fileName)
         {
             // Initialise ..
             const string Comma = ",";
+            string filepath = Path.Combine(directoryPath, fileName + "." + Edvard.FileType.csv.ToString());
             string column = string.Empty;
 
             // File control ..
@@ -301,9 +304,10 @@
         /// <param name="table"></param>
         /// <param name="filepath"></param>
         /// <param name="title"></param>
-        public static void CreateHTML(this DataTable table, string filepath, string title = null)
+        public static void CreateHTM(this DataTable table, string directoryPath, string fileName, string title = null)
         {
             // Initialise ..
+            string filepath = Path.Combine(directoryPath, fileName + "." + Edvard.FileType.htm.ToString());
             StringBuilder html = new StringBuilder();
 
             // File control ..

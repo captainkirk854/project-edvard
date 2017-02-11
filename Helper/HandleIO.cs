@@ -203,7 +203,7 @@
         /// </summary>
         /// <remarks>
         ///  Rework of:
-        ///     ref: http://www.rajapet.com/2014/03/a-file-versioning-helper-class-in-c-to-make-a-backup-copy-of-a-file-and-keep-the-last-n-copies-of-that-file.html/amp
+        ///     ref: http://www.rajapet.com/2014/03/a-file-versioning-helper-class-in-c-to-make-a-backup-copy-of-a-file-and-keep-the-last-n-copies-of-that-file.htm/amp
         ///  Backup files have the name filename.exe.###
         ///   ### = zero justified sequence number starting at 1
         ///  Can get unexpected results (not fatal) when files exceed format limits

@@ -12,8 +12,6 @@
     {
         private const string VersionNumber = "1.001";
         private const string DesktopKeyword = "desktop";
-        private const string CSV = "csv";
-        private const string HTM = "html";
         private const int BackupCycle = 50;
         private const int BackupFilenameLeftPadSize = 4;
         private const string Commands = "edvCommands";
@@ -25,37 +23,6 @@
         private static readonly string DefaultVoiceAttackProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
         private static readonly string UserDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
 
-        /// <summary>
-        /// Enumeration of Arguments
-        /// </summary>
-        private enum ArgOption
-        {
-            binds,
-            vap,
-            sync,
-            import,
-            export,
-            tag,
-            analysis,
-            format,
-            backup,
-            help,
-            sample
-        }
-
-        /// <summary>
-        /// Enumeration of Argument Sub Options
-        /// </summary>
-        private enum ArgSubOption
-        {
-            twoway,
-            oneway_to_binds,
-            oneway_to_vap,
-            csv,
-            htm,
-            none
-        }
-
         public static void Main(string[] args)
         {
             #region [Command-Line Argument Initialisation]
@@ -66,31 +33,31 @@
             CommandLine commands = new CommandLine(args);
 
             // Mandatory argument(s) ..
-            string argFilePathBinds = commands.Parse(ArgOption.binds.ToString(), true);
-            string argFilePathVap = commands.Parse(ArgOption.vap.ToString(), true);
-            string argModeSync = commands.Parse(ArgOption.sync.ToString());
+            string argFilePathBinds = commands.Parse(Edvard.ArgOption.binds.ToString(), true);
+            string argFilePathVap = commands.Parse(Edvard.ArgOption.vap.ToString(), true);
+            string argModeSync = commands.Parse(Edvard.ArgOption.sync.ToString());
 
             // Optional argument(s)..
-            string argDirectoryPathBackup = commands.Parse(ArgOption.backup.ToString(), true);
-            string argDirectoryPathAnalysis = commands.Parse(ArgOption.analysis.ToString(), true);
-            string argAnalysisFileFormat = commands.Parse(ArgOption.format.ToString());
-            bool argCreateReferenceTag = Convert.ToBoolean(commands.Parse(ArgOption.tag.ToString()));
-            string argFilePathDictionaryWrite = commands.Parse(ArgOption.export.ToString(), true);
-            string argFilePathDictionaryRead = commands.Parse(ArgOption.import.ToString(), true);
-            string argSample = commands.Parse(ArgOption.sample.ToString());
+            string argDirectoryPathBackup = commands.Parse(Edvard.ArgOption.backup.ToString(), true);
+            string argDirectoryPathAnalysis = commands.Parse(Edvard.ArgOption.analysis.ToString(), true);
+            string argAnalysisFileFormat = commands.Parse(Edvard.ArgOption.format.ToString());
+            bool argCreateReferenceTag = Convert.ToBoolean(commands.Parse(Edvard.ArgOption.tag.ToString()));
+            string argFilePathDictionaryWrite = commands.Parse(Edvard.ArgOption.export.ToString(), true);
+            string argFilePathDictionaryRead = commands.Parse(Edvard.ArgOption.import.ToString(), true);
+            string argSample = commands.Parse(Edvard.ArgOption.sample.ToString());
 
             // Specials 
             if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == DesktopKeyword)) { argDirectoryPathBackup = UserDesktop; }
             if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == DesktopKeyword)) { argDirectoryPathAnalysis = UserDesktop; }
             if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == DesktopKeyword)) { argFilePathDictionaryWrite = UserDesktop; }
             if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == DesktopKeyword)) { argFilePathDictionaryRead = UserDesktop; }
-            argAnalysisFileFormat = argAnalysisFileFormat == null ? ArgSubOption.csv.ToString() : argAnalysisFileFormat;
+            argAnalysisFileFormat = argAnalysisFileFormat == null ? Edvard.ArgSubOption.csv.ToString() : argAnalysisFileFormat;
             #endregion
 
             #region [Command-Line Argument Validation]
 
             // Help Message ..
-            if (Convert.ToBoolean(commands.Parse(ArgOption.help.ToString())))
+            if (Convert.ToBoolean(commands.Parse(Edvard.ArgOption.help.ToString())))
             {
                 ConsistentExit();
             }
@@ -101,8 +68,8 @@
                 Console.WriteLine();
                 Console.WriteLine("A valid synchronisation mode must be selected!" + System.Environment.NewLine);
                 Console.WriteLine(" e.g.");
-                Console.WriteLine("     /{0} {1}", ArgOption.sync.ToString(), ArgSubOption.oneway_to_binds.ToString());
-                Console.WriteLine("     /{0} {1}", ArgOption.sync.ToString(), ArgSubOption.twoway.ToString());
+                Console.WriteLine("     /{0} {1}", Edvard.ArgOption.sync.ToString(), Edvard.ArgSubOption.oneway_to_binds.ToString());
+                Console.WriteLine("     /{0} {1}", Edvard.ArgOption.sync.ToString(), Edvard.ArgSubOption.twoway.ToString());
                 Console.WriteLine();
                 ConsistentExit();
             }
@@ -118,7 +85,7 @@
                 {
                     Console.WriteLine();
                     Console.WriteLine("Path to Elite Dangerous Binds (.binds) File must be valid!" + System.Environment.NewLine);
-                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.binds.ToString(), Path.Combine(DefaultEliteDangerousBindingsDirectory, "Custom.binds"));
+                    Console.WriteLine(" e.g. /{0} {1}", Edvard.ArgOption.binds.ToString(), Path.Combine(DefaultEliteDangerousBindingsDirectory, "Custom.binds"));
                     Console.WriteLine();
                     ConsistentExit();
                 }
@@ -131,7 +98,7 @@
                 {
                     Console.WriteLine();
                     Console.WriteLine("Path to Voice Attack Profile (.vap) File must be valid!" + System.Environment.NewLine);
-                    Console.WriteLine(" e.g. /{0} {1}", ArgOption.vap.ToString(), Path.Combine(DefaultVoiceAttackProfilesDirectory, "Custom.vap"));
+                    Console.WriteLine(" e.g. /{0} {1}", Edvard.ArgOption.vap.ToString(), Path.Combine(DefaultVoiceAttackProfilesDirectory, "Custom.vap"));
                     Console.WriteLine();
                     ConsistentExit();
                 }
@@ -179,7 +146,7 @@
             }
             else
             {
-                Console.WriteLine("unused option: /{0}", ArgOption.export.ToString());
+                Console.WriteLine("unused option: /{0}", Edvard.ArgOption.export.ToString());
             }
 
             // Optional arg: Dictionary import ..
@@ -189,12 +156,12 @@
             }
             else
             {
-                Console.WriteLine("unused option: /{0}", ArgOption.import.ToString());
+                Console.WriteLine("unused option: /{0}", Edvard.ArgOption.import.ToString());
             }
 
             if (!argCreateReferenceTag)
             {
-                Console.WriteLine("unused option: /{0}", ArgOption.tag.ToString());
+                Console.WriteLine("unused option: /{0}", Edvard.ArgOption.tag.ToString());
             }
             #endregion
 
@@ -203,7 +170,7 @@
             {
                 #region [Read and update VoiceAttack Configuration File]
                 // Update VoiceAttack Profile (optional) ..
-                if ((argModeSync == ArgSubOption.twoway.ToString()) || (argModeSync == ArgSubOption.oneway_to_vap.ToString()))
+                if ((argModeSync == Edvard.ArgSubOption.twoway.ToString()) || (argModeSync == Edvard.ArgSubOption.oneway_to_vap.ToString()))
                 {
                     // Intro ..
                     Console.WriteLine(System.Environment.NewLine);
@@ -224,7 +191,7 @@
 
                 #region [Read and update EliteDangerous Configuration File]
                 // Reverse-synchronise any vacant Elite Dangerous Bindings (optional) ..
-                if ((argModeSync == ArgSubOption.twoway.ToString()) || (argModeSync == ArgSubOption.oneway_to_binds.ToString()))
+                if ((argModeSync == Edvard.ArgSubOption.twoway.ToString()) || (argModeSync == Edvard.ArgSubOption.oneway_to_binds.ToString()))
                 {
                     // Intro ..
                     Console.WriteLine(System.Environment.NewLine);
@@ -248,21 +215,7 @@
                 Console.WriteLine(System.Environment.NewLine);
                 if (HandleIO.ValidateFilepath(argDirectoryPathAnalysis) && HandleIO.CreateDirectory(argDirectoryPathAnalysis, false))
                 {
-                    // Intro ..
-                    Console.WriteLine("Creating Analysis File(s) in {0}", argDirectoryPathAnalysis);
-
-                    // Construct File paths ..
-                    string csvCommands = Path.Combine(argDirectoryPathAnalysis, Commands + "." + CSV);
-                    string csvBindings = Path.Combine(argDirectoryPathAnalysis, Bindings + "." + CSV);
-                    string csvConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated + "." + CSV);
-                    string csvAssociatedCommandStrings = Path.Combine(argDirectoryPathAnalysis, Associated + "." + CSV);
-                    string csvAllCommandStrings = Path.Combine(argDirectoryPathAnalysis, AllCommands + "." + CSV);
-
-                    string htmCommands = Path.Combine(argDirectoryPathAnalysis, Commands + "." + HTM);
-                    string htmBindings = Path.Combine(argDirectoryPathAnalysis, Bindings + "." + HTM);
-                    string htmConsolidatedBindings = Path.Combine(argDirectoryPathAnalysis, Consolidated + "." + HTM);
-                    string htmAssociatedCommandStrings = Path.Combine(argDirectoryPathAnalysis, Associated + "." + HTM);
-                    string htmAllCommandStrings = Path.Combine(argDirectoryPathAnalysis, AllCommands + "." + HTM);
+                    Console.WriteLine("Preparing analysis data ..");
 
                     // Read (updated) files ..
                     KeyBindingReaderEliteDangerous ed = new KeyBindingReaderEliteDangerous(eliteDangerousBinds);
@@ -289,22 +242,24 @@
                     // Create appropriate type of analysis file ..
                     try
                     {
-                        switch (HandleStrings.ParseStringToEnum<ArgSubOption>(argAnalysisFileFormat))
+                        Console.WriteLine("Creating '{0}' analysis file(s) in {1}", argAnalysisFileFormat, argDirectoryPathAnalysis);
+
+                        switch (HandleStrings.ParseStringToEnum<Edvard.ArgSubOption>(argAnalysisFileFormat))
                         {
-                            case ArgSubOption.csv:
-                                elitedangerousAllCommands.CreateCSV(csvCommands);
-                                elitedangerousBoundCommands.CreateCSV(csvBindings);
-                                consolidatedBoundCommands.CreateCSV(csvConsolidatedBindings);
-                                associatedCommands.CreateCSV(csvAssociatedCommandStrings);
-                                allCommands.CreateCSV(csvAllCommandStrings);
+                            case Edvard.ArgSubOption.csv:
+                                elitedangerousAllCommands.CreateCSV(argDirectoryPathAnalysis, Commands);
+                                elitedangerousBoundCommands.CreateCSV(argDirectoryPathAnalysis, Bindings);
+                                consolidatedBoundCommands.CreateCSV(argDirectoryPathAnalysis, Consolidated);
+                                associatedCommands.CreateCSV(argDirectoryPathAnalysis, Associated);
+                                allCommands.CreateCSV(argDirectoryPathAnalysis, AllCommands);
                                 break;
 
-                            case ArgSubOption.htm:
-                                elitedangerousAllCommands.CreateHTML(htmCommands, Commands);
-                                elitedangerousBoundCommands.CreateHTML(htmBindings, Bindings);
-                                consolidatedBoundCommands.CreateHTML(htmConsolidatedBindings, Consolidated);
-                                associatedCommands.CreateHTML(htmAssociatedCommandStrings);
-                                allCommands.CreateHTML(htmAllCommandStrings);
+                            case Edvard.ArgSubOption.htm:
+                                elitedangerousAllCommands.CreateHTM(argDirectoryPathAnalysis, Commands, Commands);
+                                elitedangerousBoundCommands.CreateHTM(argDirectoryPathAnalysis, Bindings, Bindings);
+                                consolidatedBoundCommands.CreateHTM(argDirectoryPathAnalysis, Consolidated, Consolidated);
+                                associatedCommands.CreateHTM(argDirectoryPathAnalysis, Associated, Associated);
+                                allCommands.CreateHTM(argDirectoryPathAnalysis, AllCommands, AllCommands);
                                 break;
                         }
                     }
@@ -315,7 +270,7 @@
                 }
                 else
                 {
-                    Console.WriteLine("unused option: /{0}", ArgOption.analysis.ToString());
+                    Console.WriteLine("unused option: /{0}", Edvard.ArgOption.analysis.ToString());
                 }
                 #endregion
 
@@ -350,32 +305,32 @@
                                  System.Environment.NewLine +
                                  "  [mandatory]" +
                                  System.Environment.NewLine +
-                                 "  /" + ArgOption.binds.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.binds.ToString() + System.Environment.NewLine +
                                  "           File path to Elite Dangerous .binds" + System.Environment.NewLine +
-                                 "  /" + ArgOption.vap.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.vap.ToString() + System.Environment.NewLine +
                                  "           File path to Voice Attack .vap" + System.Environment.NewLine +
-                                 "  /" + ArgOption.sync.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.sync.ToString() + System.Environment.NewLine +
                                  "           Synchronisation Mode" + System.Environment.NewLine +
-                                 "            :" + ArgSubOption.twoway.ToString() + System.Environment.NewLine +
-                                 "            :" + ArgSubOption.oneway_to_vap.ToString() + System.Environment.NewLine +
-                                 "            :" + ArgSubOption.oneway_to_binds.ToString() + System.Environment.NewLine +
-                                 "            :" + ArgSubOption.none.ToString() + System.Environment.NewLine +
+                                 "            :" + Edvard.ArgSubOption.twoway.ToString() + System.Environment.NewLine +
+                                 "            :" + Edvard.ArgSubOption.oneway_to_vap.ToString() + System.Environment.NewLine +
+                                 "            :" + Edvard.ArgSubOption.oneway_to_binds.ToString() + System.Environment.NewLine +
+                                 "            :" + Edvard.ArgSubOption.none.ToString() + System.Environment.NewLine +
                                  System.Environment.NewLine +
                                  "  [optional]" +
                                  System.Environment.NewLine +
-                                 "  /" + ArgOption.help.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.help.ToString() + System.Environment.NewLine +
                                  "           This help" + System.Environment.NewLine +
-                                 "  /" + ArgOption.backup.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.backup.ToString() + System.Environment.NewLine +
                                  "           Directory path for backup file(s)" + System.Environment.NewLine +
-                                 "  /" + ArgOption.analysis.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.analysis.ToString() + System.Environment.NewLine +
                                  "           Directory path for operational analysis file(s)" + System.Environment.NewLine +
-                                 "  /" + ArgOption.format.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.format.ToString() + System.Environment.NewLine +
                                  "           File format for operational analysis file(s) (csv[default], htm)" + System.Environment.NewLine +
-                                 "  /" + ArgOption.tag.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.tag.ToString() + System.Environment.NewLine +
                                  "           Create reference tag in affected file(s)" + System.Environment.NewLine +
-                                 "  /" + ArgOption.export.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.export.ToString() + System.Environment.NewLine +
                                  "           File path to export action dictionary" + System.Environment.NewLine +
-                                 "  /" + ArgOption.import.ToString() + System.Environment.NewLine +
+                                 "  /" + Edvard.ArgOption.import.ToString() + System.Environment.NewLine +
                                  "           File path to import action dictionary";
 
             string usageExamples =
@@ -447,7 +402,7 @@
             }
             else
             {
-                Console.WriteLine("unused option: /{0}", ArgOption.backup.ToString());
+                Console.WriteLine("unused option: /{0}", Edvard.ArgOption.backup.ToString());
             }
         }
 

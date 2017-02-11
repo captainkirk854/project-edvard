@@ -69,5 +69,42 @@
         {
             EdVard
         }
+
+        /// <summary>
+        /// Enumeration of Console Arguments
+        /// </summary>
+        public enum ArgOption
+        {
+            binds,
+            vap,
+            sync,
+            import,
+            export,
+            tag,
+            analysis,
+            format,
+            backup,
+            help,
+            sample
+        }
+
+        /// <summary>
+        /// Enumeration of Console Argument Sub Options
+        /// </summary>
+        public enum ArgSubOption
+        {
+            twoway,
+            oneway_to_binds,
+            oneway_to_vap,
+            csv,
+            htm,
+            none
+        }
+
+        public enum FileType
+        {
+            htm,
+            csv
+        }
     }
 }

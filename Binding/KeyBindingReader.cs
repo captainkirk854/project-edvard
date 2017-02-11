@@ -41,10 +41,11 @@
         /// Write currently enumerated Key Type to CSV File
         /// </summary>
         /// <param name="directoryPath"></param>
-        public void WriteKeyMap(string directoryPath)
+        public void WriteKeyTypes(string keyMapDirectoryPath)
         {
-            directoryPath += "\\" + "KeyCodes" + KeyType.ToString() + ".csv";
-            this.Keys.WriteKeyMap(directoryPath);  
+            string keyMapFileName = "KeyCodes" + KeyType.ToString();
+
+            this.Keys.WriteKeyMap(keyMapDirectoryPath, keyMapFileName);  
         }
     }
 }

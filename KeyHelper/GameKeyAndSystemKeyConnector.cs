@@ -181,8 +181,8 @@
         /// <summary>
         /// Write Key Enumeration Dictionary as CSV
         /// </summary>
-        /// <param name="csvPath"></param>
-        public void WriteKeyMap(string csvPath)
+        /// <param name="directoryPath"></param>
+        public void WriteKeyMap(string directoryPath, string fileName)
         {
             // Create DataTable with correct structure ..
             DataTable keyMap = TableShape.DefineKeyMap();
@@ -200,7 +200,7 @@
             }
 
             // Write DataTable contents as csv ..
-            keyMap.CreateCSV(csvPath);
+            keyMap.CreateCSV(directoryPath, fileName);
         }
     }
 }
