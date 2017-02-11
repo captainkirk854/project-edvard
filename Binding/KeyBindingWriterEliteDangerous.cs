@@ -4,6 +4,7 @@
     using System.Data;
     using System.Linq;
     using Helper;
+    using Items;
 
     public class KeyBindingWriterEliteDangerous : IKeyBindingWriter
     {
@@ -15,7 +16,7 @@
         private const string XMLModifier = "Modifier";
 
         /// <summary>
-        /// Update vacant Elite Dangerous Game Action binding with Key derived from Voice Attack Profile ..
+        /// Update vacant Elite Dangerous Name Action binding with Key derived from Voice Attack Profile ..
         /// </summary>
         /// <param name="reverseBindableVacantEDActions"></param>
         /// <param name="updateChangeTag"></param>
@@ -32,19 +33,19 @@
                                        select
                                           new
                                           {
-                                              KeyEnumeration = vb.Field<string>(EnumsInternal.Column.KeyEnumeration.ToString()),
-                                              EliteDangerousAction = vb.Field<string>(EnumsInternal.Column.EliteDangerousAction.ToString()),
-                                              VoiceAttackAction = vb.Field<string>(EnumsInternal.Column.VoiceAttackAction.ToString()),
-                                              VoiceAttackKeyValue = vb.Field<string>(EnumsInternal.Column.VoiceAttackKeyValue.ToString()),
-                                              VoiceAttackKeyCode = vb.Field<string>(EnumsInternal.Column.VoiceAttackKeyCode.ToString()),
-                                              EliteDangerousKeyValue = vb.Field<string>(EnumsInternal.Column.EliteDangerousKeyValue.ToString()),
-                                              VoiceAttackModifierKeyValue = vb.Field<string>(EnumsInternal.Column.VoiceAttackModifierKeyValue.ToString()),
-                                              VoiceAttackModifierKeyCode = vb.Field<string>(EnumsInternal.Column.VoiceAttackModifierKeyCode.ToString()),
-                                              EliteDangerousModifierKeyValue = vb.Field<string>(EnumsInternal.Column.EliteDangerousModifierKeyValue.ToString()),
-                                              VoiceAttackInternal = vb.Field<string>(EnumsInternal.Column.VoiceAttackInternal.ToString()),
-                                              VoiceAttackProfile = vb.Field<string>(EnumsInternal.Column.VoiceAttackProfile.ToString()),
-                                              EliteDangerousInternal = vb.Field<string>(EnumsInternal.Column.EliteDangerousInternal.ToString()),
-                                              EliteDangerousBinds = vb.Field<string>(EnumsInternal.Column.EliteDangerousBinds.ToString()),
+                                              KeyEnumeration = vb.Field<string>(Edvard.Column.KeyEnumeration.ToString()),
+                                              EliteDangerousAction = vb.Field<string>(Edvard.Column.EliteDangerousAction.ToString()),
+                                              VoiceAttackAction = vb.Field<string>(Edvard.Column.VoiceAttackAction.ToString()),
+                                              VoiceAttackKeyValue = vb.Field<string>(Edvard.Column.VoiceAttackKeyValue.ToString()),
+                                              VoiceAttackKeyCode = vb.Field<string>(Edvard.Column.VoiceAttackKeyCode.ToString()),
+                                              EliteDangerousKeyValue = vb.Field<string>(Edvard.Column.EliteDangerousKeyValue.ToString()),
+                                              VoiceAttackModifierKeyValue = vb.Field<string>(Edvard.Column.VoiceAttackModifierKeyValue.ToString()),
+                                              VoiceAttackModifierKeyCode = vb.Field<string>(Edvard.Column.VoiceAttackModifierKeyCode.ToString()),
+                                              EliteDangerousModifierKeyValue = vb.Field<string>(Edvard.Column.EliteDangerousModifierKeyValue.ToString()),
+                                              VoiceAttackInternal = vb.Field<string>(Edvard.Column.VoiceAttackInternal.ToString()),
+                                              VoiceAttackProfile = vb.Field<string>(Edvard.Column.VoiceAttackProfile.ToString()),
+                                              EliteDangerousInternal = vb.Field<string>(Edvard.Column.EliteDangerousInternal.ToString()),
+                                              EliteDangerousBinds = vb.Field<string>(Edvard.Column.EliteDangerousBinds.ToString()),
                                           };
 
             // Process each potentially vacant binding ..
@@ -54,7 +55,7 @@
 
                 // Try to update Primary bind ..
                 updateStatus = this.UpdateVacantEliteDangerousBinding(vacantBinding.EliteDangerousBinds, 
-                                                                      Helper.EnumsInternal.EliteDangerousDevicePriority.Primary.ToString(), 
+                                                                      Game.EliteDangerousDevicePriority.Primary.ToString(), 
                                                                       vacantBinding.EliteDangerousAction, 
                                                                       vacantBinding.EliteDangerousKeyValue);
 
@@ -62,7 +63,7 @@
                 if (!updateStatus)
                 {
                     updateStatus = this.UpdateVacantEliteDangerousBinding(vacantBinding.EliteDangerousBinds,
-                                                                          Helper.EnumsInternal.EliteDangerousDevicePriority.Secondary.ToString(),
+                                                                          Game.EliteDangerousDevicePriority.Secondary.ToString(),
                                                                           vacantBinding.EliteDangerousAction,
                                                                           vacantBinding.EliteDangerousKeyValue);
                 }
@@ -118,11 +119,11 @@
             var edb = HandleXml.ReadXDoc(edbinds);
 
             // Check to see if Key_value already set on primary binding for Action (no need to set same binding on secondary) ..
-            var primaryKeyBindingIsSet = edb.Descendants(EnumsInternal.EliteDangerousDevicePriority.Primary.ToString())
+            var primaryKeyBindingIsSet = edb.Descendants(Game.EliteDangerousDevicePriority.Primary.ToString())
                                             .Where(item => item.Parent.SafeElementName() == actionName &&
-                                                   item.SafeElementName() == EnumsInternal.EliteDangerousDevicePriority.Primary.ToString() &&
-                                                   item.SafeAttributeValue(XMLDevice) == EnumsInternal.Interaction.Keyboard.ToString() &&
-                                                   item.SafeAttributeValue(XMLKey) == EnumsInternal.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault();
+                                                   item.SafeElementName() == Game.EliteDangerousDevicePriority.Primary.ToString() &&
+                                                   item.SafeAttributeValue(XMLDevice) == Game.Interaction.Keyboard.ToString() &&
+                                                   item.SafeAttributeValue(XMLKey) == Game.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault();
 
             // If not, attempt binding update ..
             if (primaryKeyBindingIsSet == null)
@@ -135,15 +136,15 @@
                               item.SafeElementName() == devicePriority &&
                               item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
                               item.SafeAttributeValue(XMLKey) == string.Empty).FirstOrDefault()
-                       .SetAttributeValue(XMLKey, EnumsInternal.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue);
+                       .SetAttributeValue(XMLKey, Game.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue);
 
                     // Update [Device Type] for Elite Dangerous Action (must always follow key-binding update) ..
                     edb.Descendants(devicePriority)
                        .Where(item => item.Parent.SafeElementName() == actionName &&
                               item.SafeElementName() == devicePriority &&
                               item.SafeAttributeValue(XMLDevice) == VacantDeviceIndicator &&
-                              item.SafeAttributeValue(XMLKey) == EnumsInternal.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
-                       .SetAttributeValue(XMLDevice, EnumsInternal.Interaction.Keyboard.ToString());
+                              item.SafeAttributeValue(XMLKey) == Game.EliteDangerousBindingPrefix.Key_.ToString() + keyvalue).FirstOrDefault()
+                       .SetAttributeValue(XMLDevice, Game.Interaction.Keyboard.ToString());
 
                     edb.Save(edbinds);
 

@@ -7,7 +7,7 @@
     using Helper;
 
     /// <summary>
-    /// Key Value/Code Mapping using Virtual Key Codes ..
+    /// Key Type/Code Mapping using Virtual Key Codes ..
     /// </summary>
     public static class VirtualKeyCodeDictionary
     {
@@ -46,7 +46,7 @@
         }
 
         /// <summary>
-        /// Get Unicode Key Value from Windows Forms Keys Enum value with (optional) modifier option(s)
+        /// Get Unicode Key Type from Windows Forms Keys Enum value with (optional) modifier option(s)
         /// </summary>
         /// <remarks>
         /// A slightly different, and actually much simpler method than the methods beneath, of obtaining a key value from its enum
@@ -91,7 +91,7 @@
         }
 
         /// <summary>
-        /// Get Unicode Key Value from Windows Input Key Enum value
+        /// Get Unicode Key Type from Windows Input Key Enum value
         /// </summary>
         /// <param name="windowsInputKeyEnum"></param>
         /// <returns></returns>
@@ -104,7 +104,7 @@
         }
 
         /// <summary>
-        /// Get Unicode Key Value from Windows Forms Keys Enum value
+        /// Get Unicode Key Type from Windows Forms Keys Enum value
         /// </summary>
         /// <remarks>
         /// (see above)
@@ -125,7 +125,7 @@
         }
 
         /// <summary>
-        /// Get Unicode Key Value from its Windows Input Key Enum
+        /// Get Unicode Key Type from its Windows Input Key Enum
         /// </summary>
         /// <remarks>
         /// Taken from: 

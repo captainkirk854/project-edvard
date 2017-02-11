@@ -4,6 +4,7 @@
     using KeyHelper;
     using System.Data;
     using System.Xml.Linq;
+    using Items;
     
     /// <summary>
     /// Base Key-Bindings Reader Class
@@ -14,7 +15,7 @@
         protected readonly GameKeyAndSystemKeyConnector Keys = new GameKeyAndSystemKeyConnector(KeyType);
         protected string cfgFilePath = string.Empty;
         protected XDocument xCfg = new XDocument();
-        private static KeyHelper.EnumsKeyEnumType.InputKeyEnumType keyType = KeyHelper.EnumsKeyEnumType.InputKeyEnumType.WindowsForms; // Default startup value for KeyType Property ..
+        private static KeyEnum.Type keyType = KeyEnum.Type.WindowsForms; // Default startup value for KeyType Property ..
         
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyBindingReader" /> class.
@@ -29,7 +30,7 @@
         }
 
         // KeyType Property
-        public static KeyHelper.EnumsKeyEnumType.InputKeyEnumType KeyType
+        public static KeyEnum.Type KeyType
         {
             get { return keyType; }
 

@@ -95,7 +95,7 @@
             this.relationship.Add("((Decrease Sensor Range Max))", "RadarDecreaseRange");
             this.relationship.Add("((Increase Sensor Range))", "RadarIncreaseRange");
             this.relationship.Add("((Increase Sensor Range Max))", "RadarIncreaseRange");
-            /// ((Discovery Scanner)) (MouseAction)
+            //// ((Discovery Scanner)) (MouseAction)
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Galaxy Map))", "GalaxyMapOpen");
             this.relationship.Add("((System Map))", "SystemMapOpen");

@@ -1,9 +1,9 @@
-﻿namespace Helper
+﻿namespace Items
 {
     /// <summary>
-    /// Application related Enumerations
+    /// Edvard related Enumerations
     /// </summary>
-    public partial class EnumsInternal
+    public partial class Edvard
     {
         /// <summary>
         /// Enumeration of Table Columns

@@ -41,7 +41,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EnumsKeyEnumType.cs" />
     <Compile Include="GameKeyAndSystemKeyConnector.cs" />
     <Compile Include="GameKeyAndSystemKeyDictionary.cs" />
     <Compile Include="SystemKeyTypeDictionary.cs" />
@@ -52,6 +51,10 @@
     <ProjectReference Include="..\Helper\Helper.csproj">
       <Project>{696e228d-a175-4c0a-afab-7ad2e30e1965}</Project>
       <Name>Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Items\Items.csproj">
+      <Project>{a55e8323-766a-41f5-88fa-bde0a4f53f73}</Project>
+      <Name>Items</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

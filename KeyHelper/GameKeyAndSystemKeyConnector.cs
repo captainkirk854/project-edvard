@@ -5,9 +5,10 @@
     using System.Data;
     using System.Linq;
     using Helper;
+    using Items;
 
     /// <summary>
-    /// Key Value/Code Mapping ..
+    /// Key Type/Code Mapping ..
     /// </summary>
     public sealed class GameKeyAndSystemKeyConnector
     {
@@ -20,24 +21,24 @@
         /// Initializes a new instance of the <see cref="GameKeyAndSystemKeyConnector"/> class
         /// </summary>
         /// <param name="keytype"></param>
-        public GameKeyAndSystemKeyConnector(EnumsKeyEnumType.InputKeyEnumType keytype)
+        public GameKeyAndSystemKeyConnector(KeyEnum.Type keytype)
         {
             this.currentKeyEnumType = this.systemKeys.Get(keytype);
-            this.gameKeys.Initialise(Helper.EnumsInternal.Game.EliteDangerous);
+            this.gameKeys.Initialise(Items.Game.Name.EliteDangerous);
             this.KeyType = keytype;
         }
 
         /// <summary>
         /// Gets Key Type
         /// </summary>
-        public EnumsKeyEnumType.InputKeyEnumType KeyType
+        public KeyEnum.Type KeyType
         {
             get;
             private set;
         }
 
         /// <summary>
-        /// Get Key Value from Key Code ..
+        /// Get Key Type from Key Code ..
         /// </summary>
         /// {Dictionary Key}
         /// <param name="keyCode"></param>
@@ -64,7 +65,7 @@
         }
 
         /// <summary>
-        /// Get Elite Dangerous Binding Value from Key code
+        /// Get Elite Dangerous Binding Type from Key code
         /// </summary>
         /// <param name="keyCode"></param>
         /// <returns></returns>
@@ -121,9 +122,9 @@
         }
 
         /// <summary>
-        /// Get Key Code from Key Value
+        /// Get Key Code from Key Type
         /// </summary>
-        /// {Dictionary Value}
+        /// {Dictionary Type}
         /// <param name="keyValue"></param>
         /// <returns></returns>
         public int GetKeyCode(string keyValue)

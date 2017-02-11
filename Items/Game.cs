@@ -1,21 +1,21 @@
-﻿namespace Helper
+﻿namespace Items
 {
     /// <summary>
-    /// Application-related Enumerations for Elite Dangerous and Voice Attack
+    /// Edvard-related Enumerations for Elite Dangerous and Voice Attack
     /// </summary>
-    public partial class EnumsInternal
+    public class Game
     {
         /// <summary>
-        /// Enumeration of Game Names 
+        /// Enumeration of Name Names 
         /// </summary>
-        public enum Game
+        public enum Name
         {
             EliteDangerous,
             VoiceAttack
         }
 
         /// <summary>
-        /// Enumeration of Game-interaction Indicator
+        /// Enumeration of Name-interaction Indicator
         /// </summary>
         public enum Interaction
         {

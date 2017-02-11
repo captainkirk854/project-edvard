@@ -76,6 +76,10 @@
       <Project>{696e228d-a175-4c0a-afab-7ad2e30e1965}</Project>
       <Name>Helper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Items\Items.csproj">
+      <Project>{a55e8323-766a-41f5-88fa-bde0a4f53f73}</Project>
+      <Name>Items</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KeyHelper\KeyHelper.csproj">
       <Project>{6ed8bced-f737-4fd7-b8bd-b7aef7592ef3}</Project>
       <Name>KeyHelper</Name>

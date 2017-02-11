@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Xml.Linq;
     using Helper;
+    using Items;
 
     /// <summary>
     /// Update Voice Attack Profile Command(s) with new Key Codes
@@ -34,18 +35,18 @@
 
             // Find VoiceAttack commands which require remapping ..
             var consolidatedBindings = from cb in consolidatedActions.AsEnumerable()
-                                      where cb.Field<string>(EnumsInternal.Column.KeyUpdateRequired.ToString()) == EnumsInternal.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString()
+                                      where cb.Field<string>(Edvard.Column.KeyUpdateRequired.ToString()) == Edvard.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString()
                                      select
                                         new
                                             {
-                                                VoiceAttackInternal = cb.Field<string>(EnumsInternal.Column.VoiceAttackInternal.ToString()),
-                                                VoiceAttackProfile = cb.Field<string>(EnumsInternal.Column.VoiceAttackProfile.ToString()),
-                                                VoiceAttackAction = cb.Field<string>(EnumsInternal.Column.VoiceAttackAction.ToString()),
-                                                VoiceAttackKeyId = cb.Field<string>(EnumsInternal.Column.VoiceAttackKeyId.ToString()),
-                                                VoiceAttackKeyCode = cb.Field<string>(EnumsInternal.Column.VoiceAttackKeyCode.ToString()),
-                                                VoiceAttackModifierKeyCode = cb.Field<string>(EnumsInternal.Column.VoiceAttackModifierKeyCode.ToString()),
-                                                EliteDangerousKeyCode = cb.Field<string>(EnumsInternal.Column.EliteDangerousKeyCode.ToString()),
-                                                EliteDangerousModifierKeyCode = cb.Field<string>(EnumsInternal.Column.EliteDangerousModifierKeyCode.ToString())
+                                                VoiceAttackInternal = cb.Field<string>(Edvard.Column.VoiceAttackInternal.ToString()),
+                                                VoiceAttackProfile = cb.Field<string>(Edvard.Column.VoiceAttackProfile.ToString()),
+                                                VoiceAttackAction = cb.Field<string>(Edvard.Column.VoiceAttackAction.ToString()),
+                                                VoiceAttackKeyId = cb.Field<string>(Edvard.Column.VoiceAttackKeyId.ToString()),
+                                                VoiceAttackKeyCode = cb.Field<string>(Edvard.Column.VoiceAttackKeyCode.ToString()),
+                                                VoiceAttackModifierKeyCode = cb.Field<string>(Edvard.Column.VoiceAttackModifierKeyCode.ToString()),
+                                                EliteDangerousKeyCode = cb.Field<string>(Edvard.Column.EliteDangerousKeyCode.ToString()),
+                                                EliteDangerousModifierKeyCode = cb.Field<string>(Edvard.Column.EliteDangerousModifierKeyCode.ToString())
                                             };
 
             // Perform key code value update(s) for those commands that require it ..
@@ -98,7 +99,7 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<CommandString/>
+        ///                      !_<commandString/>
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>
@@ -134,7 +135,7 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<CommandString/>
+        ///                      !_<commandString/>
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>
@@ -168,7 +169,7 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<CommandString/>
+        ///                      !_<commandString/>
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>

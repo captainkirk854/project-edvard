@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Items;
 
     public class SystemKeyTypeDictionary
     {
@@ -13,19 +14,19 @@
         /// </summary>
         /// <param name="keytype"></param>
         /// <returns></returns>
-        public Dictionary<string, int> Get(EnumsKeyEnumType.InputKeyEnumType keytype)
+        public Dictionary<string, int> Get(KeyEnum.Type keytype)
         {
             switch (keytype)
             {
-                case EnumsKeyEnumType.InputKeyEnumType.Console:
+                case KeyEnum.Type.Console:
                     this.keyEnum = this.Console();
                     break;
 
-                case EnumsKeyEnumType.InputKeyEnumType.WindowsForms:
+                case KeyEnum.Type.WindowsForms:
                     this.keyEnum = this.WindowsForms();
                     break;
 
-                case EnumsKeyEnumType.InputKeyEnumType.WindowsInput:
+                case KeyEnum.Type.WindowsInput:
                     this.keyEnum = this.WindowsInput();
                     break;
 

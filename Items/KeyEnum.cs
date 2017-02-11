@@ -1,14 +1,14 @@
-﻿namespace KeyHelper
+﻿namespace Items
 {
     /// <summary>
-    /// Application related Enumerations
+    /// Edvard related Enumerations
     /// </summary>
-    public partial class EnumsKeyEnumType
+    public partial class KeyEnum
     {
         /// <summary>
         /// Enumeration of Keyboard Enumerations
         /// </summary>
-        public enum InputKeyEnumType
+        public enum Type
         {
             Console,
             WindowsForms,

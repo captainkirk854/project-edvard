@@ -1,6 +1,7 @@
 ﻿namespace KeyHelper
 {
     using Helper;
+    using Items;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -22,18 +23,18 @@
         /// Initializes a new instance of the <see cref="GameKeyAndSystemKeyDictionary"/> class
         /// </summary>
         /// <param name="game"></param>
-        public GameKeyAndSystemKeyDictionary(Helper.EnumsInternal.Game game)
+        public GameKeyAndSystemKeyDictionary(Items.Game.Name game)
         {
             this.Initialise(game);
         }
 
         /// <summary>
-        /// Initialise Mapping Dictionary for certain Game Keys: [Game -> WindowsForm]
+        /// Initialise Mapping Dictionary for certain Name Keys: [Name -> WindowsForm]
         /// </summary>
         /// <param name="game"></param>
-        public void Initialise(Helper.EnumsInternal.Game game)
+        public void Initialise(Items.Game.Name game)
         {
-            if (game == Helper.EnumsInternal.Game.EliteDangerous)
+            if (game == Items.Game.Name.EliteDangerous)
             {
                 this.relationship.Add("0", "D0");
                 this.relationship.Add("1", "D1");
@@ -95,7 +96,7 @@
         /// <summary>
         /// Get Windows Key Name
         /// </summary>
-        /// {Dictionary Value}
+        /// {Dictionary Type}
         /// <param name="keyName"></param>
         /// <returns></returns>
         public string GetValue(string keyName)
@@ -111,7 +112,7 @@
         }
 
         /// <summary>
-        /// Get Game Key Name
+        /// Get Name Key Name
         /// </summary>
         /// {Dictionary Key}
         /// <param name="keyName"></param>

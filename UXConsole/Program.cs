@@ -2,6 +2,7 @@
 {
     using Binding;
     using Helper;
+    using Items;
     using KeyHelper;
     using System;
     using System.Data;
@@ -156,7 +157,7 @@
             #region [Initialision]
 
             // Set key type enumeration type to use ..
-            KeyBindingReader.KeyType = KeyHelper.EnumsKeyEnumType.InputKeyEnumType.WindowsForms;
+            KeyBindingReader.KeyType = KeyEnum.Type.WindowsForms;
 
             // Initialise lookup dictionary for inter-game action references ..
             KeyBindingAndCommandConnector keyLookup = null;
@@ -277,7 +278,7 @@
                     
                     // Create table of all consolidated actions ..
                     DataTable consolidatedBoundCommands = KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup);
-                    consolidatedBoundCommands = consolidatedBoundCommands.Sort(Helper.EnumsInternal.Column.EliteDangerousAction.ToString() + " asc");
+                    consolidatedBoundCommands = consolidatedBoundCommands.Sort(Items.Edvard.Column.EliteDangerousAction.ToString() + " asc");
 
                     // Create table of related Command Strings ..
                     DataTable associatedCommands = va.GetAssociatedCommandStrings(consolidatedBoundCommands);

@@ -1,6 +1,7 @@
 ﻿namespace Binding
 {
     using Helper;
+    using Items;
     using KeyHelper;
     using System.Data;
     using System.Linq;
@@ -18,7 +19,7 @@
         private const string XMLDevice = "Device";
         private const string XMLModifier = "Modifier";
         private const string D = "+";
-        private GameKeyAndSystemKeyDictionary gameKeys = new GameKeyAndSystemKeyDictionary(Helper.EnumsInternal.Game.EliteDangerous);
+        private GameKeyAndSystemKeyDictionary gameKeys = new GameKeyAndSystemKeyDictionary(Game.Name.EliteDangerous);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyBindingReaderEliteDangerous" /> class.
@@ -39,10 +40,10 @@
             DataTable primary = this.GetBindableActions(ref xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(Helper.EnumsInternal.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(Helper.EnumsInternal.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
@@ -55,17 +56,17 @@
         public DataTable GetBoundCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetKeyBindings(ref xCfg, Helper.EnumsInternal.EliteDangerousDevicePriority.Primary);
-            DataTable secondary = this.GetKeyBindings(ref xCfg, Helper.EnumsInternal.EliteDangerousDevicePriority.Secondary);
+            DataTable primary = this.GetKeyBindings(ref xCfg, Game.EliteDangerousDevicePriority.Primary);
+            DataTable secondary = this.GetKeyBindings(ref xCfg, Game.EliteDangerousDevicePriority.Secondary);
 
             // Merge ..
             primary.Merge(secondary);
 
             // Add column ..
-            primary.AddDefaultColumn(Helper.EnumsInternal.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(Helper.EnumsInternal.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
             return primary;
@@ -79,7 +80,7 @@
         private DataTable GetBindableActions(ref XDocument xdoc)
         {
             // Initialise ..
-            string[] devicePriority = { Helper.EnumsInternal.EliteDangerousDevicePriority.Primary.ToString(), Helper.EnumsInternal.EliteDangerousDevicePriority.Secondary.ToString() };
+            string[] devicePriority = { Game.EliteDangerousDevicePriority.Primary.ToString(), Game.EliteDangerousDevicePriority.Secondary.ToString() };
 
             // Datatable to hold tabulated XML contents ..
             DataTable bindableactions = TableShape.BindableActions();
@@ -121,7 +122,7 @@
                     {
                         bindableactions.LoadDataRow(new object[] 
                                                         {
-                                                         Helper.EnumsInternal.Game.EliteDangerous.ToString(), //Context
+                                                         Game.Name.EliteDangerous.ToString(), //Context
                                                          xmlExtract.BindingAction, //BindingAction
                                                          xmlExtract.Priority, // Device priority
                                                          xmlExtract.DeviceType // Device binding applied to
@@ -179,7 +180,7 @@
         /// <param name="xdoc"></param>
         /// <param name="devicepriority"></param>
         /// <returns></returns>
-        private DataTable GetKeyBindings(ref XDocument xdoc, Helper.EnumsInternal.EliteDangerousDevicePriority devicepriority)
+        private DataTable GetKeyBindings(ref XDocument xdoc, Game.EliteDangerousDevicePriority devicepriority)
         {
             // Initialise ..
             string devicePriority = devicepriority.ToString();
@@ -196,8 +197,8 @@
                 {
                     var xmlExtracts = from item in xdoc.Descendants(childNode.Name)
                                       where
-                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Helper.EnumsInternal.Interaction.Keyboard.ToString() &&
-                                            item.Element(devicePriority).Attribute(XMLKey).Value.Contains(Helper.EnumsInternal.EliteDangerousBindingPrefix.Key_.ToString()) == true
+                                            item.Element(devicePriority).SafeAttributeValue(XMLDevice) == Game.Interaction.Keyboard.ToString() &&
+                                            item.Element(devicePriority).Attribute(XMLKey).Value.Contains(Game.EliteDangerousBindingPrefix.Key_.ToString()) == true
                                       select
                                          new // create anonymous type for every key code ..
                                          {
@@ -251,7 +252,7 @@
                         // Load final values into datatable ..
                         keyactionbinder.LoadDataRow(new object[] 
                                                         {
-                                                         Helper.EnumsInternal.Game.EliteDangerous.ToString(), //Context
+                                                         Game.Name.EliteDangerous.ToString(), //Context
                                                          Keys.KeyType.ToString(), //KeyEnumerationType
                                                          childNode.Name, //BindingAction
                                                          xmlExtract.xmlNode_DevicePriority, //Priority 

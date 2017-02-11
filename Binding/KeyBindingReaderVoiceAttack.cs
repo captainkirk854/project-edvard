@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Xml.Linq;
     using Helper;
+    using Items;
 
     /// <summary>
     /// Parse HCSVoicePacks Voice Attack Profile file
@@ -47,10 +48,10 @@
             DataTable primary = this.GetCommandStringsWithBoundKeys(ref this.xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(EnumsInternal.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(EnumsInternal.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
             return primary;
@@ -66,17 +67,17 @@
             DataTable primary = this.GetKeyBindings(ref this.xCfg);
 
             // Add column ..
-            primary.AddDefaultColumn(EnumsInternal.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            primary.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
 
             // Add column ..
-            primary.AddDefaultColumn(EnumsInternal.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
             return primary;
         }
 
         /// <summary>
-        /// Get other CommandStrings associated with a particular CommandString
+        /// Get other commandStrings associated with a particular commandString
         /// </summary>
         /// <param name="consolidatedBoundCommands"></param>
         /// <returns></returns>
@@ -86,18 +87,18 @@
             DataTable associatedCommands = TableShape.AssociatedCommands();
             string prevCommandString = string.Empty;
 
-            // Find associated CommandStrings using CommandString ActionId ...
-            foreach (DataRow consolidatedBoundCommand in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[EnumsInternal.Column.VoiceAttackAction.ToString()]))
+            // Find associated commandStrings using commandString ActionId ...
+            foreach (DataRow consolidatedBoundCommand in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[Edvard.Column.VoiceAttackAction.ToString()]))
             {
                 // Get required field information ..
-                string voiceattackCommandString = consolidatedBoundCommand[EnumsInternal.Column.VoiceAttackAction.ToString()].ToString();
-                string voiceattackActionId = consolidatedBoundCommand[EnumsInternal.Column.VoiceAttackKeyId.ToString()].ToString();
-                string elitedangerousAction = consolidatedBoundCommand[EnumsInternal.Column.EliteDangerousAction.ToString()].ToString();
-                string bindingSyncStatus = consolidatedBoundCommand[EnumsInternal.Column.KeyUpdateRequired.ToString()].ToString() == EnumsInternal.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
-                string voiceattackFile = Path.GetFileName(consolidatedBoundCommand[EnumsInternal.Column.VoiceAttackProfile.ToString()].ToString());
-                string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommand[EnumsInternal.Column.EliteDangerousBinds.ToString()].ToString());
+                string voiceattackCommandString = consolidatedBoundCommand[Edvard.Column.VoiceAttackAction.ToString()].ToString();
+                string voiceattackActionId = consolidatedBoundCommand[Edvard.Column.VoiceAttackKeyId.ToString()].ToString();
+                string elitedangerousAction = consolidatedBoundCommand[Edvard.Column.EliteDangerousAction.ToString()].ToString();
+                string bindingSyncStatus = consolidatedBoundCommand[Edvard.Column.KeyUpdateRequired.ToString()].ToString() == Edvard.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
+                string voiceattackFile = Path.GetFileName(consolidatedBoundCommand[Edvard.Column.VoiceAttackProfile.ToString()].ToString());
+                string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommand[Edvard.Column.EliteDangerousBinds.ToString()].ToString());
 
-                // Ignore duplicate CommandStrings from those with multiple Action Ids ..
+                // Ignore duplicate commandStrings from those with multiple Action Ids ..
                 if (voiceattackCommandString != prevCommandString)
                 {
                     var associatedCommandStrings = this.GetCommandStringsFromCommandActionContext(ref this.xCfg, this.GetCommandIdFromCommandActionIdWithBoundKeys(ref this.xCfg, voiceattackActionId));
@@ -105,7 +106,7 @@
                     string prevAssociatedCommandString = string.Empty;
                     foreach (var associatedCommandString in associatedCommandStrings)
                     {
-                        // Ignore any duplicate Associated CommandStrings ..
+                        // Ignore any duplicate Associated commandStrings ..
                         if (associatedCommandString != prevAssociatedCommandString)
                         {
                             associatedCommands.LoadDataRow(new object[] 
@@ -131,7 +132,7 @@
         }
 
         /// <summary>
-        /// Get CommandStrings for all Categories and load into DataTable ..
+        /// Get commandStrings for all Categories and load into DataTable ..
         /// </summary>
         /// <returns></returns>
         public DataTable GetCommandStringsForAllCategories()
@@ -140,16 +141,16 @@
             DataTable allVoiceCommands = TableShape.AllVoiceCommands();
 
             // Get anonymous type row data (as object types) ..
-            var CommandStrings = this.GetCommandStringsForCommandCategory(ref this.xCfg, this.GetAllCommandCategories(ref this.xCfg));
+            var commandStrings = this.GetCommandStringsForCommandCategory(ref this.xCfg, this.GetAllCommandCategories(ref this.xCfg));
 
-            // insert object's row data into DataTable being able to access its two fields as the anonymous type CommandString is declared as a 'dynamic' type ..
-            foreach (dynamic CommandString in CommandStrings)
+            // insert object's row data into DataTable being able to access its two fields as the anonymous type commandString is declared as a 'dynamic' type ..
+            foreach (dynamic commandString in commandStrings)
             {
                 allVoiceCommands.LoadDataRow(new object[] 
                                                 {
-                                                    CommandString.CommandCategory,
-                                                    CommandString.CommandString,
-                                                    CommandString.ActionType
+                                                    commandString.CommandCategory,
+                                                    commandString.CommandString,
+                                                    commandString.ActionType
                                                 },
                                             false);
             }
@@ -171,10 +172,10 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
-                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.KeyUp.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.KeyDown.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.ExecuteCommand.ToString()) &&
+                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.KeyUp.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.KeyDown.ToString() ||
+                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.ExecuteCommand.ToString()) &&
                                      item.SafeElementValue() != string.Empty
                               select
                                  new
@@ -187,10 +188,10 @@
             {
                 bindableactions.LoadDataRow(new object[] 
                                                 {
-                                                    EnumsInternal.Game.VoiceAttack.ToString(), //Context
+                                                    Game.Name.VoiceAttack.ToString(), //Context
                                                     xmlExtract.CommandString, //BindingAction
                                                     StatusCode.NotApplicable, // Device priority
-                                                    EnumsInternal.Interaction.Keyboard.ToString() // Device binding is applied to
+                                                    Game.Interaction.Keyboard.ToString() // Device binding is applied to
                                                 }, 
                                                 false);
             }
@@ -207,7 +208,7 @@
         ///             o <Profile/>
         ///               |_ <Commands/>
         ///                  |_ <Command/>
-        ///                      !_<CommandString/>* = Spoken Command  <--------¬
+        ///                      !_<commandString/>* = Spoken Command  <--------¬
         ///                      !_<Category/>* = <value/>
         ///                      |_<ActionSequence/> 
         ///                         !_[some] <CommandAction/>
@@ -278,7 +279,7 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>* <--------------------------------¬
-        ///                      !_<CommandString/> = ((<action name/>))   |
+        ///                      !_<commandString/> = ((<action name/>))   |
         ///                      |_<ActionSequence/>                       |
         ///                        !_[some] <CommandAction/>               |
         ///                                 !_<Id/> ------------------------
@@ -298,9 +299,9 @@
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
                                     item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue() == commandActionId &&
-                                    (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == EnumsInternal.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == EnumsInternal.Interaction.KeyUp.ToString() ||
-                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == EnumsInternal.Interaction.KeyDown.ToString())
+                                    (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Game.Interaction.PressKey.ToString() ||
+                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Game.Interaction.KeyUp.ToString() ||
+                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Game.Interaction.KeyDown.ToString())
                               select
                                     item.Parent.Parent.Parent.Parent.Element(XMLCommandId).SafeElementValue();
 
@@ -316,7 +317,7 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<CommandString/>* = Spoken Command  <--------¬           
+        ///                      !_<commandString/>* = Spoken Command  <--------¬           
         ///                      |_<ActionSequence/>                            |
         ///                        !_[some] <CommandAction/>                    |
         ///                                 |_<KeyCodes/>                       |
@@ -349,7 +350,7 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<CommandString/>* = ((<action name/>))
+        ///                      !_<commandString/>* = ((<action name/>))
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>*
@@ -363,7 +364,7 @@
         ///                VoiceAttack uses system key codes (as opposed to key value). 
         ///                Actions directly mappable to Elite Dangerous have been defined by HCSVoicePacks using: 
         ///                 o Command.Category = Keybindings
-        ///                 o Command.CommandString values which are pre- and post-fixed using '((' and '))'
+        ///                 o Command.commandString values which are pre- and post-fixed using '((' and '))'
         ///                   e.g. 
         ///                    ((Shield Cell)) : 222 (= Oem7 Numpad?7)
         ///                    ((Power To Weapons)) : 39  (= Right arrow)
@@ -385,10 +386,10 @@
             var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
-                                   (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.PressKey.ToString() ||
-                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.KeyUp.ToString() ||
-                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.KeyDown.ToString() ||
-                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == EnumsInternal.Interaction.ExecuteCommand.ToString()) &&
+                                   (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.PressKey.ToString() ||
+                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.KeyUp.ToString() ||
+                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.KeyDown.ToString() ||
+                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Game.Interaction.ExecuteCommand.ToString()) &&
                                     item.SafeElementValue() != string.Empty
                               select
                                  new // create anonymous type for every XMLunsignedShort matching criteria ..
@@ -421,7 +422,7 @@
                     // Load final values into datatable ..
                     binderKeyAction.LoadDataRow(new object[] 
                                                     {
-                                                        EnumsInternal.Game.VoiceAttack.ToString(), //Context
+                                                        Game.Name.VoiceAttack.ToString(), //Context
                                                         Keys.KeyType.ToString(), //KeyEnumerationType
                                                         xmlExtract.Commandstring, //BindingAction
                                                         StatusCode.NotApplicable, //Priority
