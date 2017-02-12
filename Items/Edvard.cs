@@ -115,5 +115,13 @@
             VoiceAttackCommandsForBoundActions,
             VoiceAttackCommandsComplete
         }
+
+        public enum BackupStatus
+        {
+            NotSelected,
+            HardFailure,
+            SoftFailure,
+            Success
+        }
     }
 }

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
+// set of attributes. Change these attribute values to modify the Information
 // associated with an assembly.
 [assembly: AssemblyTitle("Application")]
 [assembly: AssemblyDescription("")]
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("8e8c8621-8761-4713-8fff-825b927f7ec5")]
 
-// Version information for an assembly consists of the following four values:
+// Version Information for an assembly consists of the following four values:
 //
 //      Major Version
 //      Minor Version 

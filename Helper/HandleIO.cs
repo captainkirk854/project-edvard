@@ -7,6 +7,7 @@
     using System.Security.AccessControl;
     using System.Security.Permissions;
     using System.Threading;
+    using Items;
 
     /// <summary>
     /// IO-related Helper Methods
@@ -278,6 +279,38 @@
 
             // return ..
             return latestBackupFileName;
+        }
+
+        /// <summary>
+        /// File Backup
+        /// </summary>
+        /// <param name="backupDirectory"></param>
+        /// <param name="filepath"></param>
+        /// <param name="backupCycle"></param>
+        /// <param name="backupFilenameLeftPadSize"></param>
+        /// <returns></returns>
+        public static Edvard.BackupStatus SequentialFileBackup(string backupDirectory, string filepath, int backupCycle, int backupFilenameLeftPadSize)
+        {
+            // Initialise
+            if (backupDirectory == null) { return Edvard.BackupStatus.NotSelected; }
+
+            // Validate ..
+            if (HandleIO.ValidateFilepath(backupDirectory))
+            {
+                // Backup ..
+                if (HandleIO.BackupFile(HandleIO.CopyFile(filepath, backupDirectory), backupCycle, backupFilenameLeftPadSize) == string.Empty)
+                {
+                    return Edvard.BackupStatus.HardFailure;
+                }
+                else
+                {
+                    return Edvard.BackupStatus.Success;
+                }
+            }
+            else
+            {
+                return Edvard.BackupStatus.SoftFailure;
+            }
         }
 
         /// <summary>

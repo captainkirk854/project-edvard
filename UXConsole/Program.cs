@@ -37,16 +37,27 @@
             string argDirectoryPathBackup = commands.Parse(Edvard.ArgOption.backup.ToString(), true);
             string argDirectoryPathAnalysis = commands.Parse(Edvard.ArgOption.analysis.ToString(), true);
             string argAnalysisFileFormat = commands.Parse(Edvard.ArgOption.format.ToString());
-            bool argCreateReferenceTag = Convert.ToBoolean(commands.Parse(Edvard.ArgOption.tag.ToString()));
             string argFilePathDictionaryWrite = commands.Parse(Edvard.ArgOption.export.ToString(), true);
             string argFilePathDictionaryRead = commands.Parse(Edvard.ArgOption.import.ToString(), true);
             string argSample = commands.Parse(Edvard.ArgOption.sample.ToString());
+            bool argCreateReferenceTag = Convert.ToBoolean(commands.Parse(Edvard.ArgOption.tag.ToString()));
 
-            // Specials 
-            if ((argDirectoryPathBackup != null) && (argDirectoryPathBackup.ToLower() == DesktopKeyword)) { argDirectoryPathBackup = UserDesktop; }
-            if ((argDirectoryPathAnalysis != null) && (argDirectoryPathAnalysis.ToLower() == DesktopKeyword)) { argDirectoryPathAnalysis = UserDesktop; }
-            if ((argFilePathDictionaryWrite != null) && (argFilePathDictionaryWrite.ToLower() == DesktopKeyword)) { argFilePathDictionaryWrite = UserDesktop; }
-            if ((argFilePathDictionaryRead != null) && (argFilePathDictionaryRead.ToLower() == DesktopKeyword)) { argFilePathDictionaryRead = UserDesktop; }
+            // Specials for arguments containing file paths ..
+            if (argDirectoryPathBackup == "true") { argDirectoryPathBackup = null; }
+            if (argDirectoryPathAnalysis == "true") { argDirectoryPathAnalysis = null; }
+            if (argFilePathDictionaryWrite == "true") { argFilePathDictionaryWrite = null; }
+            if (argFilePathDictionaryRead == "true") { argFilePathDictionaryRead = null; }
+            try
+            {
+                if (argDirectoryPathBackup.ToLower() == DesktopKeyword) { argDirectoryPathBackup = UserDesktop; }
+                if (argDirectoryPathAnalysis.ToLower() == DesktopKeyword) { argDirectoryPathAnalysis = UserDesktop; }
+                if (argFilePathDictionaryWrite.ToLower() == DesktopKeyword) { argFilePathDictionaryWrite = UserDesktop; }
+                if (argFilePathDictionaryRead.ToLower() == DesktopKeyword) { argFilePathDictionaryRead = UserDesktop; }
+            }
+            catch
+            { }
+
+            // Default to CSV format if analysis format not defined ..
             argAnalysisFileFormat = argAnalysisFileFormat == null ? Edvard.ArgSubOption.csv.ToString() : argAnalysisFileFormat;
             #endregion
 
@@ -104,8 +115,8 @@
                 Console.WriteLine("Using internal test data ..");
 
                 // Point to project sample (not a resource as such) data ..
-                eliteDangerousBinds = GetVisualStudioProjectBaseDirectory() + "\\Sample" + "\\ED01.binds";
-                voiceAttackProfile = GetVisualStudioProjectBaseDirectory() + "\\Sample" + "\\VA03.vap";
+                eliteDangerousBinds = VisualStudio.ProjectBaseDirectory + "\\Sample" + "\\ED01.binds";
+                voiceAttackProfile = VisualStudio.ProjectBaseDirectory + "\\Sample" + "\\VA03.vap";
             }
             
             // Final Check ..
@@ -133,6 +144,12 @@
                 Console.WriteLine("Action Exchange Dictionary is invalid");
                 PressIt();
                 Environment.Exit(0);
+            }
+
+            // Optional arg: Backup
+            if (argDirectoryPathBackup == null)
+            {
+                Console.WriteLine("unused option: /" + Edvard.ArgOption.backup.ToString());
             }
 
             // Optional arg: Dictionary export
@@ -173,7 +190,7 @@
                     Console.WriteLine("Attempting VoiceAttack Profile update ..");
 
                     // Backup (optional) ..
-                    SequentialFileBackup(argDirectoryPathBackup, voiceAttackProfile);
+                    Console.WriteLine("Backup Status: [{0}]", HandleIO.SequentialFileBackup(argDirectoryPathBackup, voiceAttackProfile, BackupCycle, BackupFilenameLeftPadSize).ToString());
 
                     // Attempt synchronisation update ..
                     KeyBindingWriterVoiceAttack newVoiceAttack = new KeyBindingWriterVoiceAttack();
@@ -194,7 +211,7 @@
                     Console.WriteLine("Attempting Elite Dangerous Binds update ..");
 
                     // Backup (optional) ..
-                    SequentialFileBackup(argDirectoryPathBackup, eliteDangerousBinds);
+                    Console.WriteLine("Backup Status: [{0}]", HandleIO.SequentialFileBackup(argDirectoryPathBackup, eliteDangerousBinds, BackupCycle, BackupFilenameLeftPadSize).ToString());
 
                     // Attempt synchronisation update ..
                     KeyBindingWriterEliteDangerous newEliteDangerous = new KeyBindingWriterEliteDangerous();
@@ -207,7 +224,7 @@
                 #endregion
 
                 #region [Analysis]
-                // Re-read Voice Attack Commands and Elite Dangerous Binds for analysis information ..
+                // Re-read Voice Attack Commands and Elite Dangerous Binds for analysis Information ..
                 Console.WriteLine(System.Environment.NewLine);
                 if (HandleIO.ValidateFilepath(argDirectoryPathAnalysis) && HandleIO.CreateDirectory(argDirectoryPathAnalysis, false))
                 {
@@ -387,28 +404,6 @@
         #endregion
 
         /// <summary>
-        /// File Backup
-        /// </summary>
-        /// <param name="backupDirectory"></param>
-        /// <param name="filepath"></param>
-        private static void SequentialFileBackup(string backupDirectory, string filepath)
-        {
-            // Validate ..
-            if (HandleIO.ValidateFilepath(backupDirectory))
-            {
-                // Backup ..
-                if (HandleIO.BackupFile(HandleIO.CopyFile(filepath, backupDirectory), BackupCycle, BackupFilenameLeftPadSize) == string.Empty)
-                {
-                    Console.WriteLine("Backup attempt: failed");
-                }
-            }
-            else
-            {
-                Console.WriteLine("unused option: /{0}", Edvard.ArgOption.backup.ToString());
-            }
-        }
-
-        /// <summary>
         /// Consistent Exit
         /// </summary>
         private static void ConsistentExit()
@@ -416,15 +411,6 @@
             ShowUsage();
             PressIt();
             Environment.Exit(0);
-        }
-
-        /// <summary>
-        /// Crude way of getting current Visual Studio project base directory
-        /// </summary>
-        /// <returns></returns>
-        private static string GetVisualStudioProjectBaseDirectory()
-        {
-            return AppDomain.CurrentDomain.BaseDirectory.Replace("Debug", string.Empty).Replace("Release", string.Empty).Replace("bin", string.Empty).Replace("\\\\\\", string.Empty);
         }
 
         /// <summary>

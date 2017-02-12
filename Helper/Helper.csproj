@@ -49,6 +49,7 @@
     <Compile Include="TableShape.cs" />
     <Compile Include="HandleIO.cs" />
     <Compile Include="HandleXml.cs" />
+    <Compile Include="VisualStudio.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Items\Items.csproj">
