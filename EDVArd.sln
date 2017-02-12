@@ -58,8 +58,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "results", "results", "{E5A6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set02", "Set02", "{4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1}"
 	ProjectSection(SolutionItems) = preProject
-		Data\Test\Set02\2.0 Orion - Guardians Full House with UTF16.vap = Data\Test\Set02\2.0 Orion - Guardians Full House with UTF16.vap
 		Data\Test\Set02\HOTAS and Wireless Gamepad.binds = Data\Test\Set02\HOTAS and Wireless Gamepad.binds
+		Data\Test\Set02\Orion 2.0 Guardians Full House with UTF16.vap = Data\Test\Set02\Orion 2.0 Guardians Full House with UTF16.vap
 	EndProjectSection
 EndProject
 Global

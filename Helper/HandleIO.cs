@@ -205,8 +205,8 @@
         /// <remarks>
         ///  Rework of:
         ///     ref: http://www.rajapet.com/2014/03/a-file-versioning-helper-class-in-c-to-make-a-backup-copy-of-a-file-and-keep-the-last-n-copies-of-that-file.htm/amp
-        ///  Backup files have the name filename.exe.###
-        ///   ### = zero justified sequence number starting at 1
+        ///  Backup files have the name filename.exe.[###]
+        ///         [###] = zero justified sequence number starting at 1
         ///  Can get unexpected results (not fatal) when files exceed format limits
         /// </remarks>
         /// <param name="fileName"></param>
@@ -342,6 +342,50 @@
             {
                 printProcess.Kill();
             }
+        }
+
+        /// <summary>
+        /// Get correctly-cased directory path if directory exists
+        /// </summary>
+        /// <remarks>
+        /// rework of: http://stackoverflow.com/questions/478826/c-sharp-filepath-recasing/479198#479198
+        /// removed its recursive behaviour
+        /// </remarks>
+        /// <param name="directory"></param>
+        /// <returns></returns>
+        public static string GetCaseSensitiveDirectoryPath(string directory)
+        {
+            // Initialise ..
+            DirectoryInfo dirInfo = new DirectoryInfo(directory);
+            if (!dirInfo.Exists) { return dirInfo.Name; }
+
+            string correctCaseCurrentDirectory = string.Empty;
+            string correctCaseDirectoryPath = string.Empty;
+            string rootDir = dirInfo.Root.ToString();
+
+            // Climb directory filetree to ancestral root ..
+            while (dirInfo != null)
+            {
+                try
+                {
+                    // Get correctly capitalised name of current directory ..
+                    correctCaseCurrentDirectory = dirInfo.Parent.GetDirectories(dirInfo.Name)[0].ToString();
+
+                    // Move to parent directory ..
+                    dirInfo = dirInfo.Parent;
+
+                    // Construct correctly capitalised directory path one directory at a time ..
+                    correctCaseDirectoryPath = Path.Combine(correctCaseCurrentDirectory, correctCaseDirectoryPath);
+                }
+                catch
+                {
+                    // reached ancestral root, prepend to constructed directory ..
+                    correctCaseDirectoryPath = Path.Combine(rootDir, correctCaseDirectoryPath);
+                    dirInfo = null;
+                }
+            }
+
+            return correctCaseDirectoryPath;
         }
     }
 }

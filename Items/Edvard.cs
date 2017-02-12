@@ -85,7 +85,7 @@
             format,
             backup,
             help,
-            sample
+            test
         }
 
         /// <summary>

@@ -23,9 +23,6 @@
         // Support for crude test harness ..
         private static readonly string InternalTestRootDirectory = AppRuntime.SolutionDirectory + "\\Data" + "\\Test";
         private static readonly string InternalTestSetAnalysisResultsDirectory = "results";
-
-        // Test-set values ..
-        private static readonly string InternalTestSet = "Set01";
         #endregion
 
         public static void Main(string[] args)
@@ -48,7 +45,7 @@
             string argAnalysisFileFormat = commands.Parse(Edvard.ArgOption.format.ToString());
             string argFilePathDictionaryWrite = commands.Parse(Edvard.ArgOption.export.ToString(), true);
             string argFilePathDictionaryRead = commands.Parse(Edvard.ArgOption.import.ToString(), true);
-            string argSample = commands.Parse(Edvard.ArgOption.sample.ToString());
+            string argTestSet = commands.Parse(Edvard.ArgOption.test.ToString());
             bool argCreateReferenceTag = Convert.ToBoolean(commands.Parse(Edvard.ArgOption.tag.ToString()));
 
             // Specials for arguments containing file paths ..
@@ -90,8 +87,8 @@
                 ConsistentExit();
             }
 
-            // Determine file-type (user/sample) to be processed ..
-            if (argSample == null)
+            // Determine file-type (user/test-test) to be processed ..
+            if (argTestSet == null)
             {
                 if (File.Exists(argFilePathBinds))
                 {
@@ -121,10 +118,11 @@
             }
             else
             {
-                Console.WriteLine("Using internal test data ..");
+                Console.WriteLine("Using internal test data (test-set: {0}) ..", argTestSet);
+                Console.WriteLine();
 
-                // Select first file of each type ..
-                string internalTestDirectory = Path.Combine(InternalTestRootDirectory, InternalTestSet);
+                // Select first file of each type as test files to use ..
+                string internalTestDirectory = HandleIO.GetCaseSensitiveDirectoryPath(Path.Combine(InternalTestRootDirectory, argTestSet));
                 eliteDangerousBinds = Directory.GetFiles(internalTestDirectory, "*.binds")[0];
                 voiceAttackProfile = Directory.GetFiles(internalTestDirectory, "*.vap")[0];
 
