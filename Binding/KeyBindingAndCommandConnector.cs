@@ -116,8 +116,8 @@
             this.relationship.Add("((Fighter Follow Me))", "OrderFollow");
             this.relationship.Add("((Fighter Hold Fire))", "OrderHoldFire");
             this.relationship.Add("((Fighter Hold Position))", "OrderHoldPosition");
-            this.relationship.Add("((Fighter Recall))", "???");
-            this.relationship.Add("((Fighter Recovery))", "???");
+            this.relationship.Add("((Fighter Recall))", "OrderRequestDock");
+            this.relationship.Add("((Fighter Recovery))", "OrderRequestDock");
             ////-----------------------------------------------------------------------------------------------------
             this.relationship.Add("((Flight Assist))", "ToggleFlightAssist");
             this.relationship.Add("((Look Ahead))", "HeadLookReset");
