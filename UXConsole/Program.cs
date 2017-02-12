@@ -115,8 +115,8 @@
                 Console.WriteLine("Using internal test data ..");
 
                 // Point to project sample (not a resource as such) data ..
-                eliteDangerousBinds = VisualStudio.ProjectBaseDirectory + "\\Sample" + "\\ED01.binds";
-                voiceAttackProfile = VisualStudio.ProjectBaseDirectory + "\\Sample" + "\\VA03.vap";
+                eliteDangerousBinds = AppRuntime.ProjectDirectory + "\\Sample" + "\\ED01.binds";
+                voiceAttackProfile = AppRuntime.ProjectDirectory + "\\Sample" + "\\VA03.vap";
             }
             
             // Final Check ..
