@@ -31,12 +31,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoiceAttack", "VoiceAttack"
 		Data\Samples\VoiceAttack\1.6.5 Full House Profile HOTAS.vap = Data\Samples\VoiceAttack\1.6.5 Full House Profile HOTAS.vap
 		Data\Samples\VoiceAttack\Elite Dangerous.vap = Data\Samples\VoiceAttack\Elite Dangerous.vap
 		Data\Samples\VoiceAttack\Orion 2.0 Full House.vap = Data\Samples\VoiceAttack\Orion 2.0 Full House.vap
+		Data\Samples\VoiceAttack\Orion 2.0 Guardians Full House with UTF16.vap = Data\Samples\VoiceAttack\Orion 2.0 Guardians Full House with UTF16.vap
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EliteDangerous", "EliteDangerous", "{A7E44E31-3AF7-4E2A-859A-D9C0E0152874}"
 	ProjectSection(SolutionItems) = preProject
 		Data\Samples\EliteDangerous\Basic.binds = Data\Samples\EliteDangerous\Basic.binds
 		Data\Samples\EliteDangerous\Goodkeys.binds = Data\Samples\EliteDangerous\Goodkeys.binds
+		Data\Samples\EliteDangerous\HOTAS and Wireless Gamepad.binds = Data\Samples\EliteDangerous\HOTAS and Wireless Gamepad.binds
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set01", "Set01", "{B49C3CC2-281F-424B-AE26-8EB15F656DEA}"
