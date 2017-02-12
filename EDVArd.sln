@@ -36,12 +36,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EliteDangerous", "EliteDangerous", "{A7E44E31-3AF7-4E2A-859A-D9C0E0152874}"
 	ProjectSection(SolutionItems) = preProject
 		Data\Samples\EliteDangerous\Basic.binds = Data\Samples\EliteDangerous\Basic.binds
-		Data\Samples\EliteDangerous\GoodKeys.binds = Data\Samples\EliteDangerous\GoodKeys.binds
+		Data\Samples\EliteDangerous\Goodkeys.binds = Data\Samples\EliteDangerous\Goodkeys.binds
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set01", "Set01", "{B49C3CC2-281F-424B-AE26-8EB15F656DEA}"
 	ProjectSection(SolutionItems) = preProject
-		Data\Test\Set01\GoodKeys.binds = Data\Test\Set01\GoodKeys.binds
+		Data\Test\Set01\Goodkeys.binds = Data\Test\Set01\Goodkeys.binds
 		Data\Test\Set01\Orion 2.0 Full House.vap = Data\Test\Set01\Orion 2.0 Full House.vap
 	EndProjectSection
 EndProject
@@ -54,6 +54,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "results", "results", "{E5A6
 		Data\Test\Set01\results\VoiceAttack-BindableActions.csv = Data\Test\Set01\results\VoiceAttack-BindableActions.csv
 		Data\Test\Set01\results\VoiceAttack-KeyBoundActions.csv = Data\Test\Set01\results\VoiceAttack-KeyBoundActions.csv
 		Data\Test\Set01\results\VoiceAttack-RelatedCommands.csv = Data\Test\Set01\results\VoiceAttack-RelatedCommands.csv
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set02", "Set02", "{4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Test\Set02\2.0 Orion - Guardians Full House with UTF16.vap = Data\Test\Set02\2.0 Orion - Guardians Full House with UTF16.vap
+		Data\Test\Set02\HOTAS and Wireless Gamepad.binds = Data\Test\Set02\HOTAS and Wireless Gamepad.binds
 	EndProjectSection
 EndProject
 Global
@@ -98,5 +104,6 @@ Global
 		{A7E44E31-3AF7-4E2A-859A-D9C0E0152874} = {87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}
 		{B49C3CC2-281F-424B-AE26-8EB15F656DEA} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
 		{E5A60F9D-EA45-47A0-BB83-2A3ADFB429AD} = {B49C3CC2-281F-424B-AE26-8EB15F656DEA}
+		{4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
 	EndGlobalSection
 EndGlobal

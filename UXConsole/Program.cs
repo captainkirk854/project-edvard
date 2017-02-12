@@ -26,8 +26,6 @@
 
         // Test-set values ..
         private static readonly string InternalTestSet = "Set01";
-        private static readonly string InternalTestSetEliteDangerousBinds = "Goodkeys.binds";
-        private static readonly string InternalTestSetVoiceAttackProfile = "Orion 2.0 Full House.vap";
         #endregion
 
         public static void Main(string[] args)
@@ -123,14 +121,14 @@
             }
             else
             {
-                // Use preset test data ..
-                string internalTestDirectory = Path.Combine(InternalTestRootDirectory, InternalTestSet);
-
                 Console.WriteLine("Using internal test data ..");
-                eliteDangerousBinds = Path.Combine(internalTestDirectory, InternalTestSetEliteDangerousBinds);
-                voiceAttackProfile = Path.Combine(internalTestDirectory, InternalTestSetVoiceAttackProfile);
 
-                // Force analysis result(s) to internal test area ..
+                // Select first file of each type ..
+                string internalTestDirectory = Path.Combine(InternalTestRootDirectory, InternalTestSet);
+                eliteDangerousBinds = Directory.GetFiles(internalTestDirectory, "*.binds")[0];
+                voiceAttackProfile = Directory.GetFiles(internalTestDirectory, "*.vap")[0];
+
+                // Force redirect of analysis result(s) to internal test area ..
                 argDirectoryPathAnalysis = Path.Combine(internalTestDirectory, InternalTestSetAnalysisResultsDirectory);
                 argAnalysisFileFormat = Edvard.ArgSubOption.csv.ToString();
             }
