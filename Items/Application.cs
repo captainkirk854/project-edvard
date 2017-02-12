@@ -1,7 +1,7 @@
 ﻿namespace Items
 {
     /// <summary>
-    /// Edvard-related Enumerations for Elite Dangerous and Voice Attack
+    /// Edvard-related Enumerations for Elite Dangerous, Voice Attack and Edvard ..
     /// </summary>
     public class Application
     {
@@ -11,7 +11,8 @@
         public enum Name
         {
             EliteDangerous,
-            VoiceAttack
+            VoiceAttack,
+            Edvard
         }
 
         /// <summary>

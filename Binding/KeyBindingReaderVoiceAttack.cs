@@ -81,7 +81,7 @@
         /// </summary>
         /// <param name="consolidatedBoundCommands"></param>
         /// <returns></returns>
-        public DataTable GetAssociatedCommandStrings(DataTable consolidatedBoundCommands)
+        public DataTable GetRelatedCommandStrings(DataTable consolidatedBoundCommands)
         {
             // Initialise ..
             DataTable associatedCommands = TableShape.AssociatedCommands();

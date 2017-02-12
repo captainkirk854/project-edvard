@@ -110,10 +110,10 @@
         public enum AnalysisFile
         {
             BindableActions,
-            BoundActions,
-            ConsolidatedActions,
-            VoiceAttackCommandsForBoundActions,
-            VoiceAttackCommandsComplete
+            KeyBoundActions,
+            ConsolidatedKeyBoundActions,
+            RelatedCommands,
+            AllCommands
         }
 
         public enum BackupStatus

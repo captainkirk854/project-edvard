@@ -19,11 +19,16 @@
         private static readonly string DefaultVoiceAttackProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
         private static readonly string UserDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
 
+        #region [Internal Test Settings]
         // Support for crude test harness ..
         private static readonly string InternalTestRootDirectory = AppRuntime.SolutionDirectory + "\\Data" + "\\Test";
-        private static readonly string InternalTestSetDirectory = "Set01";
+        private static readonly string InternalTestSetAnalysisResultsDirectory = "results";
+
+        // Test-set values ..
+        private static readonly string InternalTestSet = "Set01";
         private static readonly string InternalTestSetEliteDangerousBinds = "Goodkeys.binds";
         private static readonly string InternalTestSetVoiceAttackProfile = "Orion 2.0 Full House.vap";
+        #endregion
 
         public static void Main(string[] args)
         {
@@ -119,11 +124,15 @@
             else
             {
                 // Use preset test data ..
-                string internalTestDirectory = Path.Combine(InternalTestRootDirectory, InternalTestSetDirectory);
+                string internalTestDirectory = Path.Combine(InternalTestRootDirectory, InternalTestSet);
 
                 Console.WriteLine("Using internal test data ..");
                 eliteDangerousBinds = Path.Combine(internalTestDirectory, InternalTestSetEliteDangerousBinds);
                 voiceAttackProfile = Path.Combine(internalTestDirectory, InternalTestSetVoiceAttackProfile);
+
+                // Force analysis result(s) to internal test area ..
+                argDirectoryPathAnalysis = Path.Combine(internalTestDirectory, InternalTestSetAnalysisResultsDirectory);
+                argAnalysisFileFormat = Edvard.ArgSubOption.csv.ToString();
             }
             
             // Final Check ..
@@ -231,8 +240,9 @@
                 #endregion
 
                 #region [Analysis]
-                // Re-read Voice Attack Commands and Elite Dangerous Binds for analysis Information ..
                 Console.WriteLine(System.Environment.NewLine);
+
+                // Re-read Voice Attack Commands and Elite Dangerous Binds for analysis Information ..
                 if (HandleIO.ValidateFilepath(argDirectoryPathAnalysis) && HandleIO.CreateDirectory(argDirectoryPathAnalysis, false))
                 {
                     Console.WriteLine("Preparing analysis data ..");
@@ -241,49 +251,52 @@
                     KeyBindingReaderEliteDangerous eliteDangerous = new KeyBindingReaderEliteDangerous(eliteDangerousBinds);
                     KeyBindingReaderVoiceAttack voiceAttack = new KeyBindingReaderVoiceAttack(voiceAttackProfile);
 
-                    // Get all bindable action(s) ..
-                    DataTable bindableEliteDangerous = eliteDangerous.GetBindableCommands();
-                    DataTable bindableVoiceAttack = voiceAttack.GetBindableCommands();
+                    string sortOrder = string.Empty;
 
-                    // Get all bound action(s) ..
-                    DataTable boundEliteDangerous = eliteDangerous.GetBoundCommands();
-                    DataTable boundVoiceAttack = voiceAttack.GetBoundCommands();
+                    // Elite Dangerous ..
+                    sortOrder = Items.Edvard.Column.KeyAction.ToString() + ',' + Items.Edvard.Column.DevicePriority.ToString();
+                    DataTable bindableEliteDangerous = eliteDangerous.GetBindableCommands().Sort(sortOrder);
+                    DataTable keyBoundEliteDangerous = eliteDangerous.GetBoundCommands().Sort(sortOrder);
 
-                    // Get consolidated action(s) ..
-                    DataTable consolidatedBoundActions = KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup);
-                    consolidatedBoundActions = consolidatedBoundActions.Sort(Items.Edvard.Column.EliteDangerousAction.ToString() + " asc");
+                    // Voice Attack ..
+                    sortOrder = Items.Edvard.Column.KeyAction.ToString();
+                    DataTable bindableVoiceAttack = voiceAttack.GetBindableCommands().Sort(sortOrder);
+                    DataTable keyBoundVoiceAttack = voiceAttack.GetBoundCommands().Sort(sortOrder);
 
-                    // Get associated Voice Attack Command String(s) for bound action(s) ..
-                    DataTable associatedVoiceAttackCommands = voiceAttack.GetAssociatedCommandStrings(consolidatedBoundActions);
+                    sortOrder = Items.Edvard.Column.VoiceAttackCategory.ToString() + ',' + Items.Edvard.Column.VoiceAttackCommand.ToString();
+                    DataTable allVoiceAttackCommands = voiceAttack.GetCommandStringsForAllCategories().Sort(sortOrder);
 
-                    // Get all possible Voice Attack Command String(s) ..
-                    DataTable allVoiceAttackCommands = voiceAttack.GetCommandStringsForAllCategories();
+                    // Consolidated ..
+                    sortOrder = Items.Edvard.Column.EliteDangerousAction.ToString() + ',' + Items.Edvard.Column.VoiceAttackAction.ToString();
+                    DataTable consolidatedBoundActions = KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup).Sort(sortOrder);
+                    DataTable relatedVoiceAttackCommands = voiceAttack.GetRelatedCommandStrings(consolidatedBoundActions).Sort(sortOrder);
 
                     // Create appropriate type of analysis file ..
                     try
                     {
                         Console.WriteLine("Creating '{0}' analysis file(s) in {1}", argAnalysisFileFormat, argDirectoryPathAnalysis);
+                        const char Dlm = '-';
 
                         switch (HandleStrings.ParseStringToEnum<Edvard.ArgSubOption>(argAnalysisFileFormat))
                         {
                             case Edvard.ArgSubOption.csv:
-                                bindableEliteDangerous.CreateCSV(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + '.' + Edvard.AnalysisFile.BindableActions.ToString());
-                                bindableVoiceAttack.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + '.' + Edvard.AnalysisFile.BindableActions.ToString());
-                                boundEliteDangerous.CreateCSV(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + '.' + Edvard.AnalysisFile.BoundActions.ToString());
-                                boundVoiceAttack.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + '.' + Edvard.AnalysisFile.BoundActions.ToString());
-                                consolidatedBoundActions.CreateCSV(argDirectoryPathAnalysis, Edvard.AnalysisFile.ConsolidatedActions.ToString());
-                                associatedVoiceAttackCommands.CreateCSV(argDirectoryPathAnalysis, Edvard.AnalysisFile.VoiceAttackCommandsForBoundActions.ToString());
-                                allVoiceAttackCommands.CreateCSV(argDirectoryPathAnalysis, Edvard.AnalysisFile.VoiceAttackCommandsComplete.ToString());
+                                bindableEliteDangerous.CreateCSV(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.BindableActions.ToString());
+                                bindableVoiceAttack.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.BindableActions.ToString());
+                                keyBoundEliteDangerous.CreateCSV(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.KeyBoundActions.ToString());
+                                keyBoundVoiceAttack.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.KeyBoundActions.ToString());
+                                consolidatedBoundActions.CreateCSV(argDirectoryPathAnalysis, Application.Name.Edvard.ToString() + Dlm + Edvard.AnalysisFile.ConsolidatedKeyBoundActions.ToString());
+                                relatedVoiceAttackCommands.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.RelatedCommands.ToString());
+                                allVoiceAttackCommands.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.AllCommands.ToString());
                                 break;
 
                             case Edvard.ArgSubOption.htm:
-                                bindableEliteDangerous.CreateHTM(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + '.' + Edvard.AnalysisFile.BindableActions.ToString());
-                                bindableVoiceAttack.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + '.' + Edvard.AnalysisFile.BindableActions.ToString());
-                                boundEliteDangerous.CreateHTM(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + '.' + Edvard.AnalysisFile.BoundActions.ToString());
-                                boundVoiceAttack.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + '.' + Edvard.AnalysisFile.BoundActions.ToString());
-                                consolidatedBoundActions.CreateHTM(argDirectoryPathAnalysis, Edvard.AnalysisFile.ConsolidatedActions.ToString());
-                                associatedVoiceAttackCommands.CreateHTM(argDirectoryPathAnalysis, Edvard.AnalysisFile.VoiceAttackCommandsForBoundActions.ToString());
-                                allVoiceAttackCommands.CreateHTM(argDirectoryPathAnalysis, Edvard.AnalysisFile.VoiceAttackCommandsComplete.ToString());
+                                bindableEliteDangerous.CreateHTM(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.BindableActions.ToString());
+                                bindableVoiceAttack.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.BindableActions.ToString());
+                                keyBoundEliteDangerous.CreateHTM(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.KeyBoundActions.ToString());
+                                keyBoundVoiceAttack.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.KeyBoundActions.ToString());
+                                consolidatedBoundActions.CreateHTM(argDirectoryPathAnalysis, Application.Name.Edvard.ToString() + Dlm + Edvard.AnalysisFile.ConsolidatedKeyBoundActions.ToString());
+                                relatedVoiceAttackCommands.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.RelatedCommands.ToString());
+                                allVoiceAttackCommands.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.AllCommands.ToString());
                                 break;
                         }
                     }
