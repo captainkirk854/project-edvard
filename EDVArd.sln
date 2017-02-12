@@ -20,10 +20,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}"
-	ProjectSection(SolutionItems) = preProject
-		Data\Test\GoodKeys.binds = Data\Test\GoodKeys.binds
-		Data\Test\Orion 2.0 Full House.vap = Data\Test\Orion 2.0 Full House.vap
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Downloads", "Downloads", "{7B75CA78-3478-4178-B565-46D8F24519CF}"
 	ProjectSection(SolutionItems) = preProject
@@ -41,6 +37,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EliteDangerous", "EliteDang
 	ProjectSection(SolutionItems) = preProject
 		Data\Samples\EliteDangerous\Basic.binds = Data\Samples\EliteDangerous\Basic.binds
 		Data\Samples\EliteDangerous\GoodKeys.binds = Data\Samples\EliteDangerous\GoodKeys.binds
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set01", "Set01", "{B49C3CC2-281F-424B-AE26-8EB15F656DEA}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Test\Set01\GoodKeys.binds = Data\Test\Set01\GoodKeys.binds
+		Data\Test\Set01\Orion 2.0 Full House.vap = Data\Test\Set01\Orion 2.0 Full House.vap
 	EndProjectSection
 EndProject
 Global
@@ -83,5 +85,6 @@ Global
 		{7B75CA78-3478-4178-B565-46D8F24519CF} = {A6168245-04D4-44B7-B079-254F580A0E60}
 		{9137BA1C-B06D-4677-A243-76B1E44D636F} = {87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}
 		{A7E44E31-3AF7-4E2A-859A-D9C0E0152874} = {87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}
+		{B49C3CC2-281F-424B-AE26-8EB15F656DEA} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
 	EndGlobalSection
 EndGlobal

@@ -19,6 +19,12 @@
         private static readonly string DefaultVoiceAttackProfilesDirectory = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%") + "\\VoiceAttack\\Sounds\\hcspack\\Profiles";
         private static readonly string UserDesktop = Environment.ExpandEnvironmentVariables("%UserProfile%") + "\\Desktop";
 
+        // Support for crude test harness ..
+        private static readonly string InternalTestRootDirectory = AppRuntime.SolutionDirectory + "\\Data" + "\\Test";
+        private static readonly string InternalTestSetDirectory = "Set01";
+        private static readonly string InternalTestSetEliteDangerousBinds = "Goodkeys.binds";
+        private static readonly string InternalTestSetVoiceAttackProfile = "Orion 2.0 Full House.vap";
+
         public static void Main(string[] args)
         {
             #region [Command-Line Argument Initialisation]
@@ -112,11 +118,12 @@
             }
             else
             {
-                Console.WriteLine("Using internal test data ..");
+                // Use preset test data ..
+                string internalTestDirectory = Path.Combine(InternalTestRootDirectory, InternalTestSetDirectory);
 
-                // Point to project sample (not a resource as such) data ..
-                eliteDangerousBinds = AppRuntime.ProjectDirectory + "\\Sample" + "\\ED01.binds";
-                voiceAttackProfile = AppRuntime.ProjectDirectory + "\\Sample" + "\\VA03.vap";
+                Console.WriteLine("Using internal test data ..");
+                eliteDangerousBinds = Path.Combine(internalTestDirectory, InternalTestSetEliteDangerousBinds);
+                voiceAttackProfile = Path.Combine(internalTestDirectory, InternalTestSetVoiceAttackProfile);
             }
             
             // Final Check ..
