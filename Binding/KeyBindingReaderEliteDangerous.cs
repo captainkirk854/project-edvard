@@ -37,16 +37,13 @@
         public DataTable GetBindableCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetBindableActions(ref xCfg);
+            DataTable bindable = this.GetBindableActions(ref xCfg);
 
-            // Add column ..
-            primary.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            // modify table ..
+            bindable.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            bindable.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
 
-            // Add column ..
-            primary.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
-
-            // Return merged DataTable contents ..
-            return primary;
+            return bindable;
         }
 
         /// <summary>
@@ -62,10 +59,8 @@
             // Merge ..
             primary.Merge(secondary);
 
-            // Add column ..
+            // modify table ..
             primary.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
-
-            // Add column ..
             primary.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
 
             // Return merged DataTable contents ..
@@ -75,17 +70,32 @@
         /// <summary>
         /// Process Elite Dangerous Config File to return all possible bindable actions
         /// </summary>
+        /// <remarks>
+        ///   Keys can be in assigned with Primary or Secondary Priorities
+        ///   Format: XML
+        ///             o <Root/>
+        ///               |_ <things/>
+        ///                  |_<Primary/>
+        ///                     |_<Device/>
+        ///                     |_<Key/>
+        ///                  |_<Secondary/>
+        ///                     |_<Device/>
+        ///                     |_<Key/>         
+        /// </remarks>
         /// <param name="xdoc"></param>
         /// <returns></returns>
         private DataTable GetBindableActions(ref XDocument xdoc)
         {
             // Initialise ..
-            string[] devicePriority = { Application.EliteDangerousDevicePriority.Primary.ToString(), Application.EliteDangerousDevicePriority.Secondary.ToString() };
+            string[] devicePriority = 
+                                      { 
+                                          Application.EliteDangerousDevicePriority.Primary.ToString(), 
+                                          Application.EliteDangerousDevicePriority.Secondary.ToString() 
+                                      };
 
             // Datatable to hold tabulated XML contents ..
             DataTable bindableactions = TableShape.BindableActions();
 
-            // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             // Scan all child nodes from top-level node ..
             foreach (var childNode in xdoc.Element(XMLRoot).Elements())
             {
@@ -117,7 +127,7 @@
                     // Perform a 'union all' ...
                     var xmlExtracts = primaryDevices.Concat(secondaryDevices);
 
-                    // insert anonymous type row data (with some additional values) into DataTable ..
+                    // insert anonymous type row data (with additional values) ..
                     foreach (var xmlExtract in xmlExtracts)
                     {
                         bindableactions.LoadDataRow(new object[] 
@@ -188,7 +198,6 @@
             // Datatable to hold tabulated XML contents ..
             DataTable keyactionbinder = TableShape.KeyActionBinder();
 
-            // traverse config XML and gather pertinent element data arranged in row(s) of anonymous types ..
             // Scan all child nodes from top-level node ..
             foreach (var childNode in xdoc.Element(XMLRoot).Elements())
             {
@@ -227,7 +236,7 @@
                                              ModifierKeyValue = item.Element(devicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey) != string.Empty ? item.Element(devicePriority).Element(XMLModifier).SafeAttributeValue(XMLKey).Substring(4) : string.Empty
                                          };
 
-                    // insert anonymous type row data (with some additional values) into DataTable ..
+                    // insert anonymous type row data (with additional values) ..
                     foreach (var xmlExtract in xmlExtracts)
                     {
                         string customKeyId = childNode.Name + D +
@@ -249,7 +258,7 @@
                                                   xmlExtract.ModifierKeyValueFull;
                         }
 
-                        // Load final values into datatable ..
+                        // Load final values ..
                         keyactionbinder.LoadDataRow(new object[] 
                                                         {
                                                          Application.Name.EliteDangerous.ToString(), //Context
