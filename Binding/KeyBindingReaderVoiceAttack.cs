@@ -45,16 +45,14 @@
         public DataTable GetBindableCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetCommandStringsWithBoundKeys(ref this.xCfg);
+            DataTable bindable = this.GetCommandStringsWithAssociatedKeys(ref this.xCfg);
 
-            // Add column ..
-            primary.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
-
-            // Add column ..
-            primary.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
+            // modify table ..
+            bindable.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            bindable.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
-            return primary;
+            return bindable;
         }
 
         /// <summary>
@@ -64,20 +62,18 @@
         public DataTable GetBoundCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetKeyBindings(ref this.xCfg);
+            DataTable bound = this.GetKeyBindings(ref this.xCfg);
 
-            // Add column ..
-            primary.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
-
-            // Add column ..
-            primary.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
+            // modify table ..
+            bound.AddDefaultColumn(Edvard.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
+            bound.AddDefaultColumn(Edvard.Column.FilePath.ToString(), this.cfgFilePath);
 
             // return Datatable ..
-            return primary;
+            return bound;
         }
 
         /// <summary>
-        /// Get other commandStrings associated with a particular commandString
+        /// Get CommandStrings related to action CommandStrings
         /// </summary>
         /// <param name="consolidatedBoundCommands"></param>
         /// <returns></returns>
@@ -91,17 +87,17 @@
             foreach (DataRow consolidatedBoundCommand in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[Edvard.Column.VoiceAttackAction.ToString()]))
             {
                 // Get required field information ..
-                string voiceattackCommandString = consolidatedBoundCommand[Edvard.Column.VoiceAttackAction.ToString()].ToString();
-                string voiceattackActionId = consolidatedBoundCommand[Edvard.Column.VoiceAttackKeyId.ToString()].ToString();
-                string elitedangerousAction = consolidatedBoundCommand[Edvard.Column.EliteDangerousAction.ToString()].ToString();
+                string voiceAttackCommandString = consolidatedBoundCommand[Edvard.Column.VoiceAttackAction.ToString()].ToString();
+                string voiceAttackActionId = consolidatedBoundCommand[Edvard.Column.VoiceAttackKeyId.ToString()].ToString();
+                string eliteDangerousAction = consolidatedBoundCommand[Edvard.Column.EliteDangerousAction.ToString()].ToString();
                 string bindingSyncStatus = consolidatedBoundCommand[Edvard.Column.KeyUpdateRequired.ToString()].ToString() == Edvard.KeyUpdateRequired.NO.ToString() ? "synchronised" : "*attention required*";
-                string voiceattackFile = Path.GetFileName(consolidatedBoundCommand[Edvard.Column.VoiceAttackProfile.ToString()].ToString());
+                string voiceAttackFile = Path.GetFileName(consolidatedBoundCommand[Edvard.Column.VoiceAttackProfile.ToString()].ToString());
                 string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommand[Edvard.Column.EliteDangerousBinds.ToString()].ToString());
 
                 // Ignore duplicate commandStrings from those with multiple Action Ids ..
-                if (voiceattackCommandString != prevCommandString)
+                if (voiceAttackCommandString != prevCommandString)
                 {
-                    var associatedCommandStrings = this.GetCommandStringsFromCommandActionContext(ref this.xCfg, this.GetCommandIdFromCommandActionIdWithBoundKeys(ref this.xCfg, voiceattackActionId));
+                    var associatedCommandStrings = this.GetCommandStringsFromCommandActionContext(ref this.xCfg, this.GetCommandIdFromCommandActionIdWithBoundKeys(ref this.xCfg, voiceAttackActionId));
                     
                     string prevAssociatedCommandString = string.Empty;
                     foreach (var associatedCommandString in associatedCommandStrings)
@@ -111,11 +107,11 @@
                         {
                             associatedCommands.LoadDataRow(new object[] 
                                                            {
-                                                                voiceattackCommandString,
-                                                                elitedangerousAction,
+                                                                voiceAttackCommandString,
+                                                                eliteDangerousAction,
                                                                 associatedCommandString,
                                                                 bindingSyncStatus,
-                                                                voiceattackFile,
+                                                                voiceAttackFile,
                                                                 eliteDangerousFile
                                                            },
                                                            false);
@@ -125,7 +121,7 @@
                     }
                 }
 
-                prevCommandString = voiceattackCommandString;
+                prevCommandString = voiceAttackCommandString;
             }
 
             return associatedCommands;
@@ -159,11 +155,11 @@
         }
 
         /// <summary>
-        /// Parse Voice Attack Config File to get all Command Strings with actions already bound to keys
+        /// Parse Voice Attack Config File to get all Command Strings with valid Actions Types
         /// </summary>
         /// <param name="xdoc"></param>
         /// <returns></returns>
-        private DataTable GetCommandStringsWithBoundKeys(ref XDocument xdoc)
+        private DataTable GetCommandStringsWithAssociatedKeys(ref XDocument xdoc)
         {
             // Datatable to hold tabulated XML contents ..
             DataTable bindableactions = TableShape.BindableActions();
@@ -222,7 +218,7 @@
         {
             // Create list of required anonymous type .. 
             var xmlExtracts = new[] { new { CommandString = string.Empty, CommandCategory = string.Empty, ActionType = string.Empty } }.ToList();
-            xmlExtracts.Clear();
+            xmlExtracts.Clear(); // empty first row created whilst keeping anonymous type definition
 
             // Get Command String(s) for each Command Category ..
             foreach (var commandCategory in commandCategories)
@@ -342,7 +338,7 @@
         }
 
         /// <summary>
-        /// Parse Voice Attack Config File to get key details of all actions already bound to keys
+        /// Parse Voice Attack Config File to get key details of all actions already bound to a key code
         /// </summary>
         /// <remarks>
         ///   Format: XML
