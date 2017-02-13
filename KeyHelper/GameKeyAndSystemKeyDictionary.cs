@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// Initialise Mapping Dictionary for certain Name Keys: [Name -> WindowsForm]
+        /// Initialise Mapping Dictionary for certain named key codes: [Name o-o WindowsForm]
         /// </summary>
         /// <param name="game"></param>
         public void Initialise(Items.Application.Name game)
@@ -73,8 +73,15 @@
                 this.relationship.Add("RightShift", "RShiftKey");
                 this.relationship.Add("LeftControl", "LControlKey");
                 this.relationship.Add("RightControl", "RControlKey");
+                this.relationship.Add("LeftAlt", "LMenu");
+                this.relationship.Add("RightAlt", "RMenu");
                 this.relationship.Add("LeftBracket", "OemOpenBrackets");
                 this.relationship.Add("RightBracket", "Oem6");
+                this.relationship.Add("Semicolon", "Oem1");
+                this.relationship.Add("SemiColon", "Oem1");
+                this.relationship.Add("ForwardSlash", "OemQuestion");
+                this.relationship.Add("BackSlash", "OemBackSlash");
+                this.relationship.Add("Slash", "Oem5");
                 this.relationship.Add("Grave", "Oem8");
                 this.relationship.Add("ScrollLock", "Scroll");
                 this.relationship.Add("Dash", "Separator");
@@ -83,13 +90,8 @@
                 this.relationship.Add("Period", "OemPeriod");
                 this.relationship.Add("Comma", "Oemcomma");
                 this.relationship.Add("Equals", "Oemplus");
-                this.relationship.Add("Slash", "Oem5");
-                this.relationship.Add("Semicolon", "Oem1");
-                this.relationship.Add("SemiColon", "Oem1");
                 this.relationship.Add("Hash", "Oem7");
-                this.relationship.Add("ForwardSlash", "OemQuestion");
                 this.relationship.Add("Tilde", "OemTilde");
-                this.relationship.Add("BackSlash", "OemBackSlash");
             }
         }
 
