@@ -175,7 +175,8 @@
                               select
                                  new
                                  {
-                                     CommandString = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue()
+                                     CommandString = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
+                                     ActionType = item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value
                                  };
 
             // insert anonymous type row data (with some additional values) into DataTable (.Distinct() required as some Commands have multiple (modifier) key codes)
@@ -184,9 +185,10 @@
                 bindableactions.LoadDataRow(new object[] 
                                                 {
                                                     Application.Name.VoiceAttack.ToString(), //Context
-                                                    xmlExtract.CommandString, //BindingAction
-                                                    StatusCode.NotApplicable, // Device priority
-                                                    Application.Interaction.Keyboard.ToString() // Device binding is applied to
+                                                    xmlExtract.CommandString, //KeyAction
+                                                    xmlExtract.ActionType, //KeyActionType
+                                                    StatusCode.NotApplicable, //Device Priority
+                                                    StatusCode.NotApplicable //Device Type binding is applied to
                                                 }, 
                                                 false);
             }

@@ -133,9 +133,10 @@
                         bindableactions.LoadDataRow(new object[] 
                                                         {
                                                          Application.Name.EliteDangerous.ToString(), //Context
-                                                         xmlExtract.BindingAction, //BindingAction
-                                                         xmlExtract.Priority, // Device priority
-                                                         xmlExtract.DeviceType // Device binding applied to
+                                                         xmlExtract.BindingAction, //KeyAction
+                                                         StatusCode.NotApplicable, //KeyActionType
+                                                         xmlExtract.Priority, //Device Priority
+                                                         xmlExtract.DeviceType //Device Type binding is applied to
                                                         }, 
                                                         false);
                     }

@@ -36,6 +36,7 @@
             // Define its structure ..
             table.Columns.Add(Edvard.Column.Context.ToString(), typeof(string));
             table.Columns.Add(Edvard.Column.KeyAction.ToString(), typeof(string));
+            table.Columns.Add(Edvard.Column.KeyActionType.ToString(), typeof(string));
             table.Columns.Add(Edvard.Column.DevicePriority.ToString(), typeof(string));
             table.Columns.Add(Edvard.Column.DeviceType.ToString(), typeof(string));
 
