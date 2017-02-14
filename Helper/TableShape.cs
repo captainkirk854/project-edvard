@@ -60,6 +60,7 @@
             table.Columns.Add(Edvard.Column.KeyGameValue.ToString(), typeof(string));
             table.Columns.Add(Edvard.Column.KeyEnumerationValue.ToString(), typeof(string));
             table.Columns.Add(Edvard.Column.KeyEnumerationCode.ToString(), typeof(int));
+            table.Columns.Add(Edvard.Column.KeyActionType.ToString(), typeof(string));
             table.Columns.Add(Edvard.Column.KeyId.ToString(), typeof(string));
             table.Columns.Add(Edvard.Column.ModifierKeyGameValue.ToString(), typeof(string));
             table.Columns.Add(Edvard.Column.ModifierKeyEnumerationValue.ToString(), typeof(string));

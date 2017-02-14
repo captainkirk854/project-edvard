@@ -18,6 +18,7 @@
             Internal,
             KeyEnumeration,
             KeyAction,
+            KeyActionType,
             KeyGameValue,
             KeyEnumerationValue,
             KeyEnumerationCode,

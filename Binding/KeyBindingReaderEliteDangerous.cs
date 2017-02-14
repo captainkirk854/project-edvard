@@ -268,6 +268,7 @@
                                                          xmlExtract.KeyValue, //KeyGameValue
                                                          this.gameKeys.GetValue(xmlExtract.KeyValue), //KeyEnumerationValue
                                                          Keys.GetKeyCode(xmlExtract.KeyValue), //KeyEnumerationCode
+                                                         StatusCode.NotApplicable, //KeyActionType
                                                          customKeyId, //KeyId
                                                          xmlExtract.ModifierKeyValue, //ModifierKeyGameValue
                                                          this.gameKeys.GetValue(xmlExtract.ModifierKeyValue), //ModifierKeyEnumerationValue

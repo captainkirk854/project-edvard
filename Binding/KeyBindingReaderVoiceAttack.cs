@@ -27,7 +27,6 @@
         private const string XMLContext = "Context";
         private const string XMLUnsignedShort = "unsignedShort";
         private const string XMLCategoryKeybindings = "Keybindings";
-        private const string XMLCategoryEducation = "education";
         
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyBindingReaderVoiceAttack" /> class.
@@ -279,7 +278,7 @@
         ///                      |_<ActionSequence/>                       |
         ///                        !_[some] <CommandAction/>               |
         ///                                 !_<Id/> ------------------------
-        ///                                 |_<ActionType/> = PressKey/KeyUp/KeyDown
+        ///                                 |_<ActionType/> = PressKey/KeyUp/KeyDown/ExecuteCommand
         ///                                 |_<KeyCodes/>
         ///                                   (|_<unsignedShort/> = when modifier present)
         ///                                    |_<unsignedShort/>
@@ -297,7 +296,8 @@
                                     item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue() == commandActionId &&
                                     (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.PressKey.ToString() ||
                                      item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyUp.ToString() ||
-                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyDown.ToString())
+                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyDown.ToString() ||
+                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.ExecuteCommand.ToString())
                               select
                                     item.Parent.Parent.Parent.Parent.Element(XMLCommandId).SafeElementValue();
 
@@ -350,7 +350,7 @@
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>*
-        ///                                 |_<ActionType/> = PressKey/KeyUp/KeyDown
+        ///                                 |_<ActionType/> = PressKey/KeyUp/KeyDown/ExecuteCommand
         ///                                 |_<KeyCodes/>
         ///                                   (|_<unsignedShort/> = when modifier present)
         ///                                    |_<unsignedShort/>*
@@ -378,7 +378,7 @@
             // Datatable to hold tabulated XML contents ..
             DataTable keyActionDefinition = TableShape.KeyActionDefinition();
 
-            // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out to gather pertinent Element data and arrange in row(s) of anonymous types ..
+            // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out  ..
             var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
                               where
                                     item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
@@ -392,6 +392,7 @@
                                  {
                                      Commandstring = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
                                      CommandActionId = item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue(),
+                                     KeyActionType = item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value,
                                      KeyCode = item.SafeElementValue()
                                  };
 
@@ -425,6 +426,7 @@
                                                         Keys.GetKeyValue(regularKeyCode), //KeyGameValue
                                                         Keys.GetKeyValue(regularKeyCode), //KeyEnumerationValue
                                                         regularKeyCode.ToString(), //KeyEnumerationCode
+                                                        xmlExtract.KeyActionType, //KeyActionType
                                                         xmlExtract.CommandActionId, //KeyId
                                                         modifierKeyEnumerationValue, //ModifierKeyGameValue
                                                         modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
