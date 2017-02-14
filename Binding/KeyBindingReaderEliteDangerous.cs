@@ -196,7 +196,7 @@
             string devicePriority = devicepriority.ToString();
 
             // Datatable to hold tabulated XML contents ..
-            DataTable keyactionbinder = TableShape.KeyActionBinder();
+            DataTable keyActionDefinition = TableShape.KeyActionDefinition();
 
             // Scan all child nodes from top-level node ..
             foreach (var childNode in xdoc.Element(XMLRoot).Elements())
@@ -259,7 +259,7 @@
                         }
 
                         // Load final values ..
-                        keyactionbinder.LoadDataRow(new object[] 
+                        keyActionDefinition.LoadDataRow(new object[] 
                                                         {
                                                          Application.Name.EliteDangerous.ToString(), //Context
                                                          Keys.KeyType.ToString(), //KeyEnumerationType
@@ -280,7 +280,7 @@
             }
 
             // return Datatable ..
-            return keyactionbinder;
+            return keyActionDefinition;
         }
 
         /// <summary>

@@ -376,7 +376,7 @@
         private DataTable GetKeyBindings(ref XDocument xdoc)
         {
             // Datatable to hold tabulated XML contents ..
-            DataTable binderKeyAction = TableShape.KeyActionBinder();
+            DataTable keyActionDefinition = TableShape.KeyActionDefinition();
 
             // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out to gather pertinent Element data and arrange in row(s) of anonymous types ..
             var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
@@ -416,7 +416,7 @@
                     }
 
                     // Load final values into datatable ..
-                    binderKeyAction.LoadDataRow(new object[] 
+                    keyActionDefinition.LoadDataRow(new object[] 
                                                     {
                                                         Application.Name.VoiceAttack.ToString(), //Context
                                                         Keys.KeyType.ToString(), //KeyEnumerationType
@@ -436,7 +436,7 @@
             }
 
             // return Datatable ..
-            return binderKeyAction;
+            return keyActionDefinition;
         }
 
         /// <summary>

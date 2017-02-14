@@ -43,14 +43,14 @@
         }
 
         /// <summary>
-        /// Define Key Actions Bindings DataTable Structure
+        /// Define Key Actions Definition DataTable Structure
         /// </summary>
         /// <returns></returns>
-        public static DataTable KeyActionBinder()
+        public static DataTable KeyActionDefinition()
         {
             // New DataTable ..
             DataTable table = new DataTable();
-            table.TableName = "ActionKeyBindings";
+            table.TableName = "KeyActionDefinition";
 
             // Define its structure ..
             table.Columns.Add(Edvard.Column.Context.ToString(), typeof(string));
