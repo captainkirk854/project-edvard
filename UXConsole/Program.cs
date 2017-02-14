@@ -202,7 +202,7 @@
                     Console.WriteLine("Attempting VoiceAttack Profile update ..");
 
                     // Backup (optional) ..
-                    Console.WriteLine("Backup Status: [{0}]", HandleIO.SequentialFileBackup(argDirectoryPathBackup, voiceAttackProfile, BackupCycle, BackupFilenameLeftPadSize).ToString());
+                    Console.WriteLine("backup: {0}", HandleIO.SequentialFileBackup(argDirectoryPathBackup, voiceAttackProfile, BackupCycle, BackupFilenameLeftPadSize).ToString());
 
                     // Attempt synchronisation update ..
                     KeyBindingWriterVoiceAttack newVoiceAttack = new KeyBindingWriterVoiceAttack();
@@ -223,7 +223,7 @@
                     Console.WriteLine("Attempting Elite Dangerous Binds update ..");
 
                     // Backup (optional) ..
-                    Console.WriteLine("Backup Status: [{0}]", HandleIO.SequentialFileBackup(argDirectoryPathBackup, eliteDangerousBinds, BackupCycle, BackupFilenameLeftPadSize).ToString());
+                    Console.WriteLine("backup: {0}", HandleIO.SequentialFileBackup(argDirectoryPathBackup, eliteDangerousBinds, BackupCycle, BackupFilenameLeftPadSize).ToString());
 
                     // Attempt synchronisation update ..
                     KeyBindingWriterEliteDangerous newEliteDangerous = new KeyBindingWriterEliteDangerous();
@@ -232,6 +232,16 @@
                 else
                 {
                     Console.WriteLine("Elite Dangerous Binds update: not selected");
+                }
+                #endregion
+
+                #region [Test-specific copy-processed-files-to-target]
+                if (argTestSet != null)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Copying processed test file(s) to {0}", argDirectoryPathAnalysis);
+                    HandleIO.CopyFile(eliteDangerousBinds, argDirectoryPathAnalysis);
+                    HandleIO.CopyFile(voiceAttackProfile, argDirectoryPathAnalysis);
                 }
                 #endregion
 
@@ -434,7 +444,8 @@
         /// </summary>
         private static void PressIt()
         {
-            Console.WriteLine("Press a key");
+            Console.WriteLine();
+            Console.WriteLine("Press a key to continue ..");
             Console.ReadKey();
         }
     }
