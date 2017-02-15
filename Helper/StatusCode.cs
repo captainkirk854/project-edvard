@@ -5,7 +5,7 @@
         // Initialise private internals ..
         private static int emptyString = -1;
         private static int intNA = -2;
-        private static string stringNA = "na";
+        private static string stringNA = "-";
         private static int noEquivalentKeyFoundAtExchange = -998;
         private static int noCodeFoundAfterExchange = -999;
 
