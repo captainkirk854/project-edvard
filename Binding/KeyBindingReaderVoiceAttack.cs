@@ -422,12 +422,12 @@
                                                         Keys.KeyType.ToString(), //KeyEnumerationType
                                                         xmlExtract.Commandstring, //BindingAction
                                                         StatusCode.NotApplicable, //Priority
-                                                        Keys.GetKeyValue(regularKeyCode), //KeyGameValue
+                                                        StatusCode.NotApplicable, //KeyGameValue
                                                         Keys.GetKeyValue(regularKeyCode), //KeyEnumerationValue
                                                         regularKeyCode.ToString(), //KeyEnumerationCode
                                                         xmlExtract.KeyActionType, //KeyActionType
                                                         xmlExtract.CommandActionId, //KeyId
-                                                        modifierKeyEnumerationValue, //ModifierKeyGameValue
+                                                        StatusCode.NotApplicable, //ModifierKeyGameValue
                                                         modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
                                                         modifierKeyCode, //ModifierKeyEnumerationCode
                                                         xmlExtract.CommandActionId //ModifierKeyId

@@ -154,7 +154,7 @@
                                                  voiceattackBinding.KeyValue, //VoiceAttackKeyValue
                                                  voiceattackBinding.KeyCode, //VoiceAttackKeyCode
                                                  voiceattackBinding.KeyID, //VoiceAttackKeyId
-                                                 voiceattackBinding.ModifierKeyGameValue, //VoiceAttackModifierKeyValue
+                                                 voiceattackBinding.ModifierKeyEnumerationValue, //VoiceAttackKeyEnumerationValue
                                                  voiceattackBinding.ModifierKeyEnumerationCode, //VoiceAttackModifierKeyCode
                                                  voiceattackBinding.ModifierKeyID, //VoiceAttackModifierKeyId
                                                  ////--------------------------------------------------------------------------                                                 

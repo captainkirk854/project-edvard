@@ -116,7 +116,7 @@
                     ConsistentExit();
                 }
             }
-            else
+            else // internal development test active ..
             {
                 Console.WriteLine("Using internal test data (test-set: {0}) ..", argTestSet);
                 Console.WriteLine();
