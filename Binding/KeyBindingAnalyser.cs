@@ -52,7 +52,7 @@
             foreach (var voiceattackBinding in voiceattackBindings)
             {
                 bool commandDefinedInEliteDangerousBindsFile = false;
-                string remapRequired = "unknown";
+                string updateRequirementStatus = "unknown";
                 string rationale = "unknown";
 
                 var elitedangerousBindings = from ed in eliteDangerous.AsEnumerable()
@@ -92,7 +92,7 @@
                         ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
                         (elitedangerousBinding.ModifierKeyEnumerationCode == voiceattackBinding.ModifierKeyEnumerationCode)))
                     {
-                        remapRequired = Edvard.KeyUpdateRequired.NO.ToString();
+                        updateRequirementStatus = Edvard.KeyUpdateRequired.NO.ToString();
                         rationale = "ED o--o VA Key Codes are aligned";
                     }
                     else
@@ -102,7 +102,7 @@
                         // Check for misaligned codes ..
                         if (elitedangerousBinding.KeyEnumerationCode > StatusCode.EmptyStringInt)
                         {
-                            remapRequired = Edvard.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString();
+                            updateRequirementStatus = Edvard.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString();
 
                             // Check for: misaligned key codes ..
                             if (elitedangerousBinding.KeyEnumerationCode != voiceattackBinding.KeyCode)
@@ -127,14 +127,14 @@
                         // Check for unresolvable key codes ..
                         if (elitedangerousBinding.KeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || elitedangerousBinding.KeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
                         {
-                            remapRequired = Edvard.KeyUpdateRequired.NO.ToString();
+                            updateRequirementStatus = Edvard.KeyUpdateRequired.NO.ToString();
                             rationale += string.Format("Unresolvable key code for: ED[{0}];", elitedangerousBinding.KeyGameValue);
                         }
 
                         // Check for: unresolvable modifier key codes ..
                         if (elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
                         {
-                            remapRequired = Edvard.KeyUpdateRequired.NO.ToString();
+                            updateRequirementStatus = Edvard.KeyUpdateRequired.NO.ToString();
                             rationale += string.Format("Unresolvable modifier key code for: ED[{0}];", elitedangerousBinding.ModifierKeyGameValue);
                         }
                     }
@@ -145,7 +145,7 @@
                                                  ////--------------------------------------------------------------------------
                                                  voiceattackBinding.KeyEnumeration, //KeyEnumeration
                                                  ////--------------------------------------------------------------------------
-                                                 remapRequired, //ReMapRequired
+                                                 updateRequirementStatus, //ReMapRequired
                                                  rationale, //Rationale
                                                  ////--------------------------------------------------------------------------
                                                  voiceattackBinding.Action, //VoiceAttackAction
@@ -179,14 +179,14 @@
                 if (!commandDefinedInEliteDangerousBindsFile)
                 {
                     // Append to DataTable
-                    remapRequired = Edvard.KeyUpdateRequired.YES_VoiceAttack_TO_Elite.ToString();
+                    updateRequirementStatus = Edvard.KeyUpdateRequired.YES_VoiceAttack_TO_Elite.ToString();
                     rationale = string.Format("ED[{0}] not bound/bindable to a key", voiceattackBinding.EliteDangerousAction);
                     adjustedVoiceAttackCommands.LoadDataRow(new object[] 
                                                 {
                                                  ////--------------------------------------------------------------------------
                                                  voiceattackBinding.KeyEnumeration, //KeyEnumeration
                                                  ////--------------------------------------------------------------------------
-                                                 remapRequired, //ReMapRequired
+                                                 updateRequirementStatus, //ReMapRequired
                                                  rationale, //Rationale
                                                  ////--------------------------------------------------------------------------
                                                  voiceattackBinding.Action, //VoiceAttackAction
