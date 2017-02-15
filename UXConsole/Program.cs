@@ -286,8 +286,8 @@
                         switch (HandleStrings.ParseStringToEnum<Edvard.ArgSubOption>(argAnalysisFileFormat))
                         {
                             case Edvard.ArgSubOption.csv:
-                                bindableEliteDangerous.CreateCSV(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.BindableActions.ToString());
-                                bindableVoiceAttack.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.BindableActions.ToString());
+                                bindableEliteDangerous.CreateCSV(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.KeyBindableActions.ToString());
+                                bindableVoiceAttack.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.KeyBindableActions.ToString());
                                 keyBoundEliteDangerous.CreateCSV(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.KeyBoundActions.ToString());
                                 keyBoundVoiceAttack.CreateCSV(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.KeyBoundActions.ToString());
                                 consolidatedBoundActions.CreateCSV(argDirectoryPathAnalysis, Application.Name.Edvard.ToString() + Dlm + Edvard.AnalysisFile.ConsolidatedKeyBoundActions.ToString());
@@ -296,8 +296,8 @@
                                 break;
 
                             case Edvard.ArgSubOption.htm:
-                                bindableEliteDangerous.CreateHTM(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.BindableActions.ToString());
-                                bindableVoiceAttack.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.BindableActions.ToString());
+                                bindableEliteDangerous.CreateHTM(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.KeyBindableActions.ToString());
+                                bindableVoiceAttack.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.KeyBindableActions.ToString());
                                 keyBoundEliteDangerous.CreateHTM(argDirectoryPathAnalysis, Application.Name.EliteDangerous.ToString() + Dlm + Edvard.AnalysisFile.KeyBoundActions.ToString());
                                 keyBoundVoiceAttack.CreateHTM(argDirectoryPathAnalysis, Application.Name.VoiceAttack.ToString() + Dlm + Edvard.AnalysisFile.KeyBoundActions.ToString());
                                 consolidatedBoundActions.CreateHTM(argDirectoryPathAnalysis, Application.Name.Edvard.ToString() + Dlm + Edvard.AnalysisFile.ConsolidatedKeyBoundActions.ToString());

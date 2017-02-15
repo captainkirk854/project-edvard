@@ -110,11 +110,11 @@
 
         public enum AnalysisFile
         {
-            BindableActions,
-            KeyBoundActions,
+            AllCommands,
             ConsolidatedKeyBoundActions,
-            RelatedCommands,
-            AllCommands
+            KeyBindableActions,
+            KeyBoundActions,
+            RelatedCommands
         }
 
         public enum BackupStatus
