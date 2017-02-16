@@ -375,6 +375,11 @@
         /// <returns></returns>
         private DataTable GetKeyBindings(ref XDocument xdoc)
         {
+            // Initialise ..
+            System.Collections.Generic.List<int> nonKeyPressCodesForCommandString = new System.Collections.Generic.List<int>();
+            string previousCommandString = string.Empty;
+            int nonKeyPressTypeCounter = 0;
+
             // Datatable to hold tabulated XML contents ..
             DataTable keyActionDefinition = TableShape.KeyActionDefinition();
 
@@ -401,21 +406,56 @@
                 // Initialise ..
                 string modifierKeyEnumerationValue = StatusCode.EmptyString;
                 int regularKeyCode = int.Parse(xmlExtract.KeyCode);
+                int modifierKeyCode = 0;
 
-                // Check for modifier key already present in VoiceAttack Profile for current Action Id ..
-                int modifierKeyCode = this.GetModifierKey(ref xdoc, xmlExtract.CommandActionId);
-
-                // Ignore if current regular key code is actually a modifier key code ..
-                if (regularKeyCode != modifierKeyCode)
+                // Handle differences in arrangement of regular and modifier key codes for KeyUp and KeyDown actions ..
+                bool actionTypeKeyPress = true;            
+                if (xmlExtract.KeyActionType == Application.Interaction.KeyUp.ToString() || xmlExtract.KeyActionType == Application.Interaction.KeyDown.ToString())
                 {
+                    actionTypeKeyPress = false;
+
+                    // Keep looping to gather and pivot incoming regular key codes for the same CommandString into a single row of regular key code (min value) and modifier (max value) ..
+                    nonKeyPressCodesForCommandString.Add(regularKeyCode);
+                    nonKeyPressTypeCounter += 1;
+
+                    // When CommandString is different, we've gathered all we can for this Command, sent out the min and max values gathered ..
+                    if (xmlExtract.Commandstring.ToString() != previousCommandString && nonKeyPressTypeCounter != 1) 
+                    { 
+                        regularKeyCode = nonKeyPressCodesForCommandString.Min();
+                        modifierKeyCode = nonKeyPressCodesForCommandString.Max();
+                        actionTypeKeyPress = true;
+                        nonKeyPressCodesForCommandString.Clear();
+                        nonKeyPressTypeCounter = 0;
+                    }
+                }
+                else
+                {
+                    // Dealing with a regular KeyPress action ..
+                    nonKeyPressCodesForCommandString.Clear();
+
+                    // Check if modifier key already present in VoiceAttack Profile for current Action Id ..
+                    modifierKeyCode = this.GetModifierKey(ref xdoc, xmlExtract.CommandActionId);
+                }
+
+                previousCommandString = xmlExtract.Commandstring.ToString();
+
+                // Ignore and don't add if current regular key code is actually a modifier key code or we haven't looped through all the KeyUp/KeyDown codes yet..
+                if (regularKeyCode != modifierKeyCode && actionTypeKeyPress)
+                {
+                    // If we do have a modifier key code ..
                     if (modifierKeyCode >= 0)
                     {
-                        // If modifier found, some additional probing of that segment of the XML tree required ..
+                        // Get its enumerated key value ..
                         modifierKeyEnumerationValue = Keys.GetKeyValue(modifierKeyCode);
-                        regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.CommandActionId);
+
+                        // If modifier key found, and it's a regular KeyPress action, do some additional probing of that segment of the XML tree required ..
+                        if (xmlExtract.KeyActionType == Application.Interaction.PressKey.ToString())
+                        {
+                            regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.CommandActionId);
+                        }
                     }
 
-                    // Load final values into datatable ..
+                    // Load final values into DataTable ..
                     keyActionDefinition.LoadDataRow(new object[] 
                                                     {
                                                         Application.Name.VoiceAttack.ToString(), //Context

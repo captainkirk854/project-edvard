@@ -39,6 +39,7 @@
                                             Action = va.Field<string>(Edvard.Column.KeyAction.ToString()),
                                             KeyValue = va.Field<string>(Edvard.Column.KeyEnumerationValue.ToString()),
                                             KeyCode = va.Field<int>(Edvard.Column.KeyEnumerationCode.ToString()),
+                                            KeyActionType = va.Field<string>(Edvard.Column.KeyActionType.ToString()),
                                             KeyID = va.Field<string>(Edvard.Column.KeyId.ToString()),
                                             ModifierKeyGameValue = va.Field<string>(Edvard.Column.ModifierKeyGameValue.ToString()),
                                             ModifierKeyEnumerationValue = va.Field<string>(Edvard.Column.ModifierKeyEnumerationValue.ToString()),
