@@ -28,14 +28,22 @@
         public KeyBindingAndCommandConnector()
         {
             this.relationship.Add("((0%))", "SetSpeedZero");
+            this.relationship.Add("((10%))", "ForwardKey");
             this.relationship.Add("((100% Reverse))", "SetSpeedMinus100");
             this.relationship.Add("((100%))", "SetSpeed100");
+            this.relationship.Add("((20%))", "ForwardKey");
             this.relationship.Add("((25% Reverse))", "SetSpeedMinus25");
             this.relationship.Add("((25%))", "SetSpeed25");
+            this.relationship.Add("((30%))", "ForwardKey");
+            this.relationship.Add("((40%))", "BackwardKey");
             this.relationship.Add("((50% Reverse))", "SetSpeedMinus50");
             this.relationship.Add("((50%))", "SetSpeed50");
+            this.relationship.Add("((60%))", "ForwardKey");
+            this.relationship.Add("((70%))", "ForwardKey");
             this.relationship.Add("((75% Reverse))", "SetSpeedMinus75");
             this.relationship.Add("((75%))", "SetSpeed75");
+            this.relationship.Add("((80%))", "BackwardKey");
+            this.relationship.Add("((90%))", "BackwardKey");
             this.relationship.Add("((Afterburners))", "UseBoostJuice");
             this.relationship.Add("((Balance Power))", "ResetPowerDistribution");
             this.relationship.Add("((Cargo Scoop))", "ToggleCargoScoop");
@@ -65,6 +73,7 @@
             this.relationship.Add("((Handbrake On))", "AutoBreakBuggyButton");
             this.relationship.Add("((Hardpoints))", "DeployHardpointToggle");
             this.relationship.Add("((Heatsink))", "DeployHeatSink");
+            this.relationship.Add("((Increase Sensor Range Max SC))", "RadarIncreaseRange");
             this.relationship.Add("((Increase Sensor Range Max))", "RadarIncreaseRange");
             this.relationship.Add("((Increase Sensor Range))", "RadarIncreaseRange");
             this.relationship.Add("((Jump Drive))", "HyperSuperCombination");
@@ -89,6 +98,9 @@
             this.relationship.Add("((SRV Panel))", "UIFocus_Buggy");
             this.relationship.Add("((Supercruise))", "Supercruise");
             this.relationship.Add("((System Map))", "SystemMapOpen");
+            this.relationship.Add("((Take Off))", "VerticalThrustersButton");
+            this.relationship.Add("((Thrust UP))", "VerticalThrustersButton");
+            this.relationship.Add("((UI Escape))", "UI_Back");
             this.relationship.Add("((UI Accept))", "UI_Select");
             this.relationship.Add("((UI Cancel))", "UI_Back");
             this.relationship.Add("((UI Down))", "UI_Down");

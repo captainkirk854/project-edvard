@@ -1,5 +1,6 @@
 ﻿namespace Binding
 {
+    using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Linq;
@@ -15,6 +16,7 @@
         // Initialise ..
         private const string XMLRoot = "Profile";
         private const string XMLName = "Name";
+        private const string XMLCommands = "Commands";
         private const string XMLCommand = "Command";
         private const string XMLCommandId = "Id";
         private const string XMLCommandString = "CommandString";
@@ -72,7 +74,7 @@
         }
 
         /// <summary>
-        /// Get CommandStrings related to action CommandStrings
+        /// Get CommandStrings related to key-bound Action Commands
         /// </summary>
         /// <param name="consolidatedBoundCommands"></param>
         /// <returns></returns>
@@ -80,10 +82,9 @@
         {
             // Initialise ..
             DataTable associatedCommands = TableShape.AssociatedCommands();
-            string prevCommandString = string.Empty;
 
             // Find associated commandStrings using commandString ActionId ...
-            foreach (DataRow consolidatedBoundCommand in consolidatedBoundCommands.Select().OrderBy(orderingColumn => orderingColumn[Edvard.Column.VoiceAttackAction.ToString()]))
+            foreach (DataRow consolidatedBoundCommand in consolidatedBoundCommands.Select().Distinct().OrderBy(orderingColumn => orderingColumn[Edvard.Column.VoiceAttackAction.ToString()]))
             {
                 // Get required field information ..
                 string voiceAttackCommandString = consolidatedBoundCommand[Edvard.Column.VoiceAttackAction.ToString()].ToString();
@@ -93,34 +94,22 @@
                 string voiceAttackFile = Path.GetFileName(consolidatedBoundCommand[Edvard.Column.VoiceAttackProfile.ToString()].ToString());
                 string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommand[Edvard.Column.EliteDangerousBinds.ToString()].ToString());
 
-                // Ignore duplicate commandStrings from those with multiple Action Ids ..
-                if (voiceAttackCommandString != prevCommandString)
+                // Find and loop through each associated Command String ..
+                var associatedCommandStrings = this.GetCommandStringsFromCommandActionContext(ref this.xCfg, this.ParseVoiceAttackProfileForKeyBoundCommandIdsFromCommandActionId(ref this.xCfg, voiceAttackActionId).Distinct().FirstOrDefault().ToString());
+                
+                foreach (var associatedCommandString in associatedCommandStrings.Distinct())
                 {
-                    var associatedCommandStrings = this.GetCommandStringsFromCommandActionContext(ref this.xCfg, this.GetCommandIdFromCommandActionIdWithKeyPressAction(ref this.xCfg, voiceAttackActionId));
-                    
-                    string prevAssociatedCommandString = string.Empty;
-                    foreach (var associatedCommandString in associatedCommandStrings)
-                    {
-                        // Ignore any duplicate Associated commandStrings ..
-                        if (associatedCommandString != prevAssociatedCommandString)
-                        {
-                            associatedCommands.LoadDataRow(new object[] 
-                                                           {
-                                                                voiceAttackCommandString,
-                                                                eliteDangerousAction,
-                                                                associatedCommandString,
-                                                                bindingSyncStatus,
-                                                                voiceAttackFile,
-                                                                eliteDangerousFile
-                                                           },
-                                                           false);
-                        }
-
-                        prevAssociatedCommandString = associatedCommandString;
-                    }
+                    associatedCommands.LoadDataRow(new object[] 
+                                                                {
+                                                                    voiceAttackCommandString,
+                                                                    eliteDangerousAction,
+                                                                    associatedCommandString,
+                                                                    bindingSyncStatus,
+                                                                    voiceAttackFile,
+                                                                    eliteDangerousFile
+                                                                },
+                                                    false);
                 }
-
-                prevCommandString = voiceAttackCommandString;
             }
 
             return associatedCommands;
@@ -163,20 +152,8 @@
             // Datatable to hold tabulated XML contents ..
             DataTable bindableActions = TableShape.BindableActions();
 
-            // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out to gather pertinent Element data and arrange in row(s) of anonymous types ..
-            var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
-                              where
-                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
-                                    (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.KeyUp.ToString() ||
-                                     item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.KeyDown.ToString()) &&
-                                     item.SafeElementValue() != string.Empty
-                              select
-                                 new
-                                 {
-                                     CommandString = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
-                                     ActionType = item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value
-                                 };
+            // Use dynamic-magic to create a raw list of anonymous bindable-key object(s) ..
+            IEnumerable<dynamic> xmlExtracts = this.ParseVoiceAttackProfileForKeyBindableCommands(ref xdoc);
 
             // insert anonymous type row data (with some additional values) into DataTable (.Distinct() required as some Commands have multiple (modifier) key codes)
             foreach (var xmlExtract in xmlExtracts.Distinct()) 
@@ -185,7 +162,7 @@
                                                 {
                                                     Application.Name.VoiceAttack.ToString(), //Context
                                                     xmlExtract.CommandString, //KeyAction
-                                                    xmlExtract.ActionType, //KeyActionType
+                                                    xmlExtract.KeyActionType, //KeyActionType
                                                     StatusCode.NotApplicable, //Device Priority
                                                     StatusCode.NotApplicable //Device Type binding is applied to
                                                 }, 
@@ -214,7 +191,7 @@
         /// <param name="xdoc"></param>
         /// <param name="commandCategories"></param>
         /// <returns></returns>
-        private System.Collections.Generic.IEnumerable<object> GetCommandStringsForCommandCategory(ref XDocument xdoc, System.Collections.Generic.IEnumerable<string> commandCategories)
+        private IEnumerable<object> GetCommandStringsForCommandCategory(ref XDocument xdoc, System.Collections.Generic.IEnumerable<string> commandCategories)
         {
             // Create list of required anonymous type .. 
             var xmlExtracts = new[] { new { CommandString = string.Empty, CommandCategory = string.Empty, ActionType = string.Empty } }.ToList();
@@ -224,21 +201,27 @@
             foreach (var commandCategory in commandCategories)
             {
                 // traverse config XML, return Command String(s) associated to each Category ..
-                var commandStrings = from item in xdoc.Descendants(XMLCategory)
-                                     where
-                                           item.Parent.Element(XMLCategory).SafeElementValue() == commandCategory
-                                     select
-                                        new // create anonymous type ..
-                                        {
-                                            CommandString = item.Parent.Element(XMLCommandString).SafeElementValue(),
-                                            CommandCategory = item.Parent.Element(XMLCategory).SafeElementValue(),
-                                            ActionType = item.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).SafeElementValue()
-                                        };
-
-                // Add all resultant command strings to list ..
-                foreach (var commandString in commandStrings)
+                try
                 {
-                    xmlExtracts.Add(commandString);
+                    var commandStrings = from item in xdoc.Descendants(XMLCategory)
+                                         where
+                                               item.Parent.Element(XMLCategory).SafeElementValue() == commandCategory
+                                         select
+                                            new // create anonymous type ..
+                                            {
+                                                CommandString = item.Parent.Element(XMLCommandString).SafeElementValue(),
+                                                CommandCategory = item.Parent.Element(XMLCategory).SafeElementValue(),
+                                                ActionType = item.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).SafeElementValue()
+                                            };
+
+                    // Add all resultant command strings to list ..
+                    foreach (var commandString in commandStrings)
+                    {
+                        xmlExtracts.Add(commandString);
+                    }
+                }
+                catch
+                {
                 }
             }
 
@@ -257,51 +240,13 @@
         /// </remarks>
         /// <param name="xdoc"></param>
         /// <returns></returns>
-        private System.Collections.Generic.IEnumerable<string> GetAllCommandCategories(ref XDocument xdoc)
+        private IEnumerable<string> GetAllCommandCategories(ref XDocument xdoc)
         {
             var xmlExtracts = from item in xdoc.Descendants(XMLCategory)
-                              select
-                                    item.Parent.Element(XMLCategory).SafeElementValue();
+                            select
+                                   item.Parent.Element(XMLCategory).SafeElementValue();
 
             return xmlExtracts.Distinct();
-        }
-
-        /// <summary>
-        /// Parse Voice Attack Config File to get Command Id related to Command Actions with KeyPress Action Types
-        /// </summary>
-        /// <remarks>
-        ///   Format: XML
-        ///             o <Profile/>
-        ///               |_ <Commands/>
-        ///                  |_ <Command/>
-        ///                      |_<Id/>* <--------------------------------¬
-        ///                      !_<commandString/> = ((<action name/>))   |
-        ///                      |_<ActionSequence/>                       |
-        ///                        !_[some] <CommandAction/>               |
-        ///                                 !_<Id/> ------------------------
-        ///                                 |_<ActionType/> = PressKey/KeyUp/KeyDown
-        ///                                 |_<KeyCodes/>
-        ///                                   (|_<unsignedShort/> = when modifier present)
-        ///                                    |_<unsignedShort/>
-        ///                      !_<Category/> = Keybindings
-        /// </remarks>
-        /// <param name="xdoc"></param>
-        /// <param name="commandActionId"></param>
-        /// <returns></returns>
-        private string GetCommandIdFromCommandActionIdWithKeyPressAction(ref XDocument xdoc, string commandActionId)
-        {
-            // traverse config XML to <unsignedShort> nodes, return first (and only) ancestral Command Id where Action Id is ancestor of <unsignedShort> ..
-            var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
-                              where
-                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
-                                    item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue() == commandActionId &&
-                                    (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.PressKey.ToString() ||
-                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyUp.ToString() ||
-                                     item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyDown.ToString())
-                              select
-                                    item.Parent.Parent.Parent.Parent.Element(XMLCommandId).SafeElementValue();
-
-            return xmlExtracts.FirstOrDefault();       
         }
 
         /// <summary>
@@ -324,211 +269,70 @@
         /// <param name="xdoc"></param>
         /// <param name="commandActionId"></param>
         /// <returns></returns>
-        private System.Collections.Generic.IEnumerable<string> GetCommandStringsFromCommandActionContext(ref XDocument xdoc, string commandActionId)
+        private IEnumerable<string> GetCommandStringsFromCommandActionContext(ref XDocument xdoc, string commandActionId)
         {
-            // traverse config XML, return first (and only) Command String where descendant Context = Action Id ..
+            // Find Command String(s) where descendant Context = Action Id ..
             var xmlExtracts = from item in xdoc.Descendants(XMLContext)
                               where
-                                    item.Parent.Parent.Parent.Element(XMLCategory).Value != XMLCategoryKeybindings &&
+                                    !item.Parent.Parent.Parent.Element(XMLCategory).Value.Contains(XMLCategoryKeybindings) &&
                                     item.SafeElementValue() == commandActionId
                               select
-                                     item.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue();
+                                    item.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue();
 
             return xmlExtracts;
         }
 
         /// <summary>
-        /// Parse Voice Attack Config File to get details of Commands and Command Actions with KeyPress Action Types already boundCommands to a non-blank key code
+        /// Parse Voice Attack Config File to get details of Commands and Command Actions with KeyPress Action Types already bound to a non-blank key code
         /// </summary>
         /// <remarks>
-        ///   Format: XML
-        ///             o <Profile/>
-        ///               |_ <Commands/>
-        ///                  |_ <Command/>
-        ///                      |_<Id/>
-        ///                      !_<commandString/>* = ((<action name/>))
-        ///                      |_<ActionSequence/>
-        ///                        !_[some] <CommandAction/>
-        ///                                 !_<Id/>*
-        ///                                 |_<ActionType/> = PressKey/KeyUp/KeyDown
-        ///                                 |_<KeyCodes/>
-        ///                                   (|_<unsignedShort/> = when modifier present)
-        ///                                    |_<unsignedShort/>*
-        ///                      !_<Category/> = Keybindings
-        ///                             
-        /// Key Binding Arrangement: 
-        ///                VoiceAttack uses system key codes (as opposed to key value). 
-        ///                Actions directly mappable to Elite Dangerous have been defined by HCSVoicePacks using: 
-        ///                 o Command.Category = Keybindings
-        ///                 o Predominant ActionType = PressKey
-        ///                 o Command.commandString values which are pre- and post-fixed using '((' and '))'
-        ///                   e.g. 
-        ///                    ((Shield Cell)) : 222 (= Oem7 Numpad?7)
-        ///                    ((Power To Weapons)) : 39  (= Right arrow)
-        ///                    ((Select Target Ahead)) : 84 (= T)
-        ///                    ((Flight Assist)) : 90 (= Z)
-        ///                   
-        ///                Note 
-        ///                There are other commands that also use key codes which are part of the multi-command suite.
-        ///                These are ignored
+        /// Key Bindings are identified by max and min KeyCode values for every CommandString. 
+        ///  > Max values are considered to be [modifier] key codes
+        ///  > Min values are considered to be [regular] key codes
         /// </remarks>
         /// <param name="xdoc"></param>
         /// <returns></returns>
         private DataTable GetKeyBindings(ref XDocument xdoc)
         {
-            // Datatable to hold tabulated XML contents ..
-            DataTable keyActionDefinitions = TableShape.KeyActionDefinition();
+            // Use dynamic-magic to create a raw list of anonymous bound-key object(s) ..
+            IEnumerable<dynamic> rawKeyBoundCommands = this.ParseVoiceAttackProfileForKeyBoundCommands(ref xdoc);
 
-            // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out  ..
-            var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
-                              where
-                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
-                                   (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.PressKey.ToString()) &&
-                                    item.SafeElementValue() != string.Empty
-                              select
-                                 new // create anonymous type for every XMLunsignedShort matching criteria ..
-                                 {
-                                     Commandstring = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
-                                     CommandActionId = item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue(),
-                                     KeyActionType = item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value,
-                                     KeyCode = item.SafeElementValue()
-                                 };
+            // Use Linq grouping-magic to remove duplicates and organise raw bound-key object(s) ..
+            IEnumerable<dynamic> summarisedKeyBoundCommands = rawKeyBoundCommands.GroupBy(groupingField => new { groupingField.CommandString })
+                                                                                 .Select(info => new
+                                                                                            {
+                                                                                                groupKey = info.Key,
+                                                                                                commandString = info.Max(t => t.CommandString),
+                                                                                                actionId = info.Max(t => t.CommandActionId),
+                                                                                                actionType = info.Min(t => t.KeyActionType),
+                                                                                                regular = info.Min(t => t.KeyCode),
+                                                                                                modifier = info.Max(t => t.KeyCode)
+                                                                                            });
 
-            // insert anonymous type row data (with some additional values) into DataTable ..
-            foreach (var xmlExtract in xmlExtracts)
-            {
-                // Initialise ..
-                string modifierKeyEnumerationValue = StatusCode.EmptyString;
-                int regularKeyCode = int.Parse(xmlExtract.KeyCode);
-
-                // Check if modifier key already present in VoiceAttack Profile for current Action Id ..
-                int modifierKeyCode = this.GetModifierKey(ref xdoc, xmlExtract.CommandActionId);
-
-                // Ignore if current regular key code is actually a modifier key code ..
-                if (regularKeyCode != modifierKeyCode)
-                {
-                    // If we do have a modifier key code ..
-                    if (modifierKeyCode >= 0)
-                    {
-                        // Get its enumerated key value ..
-                        modifierKeyEnumerationValue = Keys.GetKeyValue(modifierKeyCode);
-
-                        // If modifier key found, and it's a regular KeyPress action, do some additional probing of that segment of the XML tree required ..
-                        if (xmlExtract.KeyActionType == Application.Interaction.PressKey.ToString())
-                        {
-                            regularKeyCode = this.GetRegularKey(ref xdoc, xmlExtract.CommandActionId);
-                        }
-                    }
-
-                    // Load final values into DataTable ..
-                    keyActionDefinitions.LoadDataRow(new object[] 
-                                                    {
-                                                        Application.Name.VoiceAttack.ToString(), //Context
-                                                        Keys.KeyType.ToString(), //KeyEnumerationType
-                                                        xmlExtract.Commandstring, //BindingAction
-                                                        StatusCode.NotApplicable, //Priority
-                                                        StatusCode.NotApplicable, //KeyGameValue
-                                                        Keys.GetKeyValue(regularKeyCode), //KeyEnumerationValue
-                                                        regularKeyCode.ToString(), //KeyEnumerationCode
-                                                        xmlExtract.KeyActionType, //KeyActionType
-                                                        xmlExtract.CommandActionId, //KeyId
-                                                        StatusCode.NotApplicable, //ModifierKeyGameValue
-                                                        modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
-                                                        modifierKeyCode, //ModifierKeyEnumerationCode
-                                                        xmlExtract.CommandActionId //ModifierKeyId
-                                                    },
-                                                    false);
-                }
-            }
-
-            // Fetch and append key bindings for KeyUp/KeyDown interactions ..
-            keyActionDefinitions.Merge(this.GetKeyBindingsForKeyUpKeyDownInteractions(ref xdoc));
-
-            // return Datatable ..
-            return keyActionDefinitions;
+          // Finalise information ...
+          return this.Finalise(summarisedKeyBoundCommands);
         }
 
         /// <summary>
-        /// Parse Voice Attack Config File to get details of Commands and Command Actions with KeyUp/KeyDown Action Types already boundCommands to a non-blank key code
+        /// Prepare KeyCodes and their conversions.
         /// </summary>
-        /// <remarks>
-        ///   Format: XML
-        ///             o <Profile/>
-        ///               |_ <Commands/>
-        ///                  |_ <Command/>
-        ///                      |_<Id/>
-        ///                      !_<commandString/>* = ((<action name/>))
-        ///                      |_<ActionSequence/>
-        ///                        !_[some] <CommandAction/>
-        ///                                 !_<Id/>*
-        ///                                 |_<ActionType/> = KeyUp
-        ///                                 |_<KeyCodes/>
-        ///                                    |_<unsignedShort/>*
-        ///                        !_[some] <CommandAction/>
-        ///                                 !_<Id/>*
-        ///                                 |_<ActionType/> = PressKey
-        ///                                 |_<KeyCodes/>
-        ///                                    |_<unsignedShort/>*
-        ///                        !_[some] <CommandAction/>
-        ///                                 !_<Id/>*
-        ///                                 |_<ActionType/> = KeyDown
-        ///                                 |_<KeyCodes/>
-        ///                                    |_<unsignedShort/>*
-        ///                      !_<Category/> = Keybindings
-        /// 
-        /// Key Binding Arrangement:
-        ///     For bindings revolving around ActionType = KeyUp/KeyDown, the arrangement of key codes is different.
-        ///     The related ActionSequence is arranged as a series of CommandActions each with its KeyCode value.
-        ///     In all cases, the keycode values are just two numbers - the lower one being the actual key and the
-        ///     higher being the modifier (this is the one that can appear multiple times). 
-        ///     The following code scans through all the keycode values for a particular CommandString and assigns 
-        ///     the lowest value found as the regular key code, and the highest as the modifier.
-        /// </remarks>
-        /// <param name="xdoc"></param>
+        /// <param name="keyBoundCommands"></param>
         /// <returns></returns>
-        private DataTable GetKeyBindingsForKeyUpKeyDownInteractions(ref XDocument xdoc)
+        private DataTable Finalise(IEnumerable<dynamic> keyBoundCommands)
         {
             // Datatable to hold tabulated XML contents ..
-            DataTable keyActionDefinitionsForNonKeyPress = TableShape.KeyActionDefinition();
+            DataTable boundKeyActionDefinitions = TableShape.KeyActionDefinition();
 
-            // traverse config XML, find all valuated <unsignedShort> nodes, work from inside out  ..
-            var xmlExtracts = from item in xdoc.Descendants(XMLUnsignedShort)
-                              where
-                                    item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
-                                   (item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.KeyUp.ToString() ||
-                                    item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value == Application.Interaction.KeyDown.ToString()) &&
-                                    item.SafeElementValue() != string.Empty
-                              select
-                                 new // create anonymous type for every XMLunsignedShort matching criteria ..
-                                 {
-                                     Commandstring = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
-                                     CommandActionId = item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue(),
-                                     KeyActionType = item.Parent.Parent.Parent.Parent.Element(XMLActionSequence).Element(XMLCommandAction).Element(XMLActionType).Value,
-                                     KeyCode = System.Convert.ToInt32(item.SafeElementValue())
-                                 };
-
-            // Perform a grouping LINQ, to identify max and min KeyCode values for every CommandString as these are the regular and modifier key codes ..
-            var nonKeyPressCommands = xmlExtracts.GroupBy(groupingField => new { groupingField.Commandstring })
-                                                 .Select(info => new
-                                                                   {
-                                                                       groupKey = info.Key,
-                                                                       commandString = info.Max(t => t.Commandstring),
-                                                                       actionId = info.Max(t => t.CommandActionId),
-                                                                       actionType = info.Min(t => t.KeyActionType),
-                                                                       regular = info.Min(t => t.KeyCode), 
-                                                                       modifier = info.Max(t => t.KeyCode)                      
-                                                                   });
-            
             // Extract condensed aggregation of KeyCodes ..
-            foreach (var nonKeyPressCommand in nonKeyPressCommands)
+            foreach (var keyBoundCommand in keyBoundCommands)
             {
                 string modifierKeyEnumerationValue = StatusCode.EmptyString;
 
-                var bindingAction = nonKeyPressCommand.commandString;
-                var commandActionId = nonKeyPressCommand.actionId;
-                var keyActionType = nonKeyPressCommand.actionType;
-                var regularKeyCode = nonKeyPressCommand.regular;
-                var modifierKeyCode = nonKeyPressCommand.regular == nonKeyPressCommand.modifier ? StatusCode.EmptyStringInt : nonKeyPressCommand.modifier;
+                var bindingAction = keyBoundCommand.commandString;
+                var commandActionId = keyBoundCommand.actionId;
+                var keyActionType = keyBoundCommand.actionType;
+                var regularKeyCode = keyBoundCommand.regular;
+                var modifierKeyCode = keyBoundCommand.regular == keyBoundCommand.modifier ? StatusCode.EmptyStringInt : keyBoundCommand.modifier;
 
                 // If we do have a modifier key code ..
                 if (modifierKeyCode >= 0)
@@ -538,27 +342,27 @@
                 }
 
                 // Load final values into DataTable ..
-                keyActionDefinitionsForNonKeyPress.LoadDataRow(new object[] 
-                                                {
-                                                    Application.Name.VoiceAttack.ToString(), //Context
-                                                    Keys.KeyType.ToString(), //KeyEnumerationType
-                                                    bindingAction, //BindingAction
-                                                    StatusCode.NotApplicable, //Priority
-                                                    StatusCode.NotApplicable, //KeyGameValue
-                                                    Keys.GetKeyValue(regularKeyCode), //KeyEnumerationValue
-                                                    regularKeyCode.ToString(), //KeyEnumerationCode
-                                                    keyActionType, //KeyActionType
-                                                    commandActionId, //KeyId
-                                                    StatusCode.NotApplicable, //ModifierKeyGameValue
-                                                    modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
-                                                    modifierKeyCode, //ModifierKeyEnumerationCode
-                                                    commandActionId //ModifierKeyId
-                                                },
-                                                false);
+                boundKeyActionDefinitions.LoadDataRow(new object[] 
+                                                                    {
+                                                                        Application.Name.VoiceAttack.ToString(), //Context
+                                                                        Keys.KeyType.ToString(), //KeyEnumerationType
+                                                                        bindingAction, //BindingAction
+                                                                        StatusCode.NotApplicable, //Priority
+                                                                        StatusCode.NotApplicable, //KeyGameValue
+                                                                        Keys.GetKeyValue(regularKeyCode), //KeyEnumerationValue
+                                                                        regularKeyCode.ToString(), //KeyEnumerationCode
+                                                                        keyActionType, //KeyActionType
+                                                                        commandActionId, //KeyId
+                                                                        StatusCode.NotApplicable, //ModifierKeyGameValue
+                                                                        modifierKeyEnumerationValue, //ModifierKeyEnumerationValue
+                                                                        modifierKeyCode, //ModifierKeyEnumerationCode
+                                                                        commandActionId //ModifierKeyId
+                                                                    },
+                                                                    false);
             }
 
             // return Datatable ..
-            return keyActionDefinitionsForNonKeyPress;
+            return boundKeyActionDefinitions;
         }
 
         /// <summary>
@@ -593,7 +397,7 @@
         {
             // Count number of unsigned short elements (KeyCode) exist per ActionId ...
             var keyCodes = xdoc.Descendants(XMLUnsignedShort)
-                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
+                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value.Contains(XMLCategoryKeybindings) &&
                                                    item.Parent.Parent.Element(XMLCommandActionId).Value == commandActionId)
                                     .DescendantsAndSelf();
 
@@ -621,7 +425,7 @@
         {
             // Count number of unsigned short elements (KeyCode) exist per ActionId ...
             var keyCodes = xdoc.Descendants(XMLUnsignedShort)
-                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value == XMLCategoryKeybindings &&
+                                    .Where(item => item.Parent.Parent.Parent.Parent.Element(XMLCategory).Value.Contains(XMLCategoryKeybindings) &&
                                                    item.Parent.Parent.Element(XMLCommandActionId).Value == commandActionId)
                                     .DescendantsAndSelf();
 
@@ -629,6 +433,173 @@
 
             // Last value is always Regular Key Code ..
             return int.Parse(keyCodes.LastOrDefault().Value);
+        }
+
+        /// <summary>
+        /// Parse Voice Attack Config File to extract Commands and Command Actions for Key Up/Down/Press Action Types already bound to a non-blank key code
+        /// </summary>
+        /// <remarks>
+        ///   Format: XML
+        ///             o <Profile/>
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        ///                      |_<Id/>
+        ///                      !_<commandString/>* = ((<action name/>))
+        ///                      |_<ActionSequence/>
+        ///                        !_[some] <CommandAction/>
+        ///                                 !_<Id/>*
+        ///                                 |_<ActionType/> = PressKey/KeyUp/KeyDown
+        ///                                 |_<KeyCodes/>
+        ///                                   (|_<unsignedShort/> = when modifier present)
+        ///                                    |_<unsignedShort/>*
+        ///                      !_<Category/> = Keybindings
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        ///                      |_<Id/>
+        ///                      !_<commandString/>* = ((<action name/>))
+        ///                      |_<ActionSequence/>
+        ///                        !_[some] <CommandAction/>
+        ///                                 !_<Id/>*
+        ///                                 |_<ActionType/> = KeyUp
+        ///                                 |_<KeyCodes/>
+        ///                                    |_<unsignedShort/>*
+        ///                        !_[some] <CommandAction/>
+        ///                                 !_<Id/>*
+        ///                                 |_<ActionType/> = PressKey
+        ///                                 |_<KeyCodes/>
+        ///                                    |_<unsignedShort/>*
+        ///                        !_[some] <CommandAction/>
+        ///                                 !_<Id/>*
+        ///                                 |_<ActionType/> = KeyDown
+        ///                                 |_<KeyCodes/>
+        ///                                    |_<unsignedShort/>*
+        ///                      !_<Category/> = Keybindings
+        ///                             
+        ///    Key Binding Arrangement: 
+        ///                VoiceAttack uses system key codes (as opposed to key value). 
+        ///                Actions directly mappable to Elite Dangerous have been defined by HCSVoicePacks using: 
+        ///                 o Command.Category = Keybindings or variation (e.g. Keybindings - SRV)
+        ///                 o Predominant ActionType = PressKey
+        ///                 o Command.commandString values which are usually pre- and post-fixed using '((' and '))'
+        ///                   e.g. 
+        ///                    ((Shield Cell)) : 222 (= Oem7 Numpad?7)
+        ///                    ((Power To Weapons)) : 39  (= Right arrow)
+        ///                    ((Select Target Ahead)) : 84 (= T)
+        ///                    ((Flight Assist)) : 90 (= Z)                
+        /// </remarks>
+        /// <param name="xdoc"></param>
+        /// <returns></returns>
+        /// 
+        private System.Collections.Generic.IEnumerable<object> ParseVoiceAttackProfileForKeyBoundCommands(ref XDocument xdoc)
+        {
+            // Find properties related to any Key-related CommandString node with a valuated KeyCode ..
+            return
+                from item in xdoc.Descendants(XMLUnsignedShort)
+                orderby (item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommandString) +
+                         item.SafeAttributeName(XMLUnsignedShort))
+                where
+                    ////---------------------------------XML Hierarchy Integrity-Check Section---------------------------------
+                        item.Parent.Parent.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommands) == XMLCommands &&
+                        item.Parent.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommand) == XMLCommand &&
+                        item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommandString) == XMLCommandString &&
+                        item.Parent.Parent.Parent.SafeAttributeName(XMLActionSequence) == XMLActionSequence &&
+                        item.Parent.Parent.SafeAttributeName(XMLCommandAction) == XMLCommandAction &&
+                        item.Parent.SafeAttributeName(XMLCommandActionId) == XMLCommandActionId &&
+                        item.Parent.SafeAttributeName(XMLActionType) == XMLActionType &&
+                        item.Parent.SafeAttributeName(XMLKeyCodes) == XMLKeyCodes &&
+                        item.SafeAttributeName(XMLUnsignedShort) == XMLUnsignedShort &&
+                        item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCategory) == XMLCategory &&
+                        item.Parent.Parent.Parent.Parent.Element(XMLCategory).SafeElementValue().Contains(XMLCategoryKeybindings)
+                    ////---------------------------------XML Hierarchy Integrity-Check Section---------------------------------
+                        &&
+                        (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.PressKey.ToString() ||
+                         item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyDown.ToString() ||
+                         item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyUp.ToString())
+                        &&
+                        item.SafeElementValue() != string.Empty
+                select
+                    new
+                    {
+                        CommandString = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
+                        CommandActionId = item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue(),
+                        KeyActionType = item.Parent.Parent.Element(XMLActionType).SafeElementValue(),
+                        KeyCode = System.Convert.ToInt32(item.SafeElementValue())
+                    };
+        }
+
+        /// <summary>
+        /// Parse Voice Attack Config File to extract Commands and Command Actions for any Key Up/Down/Press Action Type
+        /// </summary>
+        /// <param name="xdoc"></param>
+        /// <returns></returns>
+        /// 
+        private System.Collections.Generic.IEnumerable<object> ParseVoiceAttackProfileForKeyBindableCommands(ref XDocument xdoc)
+        {
+            // // Find properties related to any Key-related CommandString node ...
+            return
+                from item in xdoc.Descendants(XMLUnsignedShort)
+                orderby (item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommandString) +
+                         item.SafeAttributeName(XMLUnsignedShort))
+                where
+                    ////---------------------------------XML Hierarchy Integrity-Check Section---------------------------------
+                        item.Parent.Parent.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommands) == XMLCommands &&
+                        item.Parent.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommand) == XMLCommand &&
+                        item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommandString) == XMLCommandString &&
+                        item.Parent.Parent.Parent.SafeAttributeName(XMLActionSequence) == XMLActionSequence &&
+                        item.Parent.Parent.SafeAttributeName(XMLCommandAction) == XMLCommandAction &&
+                        item.Parent.SafeAttributeName(XMLCommandActionId) == XMLCommandActionId &&
+                        item.Parent.SafeAttributeName(XMLActionType) == XMLActionType &&
+                        item.Parent.SafeAttributeName(XMLKeyCodes) == XMLKeyCodes &&
+                        item.SafeAttributeName(XMLUnsignedShort) == XMLUnsignedShort &&
+                        item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCategory) == XMLCategory &&
+                        item.Parent.Parent.Parent.Parent.Element(XMLCategory).SafeElementValue().Contains(XMLCategoryKeybindings)
+                    ////---------------------------------XML Hierarchy Integrity-Check Section---------------------------------
+                        &&
+                        (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.PressKey.ToString() ||
+                         item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyDown.ToString() ||
+                         item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyUp.ToString())
+                select
+                    new
+                    {
+                        CommandString = item.Parent.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue(),
+                        KeyActionType = item.Parent.Parent.Element(XMLActionType).SafeElementValue()
+                    };
+        }
+
+        /// <summary>
+        /// Parse Voice Attack Config File to extract Command Ids linked with a keyboard-related ActionId
+        /// </summary>
+        /// <param name="xdoc"></param>
+        /// <param name="commandActionId"></param>
+        /// <returns></returns>
+        private System.Collections.Generic.IEnumerable<object> ParseVoiceAttackProfileForKeyBoundCommandIdsFromCommandActionId(ref XDocument xdoc, string commandActionId)
+        {
+            return
+                from item in xdoc.Descendants(XMLUnsignedShort)
+                orderby (item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommandString) +
+                         item.SafeAttributeName(XMLUnsignedShort))
+                where
+                    ////---------------------------------XML Hierarchy Integrity-Check Section---------------------------------
+                        item.Parent.Parent.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommands) == XMLCommands &&
+                        item.Parent.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommand) == XMLCommand &&
+                        item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommandString) == XMLCommandString &&
+                        item.Parent.Parent.Parent.SafeAttributeName(XMLActionSequence) == XMLActionSequence &&
+                        item.Parent.Parent.SafeAttributeName(XMLCommandAction) == XMLCommandAction &&
+                        item.Parent.SafeAttributeName(XMLCommandActionId) == XMLCommandActionId &&
+                        item.Parent.SafeAttributeName(XMLActionType) == XMLActionType &&
+                        item.Parent.SafeAttributeName(XMLKeyCodes) == XMLKeyCodes &&
+                        item.SafeAttributeName(XMLUnsignedShort) == XMLUnsignedShort &&
+                        item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCategory) == XMLCategory &&
+                        item.Parent.Parent.Parent.Parent.Element(XMLCategory).SafeElementValue().Contains(XMLCategoryKeybindings)
+                    ////---------------------------------XML Hierarchy Integrity-Check Section---------------------------------
+                        &&
+                        (item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.PressKey.ToString() ||
+                         item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyDown.ToString() ||
+                         item.Parent.Parent.Element(XMLActionType).SafeElementValue() == Application.Interaction.KeyUp.ToString())
+                        &&
+                         item.Parent.Parent.Element(XMLCommandActionId).SafeElementValue() == commandActionId
+                select
+                         item.Parent.Parent.Parent.Parent.Element(XMLCommandId).SafeElementValue();
         }
     }
 }

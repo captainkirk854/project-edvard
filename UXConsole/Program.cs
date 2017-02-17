@@ -320,9 +320,10 @@
 
                 PressIt();
             }
-            catch
+            catch (Exception ex)
             {
                 Console.WriteLine("Something went wrong ... we cry real tears ...");
+                Console.WriteLine(" > Exception Message [{0}]", ex.Message);
                 PressIt();
                 throw;
             }
