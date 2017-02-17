@@ -66,6 +66,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set02", "Set02", "{4A08BC0B
 		Data\Test\Set02\Orion 2.0 Guardians Full House with UTF16.vap = Data\Test\Set02\Orion 2.0 Guardians Full House with UTF16.vap
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "results", "results", "{FD4293FD-3024-4BF6-B261-D2F06DEC30FB}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Test\Set02\results\Edvard-ConsolidatedKeyBoundActions.csv = Data\Test\Set02\results\Edvard-ConsolidatedKeyBoundActions.csv
+		Data\Test\Set02\results\EliteDangerous-KeyBindableActions.csv = Data\Test\Set02\results\EliteDangerous-KeyBindableActions.csv
+		Data\Test\Set02\results\EliteDangerous-KeyBoundActions.csv = Data\Test\Set02\results\EliteDangerous-KeyBoundActions.csv
+		Data\Test\Set02\results\HOTAS and Wireless Gamepad.binds = Data\Test\Set02\results\HOTAS and Wireless Gamepad.binds
+		Data\Test\Set02\results\Orion 2.0 Guardians Full House with UTF16.vap = Data\Test\Set02\results\Orion 2.0 Guardians Full House with UTF16.vap
+		Data\Test\Set02\results\VoiceAttack-AllCommands.csv = Data\Test\Set02\results\VoiceAttack-AllCommands.csv
+		Data\Test\Set02\results\VoiceAttack-KeyBindableActions.csv = Data\Test\Set02\results\VoiceAttack-KeyBindableActions.csv
+		Data\Test\Set02\results\VoiceAttack-KeyBoundActions.csv = Data\Test\Set02\results\VoiceAttack-KeyBoundActions.csv
+		Data\Test\Set02\results\VoiceAttack-RelatedCommands.csv = Data\Test\Set02\results\VoiceAttack-RelatedCommands.csv
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,5 +122,6 @@ Global
 		{B49C3CC2-281F-424B-AE26-8EB15F656DEA} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
 		{E5A60F9D-EA45-47A0-BB83-2A3ADFB429AD} = {B49C3CC2-281F-424B-AE26-8EB15F656DEA}
 		{4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
+		{FD4293FD-3024-4BF6-B261-D2F06DEC30FB} = {4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1}
 	EndGlobalSection
 EndGlobal
