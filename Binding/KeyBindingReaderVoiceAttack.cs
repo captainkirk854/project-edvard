@@ -121,7 +121,7 @@
         /// <returns></returns>
         public DataTable GetCommandStringsForAllCategories()
         {
-            // Datatable to hold tabulated XML contents ..
+            // Initialise ..
             DataTable allVoiceCommands = TableShape.AllVoiceCommands();
 
             // Get anonymous type row data (as object types) ..
@@ -149,7 +149,7 @@
         /// <returns></returns>
         private DataTable GetCommandStringsWithKeyPressAction(ref XDocument xdoc)
         {
-            // Datatable to hold tabulated XML contents ..
+            // Initialise ..
             DataTable bindableActions = TableShape.BindableActions();
 
             // Use dynamic-magic to create a raw list of anonymous bindable-key object(s) ..
@@ -294,10 +294,10 @@
         /// <returns></returns>
         private DataTable GetKeyBindings(ref XDocument xdoc)
         {
-            // Use dynamic-magic to create a raw list of anonymous bound-key object(s) ..
+            // Use dynamic-magic to create a list of raw (with potential duplicates) anonymous bound-key object(s) ..
             IEnumerable<dynamic> rawKeyBoundCommands = this.ParseVoiceAttackProfileForKeyBoundCommands(ref xdoc);
 
-            // Use Linq grouping-magic to remove duplicates and organise raw bound-key object(s) ..
+            // Use Linq grouping-magic to remove duplicates and condense raw bound-key object list ..
             IEnumerable<dynamic> summarisedKeyBoundCommands = rawKeyBoundCommands.GroupBy(groupingField => new { groupingField.CommandString })
                                                                                  .Select(info => new
                                                                                             {
@@ -320,7 +320,7 @@
         /// <returns></returns>
         private DataTable Finalise(IEnumerable<dynamic> keyBoundCommands)
         {
-            // Datatable to hold tabulated XML contents ..
+            // Initialise ..
             DataTable boundKeyActionDefinitions = TableShape.KeyActionDefinition();
 
             // Extract condensed aggregation of KeyCodes ..
@@ -492,7 +492,7 @@
         /// 
         private System.Collections.Generic.IEnumerable<object> ParseVoiceAttackProfileForKeyBoundCommands(ref XDocument xdoc)
         {
-            // Find properties related to any Key-related CommandString node with a valuated KeyCode ..
+            // Find properties linked to any Key-related CommandString node with a valuated KeyCode ..
             return
                 from item in xdoc.Descendants(XMLUnsignedShort)
                 orderby (item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommandString) +
@@ -535,7 +535,7 @@
         /// 
         private System.Collections.Generic.IEnumerable<object> ParseVoiceAttackProfileForKeyBindableCommands(ref XDocument xdoc)
         {
-            // // Find properties related to any Key-related CommandString node ...
+            // // Find properties linked to any Key-related CommandString node (whether keyCode present or not) ...
             return
                 from item in xdoc.Descendants(XMLUnsignedShort)
                 orderby (item.Parent.Parent.Parent.Parent.SafeAttributeName(XMLCommandString) +
