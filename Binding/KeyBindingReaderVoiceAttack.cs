@@ -303,17 +303,21 @@
         ///                                 |_<Context2/ xml:space=preserve>> -----
         ///                      !_<Description/> = Command Description
         ///                      !_<Category/> != Keybindings
+        ///   
+        ///   Notes:
+        ///     In some cases, the Command String references in <Context2> are in a different case. For the
+        ///     moment, this is ignored by forcing both sides of the comparison to uppercase.
         /// </remarks>
         /// <param name="xdoc"></param>
         /// <param name="keyBoundCommandString"></param>
         /// <returns></returns>
         private IEnumerable<string> GetCommandStringsFromCommandActionContext2(ref XDocument xdoc, string keyBoundCommandString)
         {
-            // Find Command String(s) where descendant Context = Action Id ..
+            // Find Command String(s) where descendant Context = key-bound CommandString ..
             var xmlExtracts = from item in xdoc.Descendants(XMLContext2)
                               where
                                     !item.Parent.Parent.Parent.Element(XMLCategory).Value.Contains(XMLCategoryKeybindings) &&
-                                    item.SafeElementValue() == keyBoundCommandString
+                                    item.SafeElementValue().ToUpper() == keyBoundCommandString.ToUpper()
                               select
                                     item.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue();
 
