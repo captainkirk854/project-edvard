@@ -79,6 +79,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "results", "results", "{FD42
 		Data\Test\Set02\results\VoiceAttack-RelatedCommands.csv = Data\Test\Set02\results\VoiceAttack-RelatedCommands.csv
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set03", "Set03", "{C6193C9B-2424-46F3-993C-8AF8882F6814}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Test\Set03\Astra profile - Full House.vap = Data\Test\Set03\Astra profile - Full House.vap
+		Data\Test\Set03\HOTAS and Wireless Gamepad.binds = Data\Test\Set03\HOTAS and Wireless Gamepad.binds
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,5 +129,6 @@ Global
 		{E5A60F9D-EA45-47A0-BB83-2A3ADFB429AD} = {B49C3CC2-281F-424B-AE26-8EB15F656DEA}
 		{4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
 		{FD4293FD-3024-4BF6-B261-D2F06DEC30FB} = {4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1}
+		{C6193C9B-2424-46F3-993C-8AF8882F6814} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
 	EndGlobalSection
 EndGlobal
