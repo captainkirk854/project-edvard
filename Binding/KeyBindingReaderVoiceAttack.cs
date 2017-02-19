@@ -27,6 +27,7 @@
         private const string XMLCommandActionId = "Id";
         private const string XMLKeyCodes = "KeyCodes";
         private const string XMLContext = "Context";
+        private const string XMLContext2 = "Context2";
         private const string XMLUnsignedShort = "unsignedShort";
         private const string XMLCategoryKeybindings = "Keybindings";
         
@@ -83,7 +84,7 @@
             // Initialise ..
             DataTable associatedCommands = TableShape.AssociatedCommands();
 
-            // Find associated commandStrings using commandString ActionId ...
+            // Loop through each key-bound Command String ..
             foreach (DataRow consolidatedBoundCommand in consolidatedBoundCommands.Select().Distinct().OrderBy(orderingColumn => orderingColumn[Edvard.Column.VoiceAttackAction.ToString()]))
             {
                 // Get required field information ..
@@ -94,9 +95,15 @@
                 string voiceAttackFile = Path.GetFileName(consolidatedBoundCommand[Edvard.Column.VoiceAttackProfile.ToString()].ToString());
                 string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommand[Edvard.Column.EliteDangerousBinds.ToString()].ToString());
 
-                // Find and loop through each associated Command String ..
+                // Find associated Command String(s) using key-bound CommandString ActionId ...
                 var associatedCommandStrings = this.GetCommandStringsFromCommandActionContext(ref this.xCfg, this.ParseVoiceAttackProfileForKeyBoundCommandIdsFromCommandActionId(ref this.xCfg, voiceAttackActionId).Distinct().FirstOrDefault().ToString());
+
+                // Find associated Command String(s) using key-bound CommandString Value ...
+                var associatedCommandStringsFromContext2 = this.GetCommandStringsFromCommandActionContext2(ref this.xCfg, voiceAttackCommandString);
+                if (associatedCommandStrings.Count() > 0) { associatedCommandStrings.Concat(associatedCommandStringsFromContext2); }
+                else { associatedCommandStrings = associatedCommandStringsFromContext2; }
                 
+                // Add to DataTable ..
                 foreach (var associatedCommandString in associatedCommandStrings.Distinct())
                 {
                     associatedCommands.LoadDataRow(new object[] 
@@ -181,7 +188,7 @@
         ///             o <Profile/>
         ///               |_ <Commands/>
         ///                  |_ <Command/>
-        ///                      !_<commandString/>* = Spoken Command  <--------¬
+        ///                      !_<CommandString/>* = Spoken Command  <--------¬
         ///                      !_<Category/>* = <value/>
         ///                      |_<ActionSequence/> 
         ///                         !_[some] <CommandAction/>
@@ -258,11 +265,10 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<commandString/>* = Spoken Command  <--------¬           
-        ///                      |_<ActionSequence/>                            |
-        ///                        !_[some] <CommandAction/>                    |
-        ///                                 |_<KeyCodes/>                       |
-        ///                                 |_<Context/> ------------------------
+        ///                      !_<CommandString/>* = Associated Spoken Command <¬           
+        ///                      |_<ActionSequence/>                              |
+        ///                        !_[some] <CommandAction/>                      |
+        ///                                 |_<Context/> --------------------------
         ///                      !_<Description/> = Command Description
         ///                      !_<Category/> != Keybindings
         /// </remarks>
@@ -273,9 +279,41 @@
         {
             // Find Command String(s) where descendant Context = Action Id ..
             var xmlExtracts = from item in xdoc.Descendants(XMLContext)
+                             where
+                                   !item.Parent.Parent.Parent.Element(XMLCategory).Value.Contains(XMLCategoryKeybindings) &&
+                                   item.SafeElementValue() == commandActionId
+                            select
+                                   item.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue();
+
+            return xmlExtracts;
+        }
+
+        /// <summary>
+        /// Parse Voice Attack Config File to get Command String associated to key-bound Command String
+        /// </summary>
+        /// <remarks>
+        ///   Format: XML
+        ///             o <Profile/>
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        ///                      |_<Id/>
+        ///                      !_<CommandString/>* = Associated Spoken Command <¬           
+        ///                      |_<ActionSequence/>                              |
+        ///                        !_[some] <CommandAction/>                      |
+        ///                                 |_<Context2/ xml:space=preserve>> -----
+        ///                      !_<Description/> = Command Description
+        ///                      !_<Category/> != Keybindings
+        /// </remarks>
+        /// <param name="xdoc"></param>
+        /// <param name="keyBoundCommandString"></param>
+        /// <returns></returns>
+        private IEnumerable<string> GetCommandStringsFromCommandActionContext2(ref XDocument xdoc, string keyBoundCommandString)
+        {
+            // Find Command String(s) where descendant Context = Action Id ..
+            var xmlExtracts = from item in xdoc.Descendants(XMLContext2)
                               where
                                     !item.Parent.Parent.Parent.Element(XMLCategory).Value.Contains(XMLCategoryKeybindings) &&
-                                    item.SafeElementValue() == commandActionId
+                                    item.SafeElementValue() == keyBoundCommandString
                               select
                                     item.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue();
 
@@ -444,7 +482,7 @@
         ///               |_ <Commands/>
         ///                  |_ <Command/>
         ///                      |_<Id/>
-        ///                      !_<commandString/>* = ((<action name/>))
+        ///                      !_<CommandString/>* = ((<action name/>))
         ///                      |_<ActionSequence/>
         ///                        !_[some] <CommandAction/>
         ///                                 !_<Id/>*
@@ -571,6 +609,21 @@
         /// </summary>
         /// <param name="xdoc"></param>
         /// <param name="commandActionId"></param>
+        /// <remarks>
+        ///   Format: XML
+        ///             o <Profile/>
+        ///               |_ <Commands/>
+        ///                  |_ <Command/>
+        ///                      |_<Id/> *  <-----------------------------------¬
+        ///                      !_<CommandString/>                             |
+        ///                      |_<ActionSequence/>                            |
+        ///                        !_[some] <CommandAction/>                    |
+        ///                                 |_<Id> -----------------------------
+        ///                                 |_<KeyCodes/>
+        ///                                 |_<Context/> 
+        ///                      !_<Description/> = Command Description
+        ///                      !_<Category/> != Keybindings
+        /// </remarks>
         /// <returns></returns>
         private System.Collections.Generic.IEnumerable<object> ParseVoiceAttackProfileForKeyBoundCommandIdsFromCommandActionId(ref XDocument xdoc, string commandActionId)
         {
