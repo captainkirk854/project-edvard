@@ -29,6 +29,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoiceAttack", "VoiceAttack", "{9137BA1C-B06D-4677-A243-76B1E44D636F}"
 	ProjectSection(SolutionItems) = preProject
 		Data\Samples\VoiceAttack\1.6.5 Full House Profile HOTAS.vap = Data\Samples\VoiceAttack\1.6.5 Full House Profile HOTAS.vap
+		Data\Samples\VoiceAttack\Astra profile - Full House.vap = Data\Samples\VoiceAttack\Astra profile - Full House.vap
 		Data\Samples\VoiceAttack\Elite Dangerous.vap = Data\Samples\VoiceAttack\Elite Dangerous.vap
 		Data\Samples\VoiceAttack\Orion 2.0 Full House.vap = Data\Samples\VoiceAttack\Orion 2.0 Full House.vap
 		Data\Samples\VoiceAttack\Orion 2.0 Guardians Full House with UTF16.vap = Data\Samples\VoiceAttack\Orion 2.0 Guardians Full House with UTF16.vap
@@ -85,6 +86,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set03", "Set03", "{C6193C9B
 		Data\Test\Set03\HOTAS and Wireless Gamepad.binds = Data\Test\Set03\HOTAS and Wireless Gamepad.binds
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "results", "results", "{FE202BD7-AA31-4E0A-8D64-2FFEBA351959}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Test\Set03\results\Astra profile - Full House.vap = Data\Test\Set03\results\Astra profile - Full House.vap
+		Data\Test\Set03\results\Edvard-ConsolidatedKeyBoundActions.csv = Data\Test\Set03\results\Edvard-ConsolidatedKeyBoundActions.csv
+		Data\Test\Set03\results\EliteDangerous-KeyBindableActions.csv = Data\Test\Set03\results\EliteDangerous-KeyBindableActions.csv
+		Data\Test\Set03\results\EliteDangerous-KeyBoundActions.csv = Data\Test\Set03\results\EliteDangerous-KeyBoundActions.csv
+		Data\Test\Set03\results\HOTAS and Wireless Gamepad.binds = Data\Test\Set03\results\HOTAS and Wireless Gamepad.binds
+		Data\Test\Set03\results\VoiceAttack-AllCommands.csv = Data\Test\Set03\results\VoiceAttack-AllCommands.csv
+		Data\Test\Set03\results\VoiceAttack-KeyBindableActions.csv = Data\Test\Set03\results\VoiceAttack-KeyBindableActions.csv
+		Data\Test\Set03\results\VoiceAttack-KeyBoundActions.csv = Data\Test\Set03\results\VoiceAttack-KeyBoundActions.csv
+		Data\Test\Set03\results\VoiceAttack-RelatedCommands.csv = Data\Test\Set03\results\VoiceAttack-RelatedCommands.csv
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,5 +144,6 @@ Global
 		{4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
 		{FD4293FD-3024-4BF6-B261-D2F06DEC30FB} = {4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1}
 		{C6193C9B-2424-46F3-993C-8AF8882F6814} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
+		{FE202BD7-AA31-4E0A-8D64-2FFEBA351959} = {C6193C9B-2424-46F3-993C-8AF8882F6814}
 	EndGlobalSection
 EndGlobal
