@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="UX.ViewModelUI"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UX"
+             mc:Ignorable="d" Height="178" Width="840">
+
+    <UserControl.DataContext>
+        <local:ViewModel/>
+    </UserControl.DataContext>
+
+    <Grid Margin="0,0,0,0">
+
+        <!--FileOpen Dialog -->
+        <Button Name="BtnFileOpen"  
+                Content="Open Binds" 
+                Background="{StaticResource ResourceKey=BindsColour}" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Margin="10,10,655,0" 
+                Height="25" 
+                Width="65" 
+                Click="BtnBindsOpen_Click"/>
+
+        <Button Name="BtnVapOpen"
+                Content="Open VAP"
+                Background="{StaticResource ResourceKey=VapColour}" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Margin="10,45,655,0" 
+                Height="25" 
+                Width="65"
+                Click="BtnVapOpen_Click"/>
+
+        <TextBox Name="TxtBoxSelectedBinds"  
+                 HorizontalAlignment="Left" 
+                 VerticalAlignment="Top" 
+                 Margin="80,10,0,0" 
+                 Height="25" 
+                 Width="740" 
+                 TextWrapping="Wrap"
+                 Text="{Binding Path=BindsFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBox Name="TxtBoxSelectedVap"  
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top" 
+                 Margin="80,45,0,0" 
+                 Height="25" 
+                 Width="740" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding Path=VAPFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!--Process Dialog -->
+        <Button Name="BtnSync"
+                Content="Sync"
+                Background="{StaticResource ResourceKey=DoItColour}" 
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="770,80,18,70"
+                Height="25"
+                Width="50"
+                Command="{Binding Path=SynchronisationCommand, UpdateSourceTrigger=PropertyChanged}"/>
+    </Grid>
+</UserControl>

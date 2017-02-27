@@ -18,9 +18,9 @@
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ViewUI : Window
     {
-        public MainWindow()
+        public ViewUI()
         {
             this.InitializeComponent();
         }
