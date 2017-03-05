@@ -4,18 +4,34 @@
     using System.IO;
     using Prism.Commands;
     using UX.BoilerPlate;
+    using System.Threading.Tasks;
 
     public class ViewModel : ObservableObject
     {
         /// <summary>
-        /// The File Path for Elite Dangerous Binds
+        /// File Path for Elite Dangerous Binds
         /// </summary>
         private string filePathBinds;
 
         /// <summary>
-        /// The File Path for VoiceAttack Profile
+        /// File Path for VoiceAttack Profile
         /// </summary>
         private string filePathVAP;
+
+        /// <summary>
+        /// Voice Attack Profile Sync Status
+        /// </summary>
+        private bool syncVoiceAttackProfile = false;
+
+        /// <summary>
+        /// Elite Dangerous Binds Sync Status
+        /// </summary>
+        private bool syncEliteDangerousBinds = false;
+
+        /// <summary>
+        /// Initialise Model instance ..
+        /// </summary>
+        private Model files = new Model();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModel"/> class
@@ -29,7 +45,7 @@
         /// <summary>
         /// Gets or sets selected Binds File Path
         /// </summary>
-        public string BindsFile
+        public string SelectedBindsFile
         {
             get
             {
@@ -52,7 +68,7 @@
         /// <summary>
         /// Gets or sets selected VAP File Path
         /// </summary>
-        public string VAPFile
+        public string SelectedVAPFile
         {
             get
             {
@@ -68,6 +84,46 @@
 
                     // Evaluate if Execute delegate can run ...
                     this.SynchronisationCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the Voice Attack Profile has been synchronised
+        /// </summary>
+        public bool VoiceAttackProfileSync
+        {
+            get
+            {
+                return this.syncVoiceAttackProfile;
+            }
+
+            private set 
+            {
+                if (this.syncVoiceAttackProfile != value)
+                {
+                    this.syncVoiceAttackProfile = value;
+                    this.RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the Elite Dangerous Binds file has been synchronised
+        /// </summary>
+        public bool EliteDangerousBindsSync
+        {
+            get
+            {
+                return this.syncEliteDangerousBinds;
+            }
+
+            private set
+            {
+                if (this.syncEliteDangerousBinds != value)
+                {
+                    this.syncEliteDangerousBinds = value;
+                    this.RaisePropertyChangedEvent();
                 }
             }
         }
@@ -96,8 +152,18 @@
         /// </summary>
         private void Execute()
         {
-            var synchro = new Model(this.BindsFile, this.VAPFile);
-            var result = synchro.Processed;
+            // Update selected file properties ..
+            this.files.EliteDangerousBinds = this.SelectedBindsFile;
+            this.files.VoiceAttackProfile = this.SelectedVAPFile;
+
+            // Process file(s) asynchronously ..
+            Task x = Task.Factory.StartNew(() =>
+            {
+                this.VoiceAttackProfileSync = files.VoiceAttackProfileSyncStatus;
+            }).ContinueWith((y) =>
+            {
+                this.EliteDangerousBindsSync = files.EliteDangerousBindSyncStatus; 
+            });
         }
 
         /// <summary>
@@ -106,7 +172,7 @@
         /// <returns></returns>
         private bool CanExecute()
         {
-            if (!File.Exists(this.BindsFile) || !File.Exists(this.VAPFile))
+            if (!File.Exists(this.SelectedBindsFile) || !File.Exists(this.SelectedVAPFile))
             {
                 return false;
             }

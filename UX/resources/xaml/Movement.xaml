@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="UX.resources.xaml.Movement"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    
+    <Grid>
+        <Canvas>
+            <Canvas.Triggers>
+                <EventTrigger RoutedEvent="Canvas.Loaded">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard BeginTime="0" Duration="Forever">
+                                <DoubleAnimation Storyboard.TargetName="eYellowGreen" Storyboard.TargetProperty="(Canvas.Left)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:3" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eYellowGreen" Storyboard.TargetProperty="(Canvas.Top)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:2" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eOrange" Storyboard.TargetProperty="(Canvas.Right)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:3" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eOrange" Storyboard.TargetProperty="(Canvas.Top)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:2" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eTomato" Storyboard.TargetProperty="(Canvas.Top)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:3" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eTomato" Storyboard.TargetProperty="(Canvas.Left)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:2" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eLightBlue" Storyboard.TargetProperty="(Canvas.Right)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:3" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eLightBlue" Storyboard.TargetProperty="(Canvas.Top)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:2" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eGold" Storyboard.TargetProperty="(Canvas.Left)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:3" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eGold" Storyboard.TargetProperty="(Canvas.Bottom)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:2" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eBlack" Storyboard.TargetProperty="(Canvas.Left)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:2" RepeatBehavior="Forever"/>
+                                <DoubleAnimation Storyboard.TargetName="eBlack" Storyboard.TargetProperty="(Canvas.Bottom)" From="0" To="50" AutoReverse="true" BeginTime="0:0:0" Duration="0:0:2" RepeatBehavior="Forever"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Canvas.Triggers>
+
+            <Ellipse x:Name="eYellowGreen" Opacity="0.95" Fill="YellowGreen" Height="5" Width="5" />
+            <Ellipse x:Name="eOrange" Opacity="0.5" Fill="Orange" Height="5" Width="5"/>
+            <Ellipse x:Name="eTomato" Opacity="0.75" Fill="Tomato" Height="5" Width="5"  />
+            <Ellipse x:Name="eLightBlue" Opacity="0.5" Fill="LightBlue" Height="5" Width="5" />
+            <Ellipse x:Name="eGold" Opacity="0.85" Fill="Gold" Height="5" Width="5" />
+            <Ellipse x:Name="eBlack" Opacity="1" Fill="Black" Height="5" Width="5" />
+
+        </Canvas>
+    </Grid>
+</UserControl>

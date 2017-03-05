@@ -2,21 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="ViewUI.xaml">
+    
     <Application.Resources>
-        <LinearGradientBrush x:Key="BindsColour" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="Aqua"  Offset="0"></GradientStop>
-            <GradientStop Color="White" Offset="0.5"></GradientStop>
-            <GradientStop Color="Lime"  Offset="1"></GradientStop>
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="VapColour" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="YellowGreen" Offset="0"></GradientStop>
-            <GradientStop Color="Aqua" Offset="0.5"></GradientStop>
-            <GradientStop Color="Lime" Offset="1"></GradientStop>
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="DoItColour" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="Red" Offset="0"></GradientStop>
-            <GradientStop Color="Orange" Offset="0.5"></GradientStop>
-            <GradientStop Color="Lime" Offset="1"></GradientStop>
-        </LinearGradientBrush>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="resources/xaml/UIColours.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="resources/xaml/ButtonStyles.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>  
     </Application.Resources>
+    
 </Application>

@@ -2,11 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:UX"
-        Title="EdVard" Height="165" Width="850"
+        Title="EdVard" Height="226" Width="850"
         ResizeMode="CanMinimize" 
         WindowStyle="ThreeDBorderWindow" 
-        Background="#FF2C4885"
-        Icon="resources/TeamEdvard.jpg">
+        Background="{StaticResource ResourceKey=UIBackground}"
+        Icon="resources/icons/TeamEdvard.jpg">
 
     <ContentPresenter>
         <ContentPresenter.Content>

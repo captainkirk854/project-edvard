@@ -1,0 +1,35 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <LinearGradientBrush x:Key="UIMain" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="LightGray" Offset="0.5"></GradientStop>
+        <GradientStop Color="White" Offset="0.5"></GradientStop>
+        <GradientStop Color="Gray" Offset="1"></GradientStop>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="UIIsPressed" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="White" Offset="0"></GradientStop>
+        <GradientStop Color="DarkGray" Offset="0.5"></GradientStop>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="UIMouseOver" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="LightGray"  Offset="0.5"></GradientStop>
+        <GradientStop Color="Silver" Offset="0.5"></GradientStop>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="UIBackground" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="DimGray" Offset="0.5"></GradientStop>
+        <GradientStop Color="Silver"  Offset="1"></GradientStop>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="UIPressButton01" StartPoint="0,0" EndPoint="0,0.5">
+        <GradientStop Offset="0" Color="OrangeRed"/>
+        <GradientStop Offset="1" Color="Orange"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="UIPressButton02" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="White"/>
+        <GradientStop Offset="1" Color="OrangeRed"/>
+    </LinearGradientBrush>
+    
+</ResourceDictionary>

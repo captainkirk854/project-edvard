@@ -6,46 +6,101 @@
 
     public class Model : ObservableObject
     {
-    //    private bool processed;
-        private string bindsFile;
-        private string vapFile;
+        /// <summary>
+        /// File Path for Elite Dangerous Binds
+        /// </summary>
+        private string filepathBinds;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Model"/> class
+        /// File Path for VoiceAttack Profile
         /// </summary>
-        /// <param name="binds"></param>
-        /// <param name="vap"></param>
-        public Model(string binds, string vap)
+        private string filepathVAP;
+
+        /// <summary>
+        /// Key Bindings Lookup
+        /// </summary>
+        private KeyBindingAndCommandConnector keyLookup = new KeyBindingAndCommandConnector();
+        
+        /// <summary>
+        /// Voice Attack Writer
+        /// </summary>
+        private KeyBindingWriterVoiceAttack keyWriterVoiceAttack = new KeyBindingWriterVoiceAttack();
+        
+        /// <summary>
+        /// Elite Dangerous Writer
+        /// </summary>
+        private KeyBindingWriterEliteDangerous keyWriterEliteDangerous = new KeyBindingWriterEliteDangerous();
+
+        /// <summary>
+        /// Gets or sets selected Binds File Path
+        /// </summary>
+        public string EliteDangerousBinds
         {
-            this.bindsFile = binds;
-            this.vapFile = vap;
+            get
+            {
+                return this.filepathBinds;
+            }
+
+            set
+            {
+                if (this.filepathBinds != value)
+                {
+                    this.filepathBinds = value;
+                }
+            }
         }
 
-        public bool Processed 
+        /// <summary>
+        /// Gets or sets selected VAP File Path
+        /// </summary>
+        public string VoiceAttackProfile
         {
-            get { return this.Synchronise(this.bindsFile, this.vapFile); }
+            get
+            {
+                return this.filepathVAP;
+            }
+
+            set
+            {
+                if (this.filepathVAP != value)
+                {
+                    this.filepathVAP = value;
+                }
+            }
         }
 
-        private bool Synchronise(string bindsFile, string vapFile)
+        /// <summary>
+        /// Gets a value indicating whether the Voice Attack Profile has been synchronised
+        /// </summary>
+        public bool VoiceAttackProfileSyncStatus
         {
-            if (File.Exists(bindsFile) && File.Exists(vapFile))
-            {
-                KeyBindingAndCommandConnector keyLookup = new KeyBindingAndCommandConnector();
+            get { return this.SynchroniseVoiceAttack(); }
+        }
 
-                // Voice Attack Profile synchronise ..
-                KeyBindingWriterVoiceAttack newVoiceAttack = new KeyBindingWriterVoiceAttack();
-                newVoiceAttack.Update(KeyBindingAnalyser.VoiceAttack(bindsFile, vapFile, keyLookup), true);
+        /// <summary>
+        /// Gets a value indicating whether the Elite Dangerous Binds file has been synchronised
+        /// </summary>
+        public bool EliteDangerousBindSyncStatus
+        {
+            get { return this.SynchroniseEliteDangerous(); }
+        }
 
-                // Elite Dangerous Binds synchronise ..
-                KeyBindingWriterEliteDangerous newEliteDangerous = new KeyBindingWriterEliteDangerous();
-                newEliteDangerous.Update(KeyBindingAnalyser.EliteDangerous(bindsFile, vapFile, keyLookup), true);
+        /// <summary>
+        /// Synchronise Voice Attack Profile
+        /// </summary>
+        /// <returns></returns>
+        private bool SynchroniseVoiceAttack()
+        {
+            return this.keyWriterVoiceAttack.Update(KeyBindingAnalyser.VoiceAttack(this.EliteDangerousBinds, this.VoiceAttackProfile, this.keyLookup), true);
+        }
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        /// <summary>
+        /// Synchronise Elite Dangerous Binds
+        /// </summary>
+        /// <returns></returns>
+        private bool SynchroniseEliteDangerous()
+        {
+            return this.keyWriterEliteDangerous.Update(KeyBindingAnalyser.EliteDangerous(this.EliteDangerousBinds, this.VoiceAttackProfile, this.keyLookup), true);
         }
     }
 }

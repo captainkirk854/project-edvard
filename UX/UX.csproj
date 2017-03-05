@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Input.Manipulations" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -72,12 +73,29 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BoilerPlate\GlobalProperty.cs" />
+    <Compile Include="Convertors\BooleanToColour.cs" />
+    <Compile Include="Convertors\ValueToType.cs" />
     <Compile Include="LocalHelper\Dialog.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="resources\xaml\Movement.xaml.cs">
+      <DependentUpon>Movement.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel.cs" />
     <Compile Include="ViewModelUI.xaml.cs">
       <DependentUpon>ViewModelUI.xaml</DependentUpon>
     </Compile>
+    <Page Include="resources\xaml\Movement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="resources\xaml\UIColours.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="resources\xaml\ButtonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ViewUI.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -143,8 +161,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\TeamEdvard.jpg" />
-    <Resource Include="resources\TeamEdward.jpg" />
+    <Resource Include="resources\icons\TeamEdvard.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
