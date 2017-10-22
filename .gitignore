@@ -187,3 +187,8 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+# Some Visual Studio 2017 things ..
+/.vs
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
