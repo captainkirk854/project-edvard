@@ -90,7 +90,7 @@
                 ConsistentExit();
             }
 
-            // Determine file-type (user/test-test) to be processed ..
+            // Determine file-type (user/test) to be processed (e.g. /test Set01 /sync:twoway) ..
             if (argTestSet == null)
             {
                 if (File.Exists(argFilePathBinds))
