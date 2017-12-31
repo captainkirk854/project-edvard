@@ -4,7 +4,7 @@
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Windows.Input;
-    using Helper;
+    using Utility;
 
     /// <summary>
     /// Key Type/Code Mapping using Virtual Key Codes ..

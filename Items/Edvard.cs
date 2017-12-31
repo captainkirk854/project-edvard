@@ -3,7 +3,7 @@
     /// <summary>
     /// Edvard related Enumerations
     /// </summary>
-    public partial class Edvard
+    public partial class EDVArd
     {
         /// <summary>
         /// Enumeration of Table Columns

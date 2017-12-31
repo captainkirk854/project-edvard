@@ -1,0 +1,125 @@
+﻿<UserControl x:Class="EDVArd.ViewDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:EDVArd"
+             xmlns:localconv="clr-namespace:EDVArd.ViewConvertor"
+             mc:Ignorable="d" Height="180" Width="830">
+
+    <UserControl.DataContext>
+        <local:ViewModelUI/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <localconv:BooleanToColour x:Key="StatusColours"></localconv:BooleanToColour>
+    </UserControl.Resources>
+
+    <Grid>
+
+            <!--FileOpen Dialog -->
+            <Button Name="BtnFileOpen"  
+                    Content="Open Binds" 
+                    Margin="10,10,655,0" 
+                    Click="BtnBindsOpen_Click"/>
+
+            <Button Name="BtnVapOpen"
+                    Content="Open VAP"
+                    Margin="10,45,655,0" 
+                    Click="BtnVapOpen_Click"/>
+
+            <TextBox Name="TxtBoxSelectedBinds"  
+                     HorizontalAlignment="Left" 
+                     VerticalAlignment="Top" 
+                     Margin="90,10,0,0" 
+                     Height="25" 
+                     Width="730" 
+                     TextWrapping="Wrap"
+                     Text="{Binding Path=SelectedBindsFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBox Name="TxtBoxSelectedVap"  
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top" 
+                     Margin="90,45,0,0" 
+                     Height="25" 
+                     Width="730" 
+                     TextWrapping="Wrap" 
+                     Text="{Binding Path=SelectedVAPFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <!--Process Dialog -->
+            <Button Name="BtnSync"
+                    Content="Synchronise"
+                    Margin="650,75,0,0"
+                    Command="{Binding Path=SynchronisationCommand, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Button Name="BtnSync2"
+                    Margin="750,105,0,0"
+                    Template="{StaticResource CustomButton01}"
+                    Command="{Binding Path=SynchronisationCommand, UpdateSourceTrigger=PropertyChanged}">
+            </Button>
+
+            <Ellipse
+                Name="VAPSyncStatus"
+                Height="20"
+                Width="20"
+                Stroke="Black"
+                Margin="715,-15,0,0"
+                Fill="{Binding Path=VoiceAttackProfileSync, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StatusColours}}" RenderTransformOrigin="0.733,3.067"/>
+
+            <Ellipse
+                Name="BindsSyncStatus"
+                Height="20"
+                Width="20"
+                Stroke="Black"
+                Margin="755,-15,0,0"
+                Fill="{Binding Path=EliteDangerousBindsSync, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StatusColours}}"/>
+
+            
+            <!--
+            <localcustom:Movement Margin="390,100,390,30"/>
+            -->
+            
+            
+            <!--
+            <StackPanel Margin="34,80,500,30" >
+                <ComboBox Margin="30,8,29,8" Width="120">
+                    <ComboBoxItem Content="First Normal Item" />
+                    <ComboBoxItem Content="Second Normal Item" />
+                    <ComboBoxItem Content="Third Normal Item" />
+                    <ComboBoxItem Content="Fourth Normal Item" />
+                    <ComboBoxItem Content="Fifth Normal Item" />
+                </ComboBox>
+                <ComboBox Margin="8" Width="120" IsEditable="True" Text="Edit Me">
+                    <ComboBoxItem Content="First Normal Item" />
+                    <ComboBoxItem Content="Second Normal Item" />
+                    <ComboBoxItem Content="Third Normal Item" />
+                    <ComboBoxItem Content="Fourth Normal Item" />
+                    <ComboBoxItem Content="Fifth Normal Item" />
+                </ComboBox>
+            </StackPanel>
+  -->
+        <!--
+        <Grid Margin="0,82,0,38">
+            <CheckBox Name="ChkBoxBackup"
+                      Content="Backup"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      Height="20" 
+                      Width="75"
+                      Margin="10,0,0,0"/>
+        </Grid>
+
+        <Grid Margin="0,0,0,51">
+            <ComboBox Name="ChkBoxSyncMode"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      Height="20" 
+                      Width="75"
+                      Margin="10,100,0,0"/>
+        </Grid>
+-->
+    </Grid>
+
+</UserControl>
+
+    
