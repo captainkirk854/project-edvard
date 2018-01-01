@@ -10,17 +10,17 @@
         /// <summary>
         /// File Path for Elite Dangerous Binds
         /// </summary>
-        private string filepathBinds;
+        private string filepathEliteDangerousBinds;
 
         /// <summary>
         /// File Path for VoiceAttack Profile
         /// </summary>
-        private string filepathVAP;
+        private string filepathVoiceAttackProfile;
 
         /// <summary>
         /// Key Bindings Lookup
         /// </summary>
-        private GameKeyAndCommandBindingsAdapter keyLookup = new GameKeyAndCommandBindingsAdapter();
+        private GameKeyAndCommandBindingsAdapter bindingsAdapter = new GameKeyAndCommandBindingsAdapter();
         
         /// <summary>
         /// Voice Attack Writer
@@ -39,14 +39,14 @@
         {
             get
             {
-                return this.filepathBinds;
+                return this.filepathEliteDangerousBinds;
             }
 
             set
             {
-                if (this.filepathBinds != value)
+                if (this.filepathEliteDangerousBinds != value)
                 {
-                    this.filepathBinds = value;
+                    this.filepathEliteDangerousBinds = value;
                 }
             }
         }
@@ -58,14 +58,14 @@
         {
             get
             {
-                return this.filepathVAP;
+                return this.filepathVoiceAttackProfile;
             }
 
             set
             {
-                if (this.filepathVAP != value)
+                if (this.filepathVoiceAttackProfile != value)
                 {
-                    this.filepathVAP = value;
+                    this.filepathVoiceAttackProfile = value;
                 }
             }
         }
@@ -92,7 +92,7 @@
         /// <returns></returns>
         private bool SynchroniseVoiceAttack()
         {
-            return this.keyWriterVoiceAttack.Update(KeyBindingAnalyser.VoiceAttack(this.EliteDangerousBinds, this.VoiceAttackProfile, this.keyLookup), true);
+            return this.keyWriterVoiceAttack.Update(KeyBindingAnalyser.VoiceAttack(this.EliteDangerousBinds, this.VoiceAttackProfile, this.bindingsAdapter), true);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@
         /// <returns></returns>
         private bool SynchroniseEliteDangerous()
         {
-            return this.keyWriterEliteDangerous.Update(KeyBindingAnalyser.EliteDangerous(this.EliteDangerousBinds, this.VoiceAttackProfile, this.keyLookup), true);
+            return this.keyWriterEliteDangerous.Update(KeyBindingAnalyser.EliteDangerous(this.EliteDangerousBinds, this.VoiceAttackProfile, this.bindingsAdapter), true);
         }
     }
 }

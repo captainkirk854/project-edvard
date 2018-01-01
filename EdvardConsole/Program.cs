@@ -4,11 +4,11 @@
     using GameKey.Binding.Analysis;
     using GameKey.Binding.Readers;
     using GameKey.Binding.Writers;
-    using Utility;
     using Items;
     using System;
     using System.Data;
     using System.IO;
+    using Utility;
 
     public class Program
     {
@@ -31,8 +31,8 @@
         public static void Main(string[] args)
         {
             #region [Command-Line Argument Initialisation]
-            string eliteDangerousBinds = string.Empty;
-            string voiceAttackProfile = string.Empty;
+            string filepathEliteDangerousBinds = string.Empty;
+            string filepathVoiceAttackProfile = string.Empty;
 
             // Parse Command Line arguments ..
             CommandLine commands = new CommandLine(args);
@@ -96,7 +96,7 @@
             {
                 if (File.Exists(argFilePathBinds))
                 {
-                    eliteDangerousBinds = argFilePathBinds;
+                    filepathEliteDangerousBinds = argFilePathBinds;
                 }
                 else
                 {
@@ -109,7 +109,7 @@
 
                 if (File.Exists(argFilePathVap))
                 {
-                    voiceAttackProfile = argFilePathVap;
+                    filepathVoiceAttackProfile = argFilePathVap;
                 }
                 else
                 {
@@ -129,8 +129,8 @@
                 // Select first file of each type as test files to use ..
                 var internalTestDirectory = HandleIO.GetCaseSensitiveDirectoryPath(Path.Combine(InternalTestRootDirectory, argTestSet));
                 var internalTestInputDataDirectory = HandleIO.GetCaseSensitiveDirectoryPath(Path.Combine(internalTestDirectory, InternalTestSetAnalysisInputDirectory));
-                eliteDangerousBinds = Directory.GetFiles(internalTestInputDataDirectory, "*.binds")[0];
-                voiceAttackProfile = Directory.GetFiles(internalTestInputDataDirectory, "*.vap")[0];
+                filepathEliteDangerousBinds = Directory.GetFiles(internalTestInputDataDirectory, "*.binds")[0];
+                filepathVoiceAttackProfile = Directory.GetFiles(internalTestInputDataDirectory, "*.vap")[0];
 
                 // Force redirect of analysis result(s) to internal test area ..
                 argDirectoryPathAnalysis = Path.Combine(internalTestDirectory, InternalTestSetAnalysisOutputDirectory);
@@ -138,7 +138,7 @@
             }
             
             // Final Check ..
-            if (!(File.Exists(eliteDangerousBinds) && File.Exists(voiceAttackProfile)))
+            if (!(File.Exists(filepathEliteDangerousBinds) && File.Exists(filepathVoiceAttackProfile)))
             {
                 Console.WriteLine("Required file(s) are missing!");
                 PressIt();
@@ -152,10 +152,10 @@
             KeyBindingReader.KeyType = KeyEnum.Type.WindowsForms;
 
             // Initialise lookup dictionary for inter-game action references ..
-            GameKeyAndCommandBindingsAdapter keyLookup = null;
+            GameKeyAndCommandBindingsAdapter bindingsAdapter = null;
             try
             {
-                keyLookup = new GameKeyAndCommandBindingsAdapter();
+                bindingsAdapter = new GameKeyAndCommandBindingsAdapter();
             }
             catch
             {
@@ -173,7 +173,7 @@
             // Optional arg: Dictionary export
             if (HandleIO.ValidateFilepath(argFilePathDictionaryWrite) && HandleIO.CreateDirectory(argFilePathDictionaryWrite, true))
             {
-                keyLookup.Export(argFilePathDictionaryWrite);
+                bindingsAdapter.Export(argFilePathDictionaryWrite);
             }
             else
             {
@@ -183,7 +183,7 @@
             // Optional arg: Dictionary import ..
             if (File.Exists(argFilePathDictionaryRead))
             {
-                keyLookup.Import(argFilePathDictionaryRead);
+                bindingsAdapter.Import(argFilePathDictionaryRead);
             }
             else
             {
@@ -208,11 +208,11 @@
                     Console.WriteLine("Attempting VoiceAttack Profile update ..");
 
                     // Backup (optional) ..
-                    Console.WriteLine("backup: {0}", HandleIO.SequentialFileBackup(argDirectoryPathBackup, voiceAttackProfile, BackupCycle, BackupFilenameLeftPadSize).ToString());
+                    Console.WriteLine("backup: {0}", HandleIO.SequentialFileBackup(argDirectoryPathBackup, filepathVoiceAttackProfile, BackupCycle, BackupFilenameLeftPadSize).ToString());
 
                     // Attempt synchronisation update ..
                     KeyBindingWriterVoiceAttack newVoiceAttack = new KeyBindingWriterVoiceAttack();
-                    Console.WriteLine("Voice Attack Profile: {0}", newVoiceAttack.Update(KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
+                    Console.WriteLine("Voice Attack Profile: {0}", newVoiceAttack.Update(KeyBindingAnalyser.VoiceAttack(filepathEliteDangerousBinds, filepathVoiceAttackProfile, bindingsAdapter), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
                 }
                 else
                 {
@@ -229,11 +229,11 @@
                     Console.WriteLine("Attempting Elite Dangerous Binds update ..");
 
                     // Backup (optional) ..
-                    Console.WriteLine("backup: {0}", HandleIO.SequentialFileBackup(argDirectoryPathBackup, eliteDangerousBinds, BackupCycle, BackupFilenameLeftPadSize).ToString());
+                    Console.WriteLine("backup: {0}", HandleIO.SequentialFileBackup(argDirectoryPathBackup, filepathEliteDangerousBinds, BackupCycle, BackupFilenameLeftPadSize).ToString());
 
                     // Attempt synchronisation update ..
                     KeyBindingWriterEliteDangerous newEliteDangerous = new KeyBindingWriterEliteDangerous();
-                    Console.WriteLine("Elite Dangerous Binds: {0}", newEliteDangerous.Update(KeyBindingAnalyser.EliteDangerous(eliteDangerousBinds, voiceAttackProfile, keyLookup), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
+                    Console.WriteLine("Elite Dangerous Binds: {0}", newEliteDangerous.Update(KeyBindingAnalyser.EliteDangerous(filepathEliteDangerousBinds, filepathVoiceAttackProfile, bindingsAdapter), argCreateReferenceTag) == true ? "updated" : "no update possible or required");
                 }
                 else
                 {
@@ -246,8 +246,8 @@
                 {
                     Console.WriteLine();
                     Console.WriteLine("Copying processed test file(s) to {0}", argDirectoryPathAnalysis);
-                    HandleIO.CopyFile(eliteDangerousBinds, argDirectoryPathAnalysis);
-                    HandleIO.CopyFile(voiceAttackProfile, argDirectoryPathAnalysis);
+                    HandleIO.CopyFile(filepathEliteDangerousBinds, argDirectoryPathAnalysis);
+                    HandleIO.CopyFile(filepathVoiceAttackProfile, argDirectoryPathAnalysis);
                 }
                 #endregion
 
@@ -260,8 +260,8 @@
                     Console.WriteLine("Preparing analysis data ..");
 
                     // Read (updated) file(s) ..
-                    KeyBindingReaderEliteDangerous eliteDangerous = new KeyBindingReaderEliteDangerous(eliteDangerousBinds);
-                    KeyBindingReaderVoiceAttack voiceAttack = new KeyBindingReaderVoiceAttack(voiceAttackProfile);
+                    KeyBindingReaderEliteDangerous eliteDangerous = new KeyBindingReaderEliteDangerous(filepathEliteDangerousBinds);
+                    KeyBindingReaderVoiceAttack voiceAttack = new KeyBindingReaderVoiceAttack(filepathVoiceAttackProfile);
 
                     string sortOrder = string.Empty;
 
@@ -280,7 +280,7 @@
 
                     // Consolidated ..
                     sortOrder = Items.EDVArd.Column.EliteDangerousAction.ToString() + ',' + Items.EDVArd.Column.VoiceAttackAction.ToString();
-                    DataTable consolidatedBoundActions = KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup).Sort(sortOrder);
+                    DataTable consolidatedBoundActions = KeyBindingAnalyser.VoiceAttack(filepathEliteDangerousBinds, filepathVoiceAttackProfile, bindingsAdapter).Sort(sortOrder);
                     DataTable relatedVoiceAttackCommands = voiceAttack.GetRelatedCommandStrings(consolidatedBoundActions).Sort(sortOrder);
 
                     // Create appropriate type of analysis file ..

@@ -15,27 +15,27 @@
         /// <summary>
         /// Adjust VoiceAttack Command key codes to match those in Elite Dangerous using Elite Dangerous command bindings as master ..
         /// </summary>
-        /// <param name="eliteDangerousBinds"></param>
-        /// <param name="voiceAttackProfile"></param>
-        /// <param name="keyLookup"></param>
+        /// <param name="filepathEliteDangerousBinds"></param>
+        /// <param name="filepathVoiceAttackProfile"></param>
+        /// <param name="bindingsAdapter"></param>
         /// <returns></returns>
-        public static DataTable VoiceAttack(string eliteDangerousBinds, string voiceAttackProfile, GameKeyAndCommandBindingsAdapter keyLookup)
+        public static DataTable VoiceAttack(string filepathEliteDangerousBinds, string filepathVoiceAttackProfile, GameKeyAndCommandBindingsAdapter bindingsAdapter)
         {
             // Datatable to hold tabulated contents ..
             DataTable adjustedVoiceAttackCommands = TableShape.ConsolidatedActions();
             string globalEliteDangerousBindsInternal = string.Empty;
 
-            // Read bindings ..
-            var eliteDangerous = new KeyBindingReaderEliteDangerous(eliteDangerousBinds).GetBoundCommands();
-            var voiceAttack = new KeyBindingReaderVoiceAttack(voiceAttackProfile).GetBoundCommands();
+            // Read bindings for each ..
+            var boundCommandsEliteDangerous = new KeyBindingReaderEliteDangerous(filepathEliteDangerousBinds).GetBoundCommands();
+            var boundCommandsVoiceAttack = new KeyBindingReaderVoiceAttack(filepathVoiceAttackProfile).GetBoundCommands();
 
             // Search through all defined Voice Attack bindings ..
-            var voiceattackBindings = from va in voiceAttack.AsEnumerable()
+            var bindingsVoiceAttack = from va in boundCommandsVoiceAttack.AsEnumerable()
                                     select
                                        new
                                          {
                                             KeyEnumeration = va.Field<string>(EDVArd.Column.KeyEnumeration.ToString()),
-                                            EliteDangerousAction = keyLookup.GetEliteDangerousBinding(va.Field<string>(EDVArd.Column.KeyAction.ToString())),
+                                            EliteDangerousAction = bindingsAdapter.GetEliteDangerousBinding(va.Field<string>(EDVArd.Column.KeyAction.ToString())),
                                             Action = va.Field<string>(EDVArd.Column.KeyAction.ToString()),
                                             KeyValue = va.Field<string>(EDVArd.Column.KeyEnumerationValue.ToString()),
                                             KeyCode = va.Field<int>(EDVArd.Column.KeyEnumerationCode.ToString()),
@@ -50,14 +50,14 @@
                                          };
 
             // .. and compare to Elite Dangerous bindings ..
-            foreach (var voiceattackBinding in voiceattackBindings)
+            foreach (var bindingVoiceAttack in bindingsVoiceAttack)
             {
                 bool commandDefinedInEliteDangerousBindsFile = false;
                 string updateRequirementStatus = "unknown";
                 string rationale = "unknown";
 
-                var elitedangerousBindings = from ed in eliteDangerous.AsEnumerable()
-                                             where ed.Field<string>(EDVArd.Column.KeyAction.ToString()) == voiceattackBinding.EliteDangerousAction
+                var bindingsEliteDangerous = from ed in boundCommandsEliteDangerous.AsEnumerable()
+                                            where ed.Field<string>(EDVArd.Column.KeyAction.ToString()) == bindingVoiceAttack.EliteDangerousAction
                                            select
                                               new
                                                 {
@@ -76,22 +76,22 @@
                                                 };
 
                 // Compare matching action bindings with their assigned key value/code to evaluate which key code(s) require re-mapping ..
-                foreach (var elitedangerousBinding in elitedangerousBindings)
+                foreach (var bindingEliteDangerous in bindingsEliteDangerous)
                 {
                     commandDefinedInEliteDangerousBindsFile = true;
 
                     // Assign for later use ..
-                    globalEliteDangerousBindsInternal = elitedangerousBinding.Internal;
+                    globalEliteDangerousBindsInternal = bindingEliteDangerous.Internal;
 
                     // Check for: satisfactory alignment of regular and modifier key codes ..
                     if (
                         // Matching Regular Key Codes with no Modifier Key(s) present ..
-                        ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
-                        (elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NotApplicableInt))     ||
+                        ((bindingEliteDangerous.KeyEnumerationCode == bindingVoiceAttack.KeyCode) &&
+                        (bindingEliteDangerous.ModifierKeyEnumerationCode == StatusCode.NotApplicableInt))     ||
                         
                         // Matching Regular Key Codes with matching Modifier Key(s) present ..
-                        ((elitedangerousBinding.KeyEnumerationCode == voiceattackBinding.KeyCode) &&
-                        (elitedangerousBinding.ModifierKeyEnumerationCode == voiceattackBinding.ModifierKeyEnumerationCode)))
+                        ((bindingEliteDangerous.KeyEnumerationCode == bindingVoiceAttack.KeyCode) &&
+                        (bindingEliteDangerous.ModifierKeyEnumerationCode == bindingVoiceAttack.ModifierKeyEnumerationCode)))
                     {
                         updateRequirementStatus = EDVArd.KeyUpdateRequired.NO.ToString();
                         rationale = "ED o--o VA Key Codes are aligned";
@@ -101,42 +101,42 @@
                         rationale = string.Empty;
 
                         // Check for misaligned codes ..
-                        if (elitedangerousBinding.KeyEnumerationCode > StatusCode.EmptyStringInt)
+                        if (bindingEliteDangerous.KeyEnumerationCode > StatusCode.EmptyStringInt)
                         {
                             updateRequirementStatus = EDVArd.KeyUpdateRequired.YES_Elite_TO_VoiceAttack.ToString();
 
                             // Check for: misaligned key codes ..
-                            if (elitedangerousBinding.KeyEnumerationCode != voiceattackBinding.KeyCode)
+                            if (bindingEliteDangerous.KeyEnumerationCode != bindingVoiceAttack.KeyCode)
                             {
-                                rationale += string.Format("Misaligned key codes: ED[{0}] o--O VA[{1}];", elitedangerousBinding.KeyEnumerationCode, voiceattackBinding.KeyCode);
+                                rationale += string.Format("Misaligned key codes: ED[{0}] o--O VA[{1}];", bindingEliteDangerous.KeyEnumerationCode, bindingVoiceAttack.KeyCode);
                             }
 
                             // Check for: misaligned modifier key codes ..
-                            if (elitedangerousBinding.ModifierKeyEnumerationCode != voiceattackBinding.ModifierKeyEnumerationCode)
+                            if (bindingEliteDangerous.ModifierKeyEnumerationCode != bindingVoiceAttack.ModifierKeyEnumerationCode)
                             {
-                                if (voiceattackBinding.ModifierKeyEnumerationCode == StatusCode.EmptyStringInt)
+                                if (bindingVoiceAttack.ModifierKeyEnumerationCode == StatusCode.EmptyStringInt)
                                 {
-                                    rationale += string.Format("Misaligned modifier key codes: ED[{0}] o--O VA[{1}];", elitedangerousBinding.ModifierKeyEnumerationCode, "no-modifier defined");
+                                    rationale += string.Format("Misaligned modifier key codes: ED[{0}] o--O VA[{1}];", bindingEliteDangerous.ModifierKeyEnumerationCode, "no-modifier defined");
                                 }
                                 else
                                 {
-                                    rationale += string.Format("Misaligned modifier key codes: ED[{0}] o--O VA[{1}];", elitedangerousBinding.ModifierKeyEnumerationCode, voiceattackBinding.ModifierKeyEnumerationCode);
+                                    rationale += string.Format("Misaligned modifier key codes: ED[{0}] o--O VA[{1}];", bindingEliteDangerous.ModifierKeyEnumerationCode, bindingVoiceAttack.ModifierKeyEnumerationCode);
                                 }
                             }
                         }
 
                         // Check for unresolvable key codes ..
-                        if (elitedangerousBinding.KeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || elitedangerousBinding.KeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
+                        if (bindingEliteDangerous.KeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || bindingEliteDangerous.KeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
                         {
                             updateRequirementStatus = EDVArd.KeyUpdateRequired.NO.ToString();
-                            rationale += string.Format("Unresolvable key code for: ED[{0}];", elitedangerousBinding.KeyGameValue);
+                            rationale += string.Format("Unresolvable key code for: ED[{0}];", bindingEliteDangerous.KeyGameValue);
                         }
 
                         // Check for: unresolvable modifier key codes ..
-                        if (elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || elitedangerousBinding.ModifierKeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
+                        if (bindingEliteDangerous.ModifierKeyEnumerationCode == StatusCode.NoEquivalentKeyFoundAtExchange || bindingEliteDangerous.ModifierKeyEnumerationCode == StatusCode.NoCodeFoundAfterExchange)
                         {
                             updateRequirementStatus = EDVArd.KeyUpdateRequired.NO.ToString();
-                            rationale += string.Format("Unresolvable modifier key code for: ED[{0}];", elitedangerousBinding.ModifierKeyGameValue);
+                            rationale += string.Format("Unresolvable modifier key code for: ED[{0}];", bindingEliteDangerous.ModifierKeyGameValue);
                         }
                     }
 
@@ -144,33 +144,33 @@
                     adjustedVoiceAttackCommands.LoadDataRow(new object[] 
                                                 {
                                                  ////--------------------------------------------------------------------------
-                                                 voiceattackBinding.KeyEnumeration, //KeyEnumeration
+                                                 bindingVoiceAttack.KeyEnumeration, //KeyEnumeration
                                                  ////--------------------------------------------------------------------------
                                                  updateRequirementStatus, //ReMapRequired
                                                  rationale, //Rationale
                                                  ////--------------------------------------------------------------------------
-                                                 voiceattackBinding.Action, //VoiceAttackAction
-                                                 voiceattackBinding.EliteDangerousAction, //EliteDangerousAction
+                                                 bindingVoiceAttack.Action, //VoiceAttackAction
+                                                 bindingVoiceAttack.EliteDangerousAction, //EliteDangerousAction
                                                  ////--------------------------------------------------------------------------
-                                                 voiceattackBinding.KeyValue, //VoiceAttackKeyValue
-                                                 voiceattackBinding.KeyCode, //VoiceAttackKeyCode
-                                                 voiceattackBinding.KeyID, //VoiceAttackKeyId
-                                                 voiceattackBinding.ModifierKeyEnumerationValue, //VoiceAttackKeyEnumerationValue
-                                                 voiceattackBinding.ModifierKeyEnumerationCode, //VoiceAttackModifierKeyCode
-                                                 voiceattackBinding.ModifierKeyID, //VoiceAttackModifierKeyId
+                                                 bindingVoiceAttack.KeyValue, //VoiceAttackKeyValue
+                                                 bindingVoiceAttack.KeyCode, //VoiceAttackKeyCode
+                                                 bindingVoiceAttack.KeyID, //VoiceAttackKeyId
+                                                 bindingVoiceAttack.ModifierKeyEnumerationValue, //VoiceAttackKeyEnumerationValue
+                                                 bindingVoiceAttack.ModifierKeyEnumerationCode, //VoiceAttackModifierKeyCode
+                                                 bindingVoiceAttack.ModifierKeyID, //VoiceAttackModifierKeyId
                                                  ////--------------------------------------------------------------------------                                                 
-                                                 elitedangerousBinding.KeyPriority, //EliteDangerousDevicePriority
-                                                 elitedangerousBinding.KeyGameValue, //EliteDangerousKeyValue
-                                                 elitedangerousBinding.KeyEnumerationCode, //EliteDangerousKeyCode
-                                                 elitedangerousBinding.KeyID, //EliteDangerousKeyId
-                                                 elitedangerousBinding.ModifierKeyGameValue, //EliteDangerousModifierKeyValue
-                                                 elitedangerousBinding.ModifierKeyEnumerationCode, //EliteDangerousModifierKeyCode
-                                                 elitedangerousBinding.ModifierKeyID, //EliteDangerousModifierKeyId
+                                                 bindingEliteDangerous.KeyPriority, //EliteDangerousDevicePriority
+                                                 bindingEliteDangerous.KeyGameValue, //EliteDangerousKeyValue
+                                                 bindingEliteDangerous.KeyEnumerationCode, //EliteDangerousKeyCode
+                                                 bindingEliteDangerous.KeyID, //EliteDangerousKeyId
+                                                 bindingEliteDangerous.ModifierKeyGameValue, //EliteDangerousModifierKeyValue
+                                                 bindingEliteDangerous.ModifierKeyEnumerationCode, //EliteDangerousModifierKeyCode
+                                                 bindingEliteDangerous.ModifierKeyID, //EliteDangerousModifierKeyId
                                                  ////--------------------------------------------------------------------------
-                                                 voiceattackBinding.Internal, //VoiceAttackInternal
-                                                 voiceattackBinding.FilePath, //VoiceAttackProfile
-                                                 elitedangerousBinding.Internal, //EliteDangerousInternal
-                                                 elitedangerousBinding.FilePath //EliteDangerousFilePath
+                                                 bindingVoiceAttack.Internal, //VoiceAttackInternal
+                                                 bindingVoiceAttack.FilePath, //VoiceAttackProfile
+                                                 bindingEliteDangerous.Internal, //EliteDangerousInternal
+                                                 bindingEliteDangerous.FilePath //EliteDangerousFilePath
                                                  ////--------------------------------------------------------------------------
                                                 }, 
                                                 false);
@@ -181,24 +181,24 @@
                 {
                     // Append to DataTable
                     updateRequirementStatus = EDVArd.KeyUpdateRequired.YES_VoiceAttack_TO_Elite.ToString();
-                    rationale = string.Format("ED[{0}] not bound/bindable to a key", voiceattackBinding.EliteDangerousAction);
+                    rationale = string.Format("ED[{0}] not bound/bindable to a key", bindingVoiceAttack.EliteDangerousAction);
                     adjustedVoiceAttackCommands.LoadDataRow(new object[] 
                                                 {
                                                  ////--------------------------------------------------------------------------
-                                                 voiceattackBinding.KeyEnumeration, //KeyEnumeration
+                                                 bindingVoiceAttack.KeyEnumeration, //KeyEnumeration
                                                  ////--------------------------------------------------------------------------
                                                  updateRequirementStatus, //ReMapRequired
                                                  rationale, //Rationale
                                                  ////--------------------------------------------------------------------------
-                                                 voiceattackBinding.Action, //VoiceAttackAction
-                                                 voiceattackBinding.EliteDangerousAction, //EliteDangerousAction
+                                                 bindingVoiceAttack.Action, //VoiceAttackAction
+                                                 bindingVoiceAttack.EliteDangerousAction, //EliteDangerousAction
                                                  ////--------------------------------------------------------------------------
-                                                 voiceattackBinding.KeyValue, //VoiceAttackKeyValue
-                                                 voiceattackBinding.KeyCode, //VoiceAttackKeyCode
-                                                 voiceattackBinding.KeyID, //VoiceAttackKeyId
-                                                 voiceattackBinding.ModifierKeyGameValue, //VoiceAttackModifierKeyValue
-                                                 voiceattackBinding.ModifierKeyEnumerationCode, //VoiceAttackModifierKeyCode
-                                                 voiceattackBinding.ModifierKeyID, //VoiceAttackModifierKeyId
+                                                 bindingVoiceAttack.KeyValue, //VoiceAttackKeyValue
+                                                 bindingVoiceAttack.KeyCode, //VoiceAttackKeyCode
+                                                 bindingVoiceAttack.KeyID, //VoiceAttackKeyId
+                                                 bindingVoiceAttack.ModifierKeyGameValue, //VoiceAttackModifierKeyValue
+                                                 bindingVoiceAttack.ModifierKeyEnumerationCode, //VoiceAttackModifierKeyCode
+                                                 bindingVoiceAttack.ModifierKeyID, //VoiceAttackModifierKeyId
                                                  ////--------------------------------------------------------------------------
                                                  StatusCode.NotApplicable, //EliteDangerousDevicePriority                 
                                                  StatusCode.NotApplicable, //EliteDangerousKeyValue
@@ -208,10 +208,10 @@
                                                  StatusCode.NotApplicableInt.ToString(), //EliteDangerousModifierKeyCode
                                                  StatusCode.NotApplicable, //EliteDangerousModifierKeyId
                                                  ////--------------------------------------------------------------------------                                               
-                                                 voiceattackBinding.Internal, //VoiceAttackInternal
-                                                 voiceattackBinding.FilePath, //VoiceAttackProfile
+                                                 bindingVoiceAttack.Internal, //VoiceAttackInternal
+                                                 bindingVoiceAttack.FilePath, //VoiceAttackProfile
                                                  globalEliteDangerousBindsInternal, //EliteDangerousInternal
-                                                 eliteDangerousBinds //EliteDangerousFilePath
+                                                 filepathEliteDangerousBinds //EliteDangerousFilePath
                                                  ////--------------------------------------------------------------------------
                                                 },
                                                 false);
@@ -224,23 +224,23 @@
         /// <summary>
         /// Search for undefined actions in Elite Dangerous Bindings that have been defined in VoiceAttack ..
         /// </summary>
-        /// <param name="eliteDangerousBinds"></param>
-        /// <param name="voiceAttackProfile"></param>
-        /// <param name="keyLookup"></param>
+        /// <param name="filepathEliteDangerousBinds"></param>
+        /// <param name="filepathVoiceAttackProfile"></param>
+        /// <param name="bindingsAdapter"></param>
         /// <returns></returns>
-        public static DataTable EliteDangerous(string eliteDangerousBinds, string voiceAttackProfile, GameKeyAndCommandBindingsAdapter keyLookup)
+        public static DataTable EliteDangerous(string filepathEliteDangerousBinds, string filepathVoiceAttackProfile, GameKeyAndCommandBindingsAdapter bindingsAdapter)
         {
             // Datatable to hold tabulated contents ..
-            DataTable reverseBindableActions = TableShape.ReverseBindableVacantEliteDangerousActions();
+            DataTable reverseBindableVacantActions = TableShape.ReverseBindableVacantEliteDangerousActions();
 
             // Analyse binding differences ..
-            var analysedGameActions = KeyBindingAnalyser.VoiceAttack(eliteDangerousBinds, voiceAttackProfile, keyLookup);
+            var analysedGameActions = KeyBindingAnalyser.VoiceAttack(filepathEliteDangerousBinds, filepathVoiceAttackProfile, bindingsAdapter);
 
             // Initialise lookup dictionary for game binding to action references ..
             var keys = new GameAndSystemKeyAdapter(KeyEnum.Type.WindowsForms);
 
             // Find defined Voice Attack commands with potential for update in Elite Dangerous binds ..
-            var vacantEliteDangerousBindings = from vac in analysedGameActions.AsEnumerable()
+            var vacantBindingsEliteDangerous = from vac in analysedGameActions.AsEnumerable()
                                               where vac.Field<string>(EDVArd.Column.KeyUpdateRequired.ToString()) == EDVArd.KeyUpdateRequired.YES_VoiceAttack_TO_Elite.ToString()
                                              select
                                                 new
@@ -258,31 +258,31 @@
                                                      EliteDangerousBinds = vac.Field<string>(EDVArd.Column.EliteDangerousBinds.ToString())
                                                  };
 
-            foreach (var vacantEliteDangerousBinding in vacantEliteDangerousBindings)
+            foreach (var vacantBindingEliteDangerous in vacantBindingsEliteDangerous)
             {
-                reverseBindableActions.LoadDataRow(new object[] 
+                reverseBindableVacantActions.LoadDataRow(new object[] 
                                                 {
                                                  ////--------------------------------------------------------------------------
-                                                 vacantEliteDangerousBinding.KeyEnumeration, //KeyEnumeration
-                                                 vacantEliteDangerousBinding.EliteDangerousAction, //EliteDangerousAction
-                                                 vacantEliteDangerousBinding.VoiceAttackAction, //VoiceAttackAction
+                                                 vacantBindingEliteDangerous.KeyEnumeration, //KeyEnumeration
+                                                 vacantBindingEliteDangerous.EliteDangerousAction, //EliteDangerousAction
+                                                 vacantBindingEliteDangerous.VoiceAttackAction, //VoiceAttackAction
                                                  ////--------------------------------------------------------------------------
-                                                 vacantEliteDangerousBinding.VoiceAttackKeyValue, //VoiceAttackKeyValue
-                                                 vacantEliteDangerousBinding.VoiceAttackKeyCode, //VoiceAttackKeyCode
-                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vacantEliteDangerousBinding.VoiceAttackKeyCode)), //EliteDangerousKeyValue
-                                                 vacantEliteDangerousBinding.VoiceAttackModifierKeyValue, //VoiceAttackModifierKeyValue
-                                                 vacantEliteDangerousBinding.VoiceAttackModifierKeyCode, //VoiceAttackModifierKeyCode
-                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vacantEliteDangerousBinding.VoiceAttackModifierKeyCode)), //EliteDangerousModifierKeyValue
+                                                 vacantBindingEliteDangerous.VoiceAttackKeyValue, //VoiceAttackKeyValue
+                                                 vacantBindingEliteDangerous.VoiceAttackKeyCode, //VoiceAttackKeyCode
+                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vacantBindingEliteDangerous.VoiceAttackKeyCode)), //EliteDangerousKeyValue
+                                                 vacantBindingEliteDangerous.VoiceAttackModifierKeyValue, //VoiceAttackModifierKeyValue
+                                                 vacantBindingEliteDangerous.VoiceAttackModifierKeyCode, //VoiceAttackModifierKeyCode
+                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vacantBindingEliteDangerous.VoiceAttackModifierKeyCode)), //EliteDangerousModifierKeyValue
                                                  ////--------------------------------------------------------------------------
-                                                 vacantEliteDangerousBinding.VoiceAttackInternal, //VoiceAttackInternal
-                                                 vacantEliteDangerousBinding.VoiceAttackProfile, //VoiceAttackProfile
-                                                 vacantEliteDangerousBinding.EliteDangerousInternal, //EliteDangerousInternal
-                                                 vacantEliteDangerousBinding.EliteDangerousBinds //EliteDangerousBinds
+                                                 vacantBindingEliteDangerous.VoiceAttackInternal, //VoiceAttackInternal
+                                                 vacantBindingEliteDangerous.VoiceAttackProfile, //VoiceAttackProfile
+                                                 vacantBindingEliteDangerous.EliteDangerousInternal, //EliteDangerousInternal
+                                                 vacantBindingEliteDangerous.EliteDangerousBinds //EliteDangerousBinds
                                                 },
                                                 false);
             }
 
-            return reverseBindableActions;
+            return reverseBindableVacantActions;
         }
     }
 }
