@@ -23,7 +23,7 @@
 
         #region [Internal Test Settings]
         // Support for crude test harness ..
-        private static readonly string InternalTestRootDirectory = AppRuntime.SolutionDirectory + "\\Tests\\TestData";
+        private static readonly string InternalTestRootDirectory = AppRuntime.SolutionDirectory + "\\Tests\\TestData\\Integration";
         private static readonly string InternalTestSetAnalysisInputDirectory = "in";
         private static readonly string InternalTestSetAnalysisOutputDirectory = "out";
         #endregion
