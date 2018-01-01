@@ -24,7 +24,8 @@
         #region [Internal Test Settings]
         // Support for crude test harness ..
         private static readonly string InternalTestRootDirectory = AppRuntime.SolutionDirectory + "\\Tests\\TestData";
-        private static readonly string InternalTestSetAnalysisResultsDirectory = "out";
+        private static readonly string InternalTestSetAnalysisInputDirectory = "in";
+        private static readonly string InternalTestSetAnalysisOutputDirectory = "out";
         #endregion
 
         public static void Main(string[] args)
@@ -127,12 +128,12 @@
 
                 // Select first file of each type as test files to use ..
                 var internalTestDirectory = HandleIO.GetCaseSensitiveDirectoryPath(Path.Combine(InternalTestRootDirectory, argTestSet));
-                var internalTestInputDataDirectory =  HandleIO.GetCaseSensitiveDirectoryPath(Path.Combine(internalTestDirectory, "in"));
+                var internalTestInputDataDirectory = HandleIO.GetCaseSensitiveDirectoryPath(Path.Combine(internalTestDirectory, InternalTestSetAnalysisInputDirectory));
                 eliteDangerousBinds = Directory.GetFiles(internalTestInputDataDirectory, "*.binds")[0];
                 voiceAttackProfile = Directory.GetFiles(internalTestInputDataDirectory, "*.vap")[0];
 
                 // Force redirect of analysis result(s) to internal test area ..
-                argDirectoryPathAnalysis = Path.Combine(internalTestDirectory, InternalTestSetAnalysisResultsDirectory);
+                argDirectoryPathAnalysis = Path.Combine(internalTestDirectory, InternalTestSetAnalysisOutputDirectory);
                 argAnalysisFileFormat = EDVArd.ArgSubOption.csv.ToString();
             }
             

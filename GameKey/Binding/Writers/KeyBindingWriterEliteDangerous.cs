@@ -1,11 +1,11 @@
 ﻿namespace GameKey.Binding.Writers
 {
+    using Items;
     using System;
     using System.Data;
     using System.Linq;
     using System.Xml.Linq;
     using Utility;
-    using Items;
 
     public class KeyBindingWriterEliteDangerous : IKeyBindingWriter
     {

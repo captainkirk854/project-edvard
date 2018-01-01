@@ -1,11 +1,10 @@
 ﻿namespace GameKey.Binding.Writers
 {
-    using System;
+    using Items;
     using System.Data;
     using System.Linq;
     using System.Xml.Linq;
     using Utility;
-    using Items;
 
     /// <summary>
     /// Update Voice Attack Profile Command(s) with new Key Codes

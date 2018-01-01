@@ -1,8 +1,7 @@
 ﻿namespace GameKey.Binding.Writers
 {
-    using System;
-    using Utility;
     using Items;
+    using System;
 
     /// <summary>
     /// Tag Class
