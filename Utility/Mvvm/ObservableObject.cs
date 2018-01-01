@@ -32,7 +32,7 @@ namespace Utility.Mvvm
             }
 
             storage = value;
-            OnPropertyChanged(propertyName);
+            this.OnPropertyChanged(propertyName);
 
             return true;
         }
@@ -81,7 +81,7 @@ namespace Utility.Mvvm
         protected void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
         {
             var propertyName = PropertyHelper.ExtractPropertyName(propertyExpression);
-            OnPropertyChanged(propertyName);
+            this.OnPropertyChanged(propertyName);
         }
     }
 }

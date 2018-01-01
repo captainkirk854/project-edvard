@@ -8,14 +8,14 @@
 
         public void SetToChanged()
         {
-            OnChanged(EventArgs.Empty);
+            this.OnChanged(EventArgs.Empty);
         }
 
         protected virtual void OnChanged(EventArgs e)
         {
-            if (Changed != null)
+            if (this.Changed != null)
             {
-                Changed(this, e);
+                this.Changed(this, e);
             }
         }
     }

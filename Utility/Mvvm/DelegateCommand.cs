@@ -73,7 +73,7 @@ namespace Utility.Mvvm
         /// </summary>
         public virtual async Task Execute()
         {
-            await Execute(null);
+            await this.Execute(null);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Utility.Mvvm
         /// <returns>Returns <see langword="true"/> if command can execute, otherwise returns <see langword="false"/>.</returns>
         public virtual bool CanExecute()
         {
-            return CanExecute(null);
+            return this.CanExecute(null);
         }
     }
 }

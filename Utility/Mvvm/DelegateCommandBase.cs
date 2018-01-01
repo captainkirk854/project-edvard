@@ -28,12 +28,12 @@ namespace Utility.Mvvm
                 throw new ArgumentNullException("executeMethod", "Neither the executeMethod nor the canExecuteMethod delegates can be null.");
             }
 
-            _executeMethod = (arg) =>
+            this._executeMethod = (arg) =>
             {
                 executeMethod(arg);
                 return Task.Delay(0);
             };
-            _canExecuteMethod = canExecuteMethod;
+            this._canExecuteMethod = canExecuteMethod;
         }
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace Utility.Mvvm
                 throw new ArgumentNullException("executeMethod", "Neither the executeMethod nor the canExecuteMethod delegates can be null.");
             }
 
-            _executeMethod = executeMethod;
-            _canExecuteMethod = canExecuteMethod;
+            this._executeMethod = executeMethod;
+            this._canExecuteMethod = canExecuteMethod;
         }
 
         /// <summary>
@@ -77,12 +77,12 @@ namespace Utility.Mvvm
         {
             add
             {
-                EventHandlerManager.AddWeakReferenceHandler(ref _canExecuteChangedHandlers, value, 2);
+                EventHandlerManager.AddWeakReferenceHandler(ref this._canExecuteChangedHandlers, value, 2);
             }
 
             remove
             {
-                EventHandlerManager.RemoveWeakReferenceHandler(_canExecuteChangedHandlers, value);
+                EventHandlerManager.RemoveWeakReferenceHandler(this._canExecuteChangedHandlers, value);
             }
         }
 
@@ -95,17 +95,17 @@ namespace Utility.Mvvm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate", Justification = "This isn't an event, it's intended to allow raising an event.")]
         public void RaiseCanExecuteChanged()
         {
-            OnCanExecuteChanged();
+            this.OnCanExecuteChanged();
         }
 
         async void ICommand.Execute(object parameter)
         {
-            await Execute(parameter);
+            await this.Execute(parameter);
         }
 
         bool ICommand.CanExecute(object parameter)
         {
-            return CanExecute(parameter);
+            return this.CanExecute(parameter);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Utility.Mvvm
         /// </summary>
         protected virtual void OnCanExecuteChanged()
         {
-            EventHandlerManager.CallWeakReferenceHandlers(this, _canExecuteChangedHandlers);
+            EventHandlerManager.CallWeakReferenceHandlers(this, this._canExecuteChangedHandlers);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Utility.Mvvm
         /// <param name="parameter"></param>
         protected async Task Execute(object parameter)
         {
-            await _executeMethod(parameter);
+            await this._executeMethod(parameter);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Utility.Mvvm
         /// <returns>Returns <see langword="true"/> if the command can execute.  <see langword="False"/> otherwise.</returns>
         protected bool CanExecute(object parameter)
         {
-            return _canExecuteMethod == null || _canExecuteMethod(parameter);
+            return this._canExecuteMethod == null || this._canExecuteMethod(parameter);
         }
     }
 }

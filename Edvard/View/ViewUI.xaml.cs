@@ -16,7 +16,7 @@
     using System.Windows.Shapes;
 
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ViewUI.xaml
     /// </summary>
     public partial class ViewUI : Window
     {
