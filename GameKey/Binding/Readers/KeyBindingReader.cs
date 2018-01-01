@@ -12,8 +12,8 @@
     {
         // Initialise ..
         protected readonly GameAndSystemKeyAdapter Keys = new GameAndSystemKeyAdapter(KeyType);
-        protected string cfgFilePath = string.Empty;
-        protected XDocument xCfg = new XDocument();
+        protected string bindingsFilepath = string.Empty;
+        protected XDocument bindingsXDocument = new XDocument();
         private static KeyEnum.Type keyType = KeyEnum.Type.WindowsForms; // Default startup value for KeyType Property ..
         
         /// <summary>
@@ -22,10 +22,10 @@
         /// <param name="cfgFilePath"></param>
         public KeyBindingReader(string cfgFilePath)
         {
-            this.cfgFilePath = cfgFilePath;
+            this.bindingsFilepath = cfgFilePath;
 
             // Load XDocument into memory for availability in any derived classes ..
-            this.xCfg = HandleXml.ReadXDoc(this.cfgFilePath);
+            this.bindingsXDocument = HandleXml.ReadXDoc(this.bindingsFilepath);
         }
 
         // KeyType Property

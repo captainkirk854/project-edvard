@@ -36,8 +36,8 @@
         /// Initializes a new instance of the <see cref="KeyBindingReaderVoiceAttack" /> class.
         /// Base class constructor loads config.file as XDocument (this.xCfg)
         /// </summary>
-        /// <param name="cfgFilePath"></param>
-        public KeyBindingReaderVoiceAttack(string cfgFilePath) : base(cfgFilePath)
+        /// <param name="bindingsFilepath"></param>
+        public KeyBindingReaderVoiceAttack(string bindingsFilepath) : base(bindingsFilepath)
         {
         }
    
@@ -48,11 +48,11 @@
         public DataTable GetBindableCommands()
         {
             // Read bindings and tabulate ..
-            DataTable bindableCommands = this.GetCommandStringsWithKeyPressAction(ref this.xCfg);
+            DataTable bindableCommands = this.GetCommandStringsWithKeyPressAction(ref this.bindingsXDocument);
 
             // modify table ..
-            bindableCommands.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
-            bindableCommands.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.cfgFilePath);
+            bindableCommands.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.bindingsXDocument));
+            bindableCommands.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.bindingsFilepath);
 
             // return Datatable ..
             return bindableCommands;
@@ -65,11 +65,11 @@
         public DataTable GetBoundCommands()
         {
             // Read bindings and tabulate ..
-            DataTable boundCommands = this.GetKeyBindings(ref this.xCfg);
+            DataTable boundCommands = this.GetKeyBindings(ref this.bindingsXDocument);
 
             // modify table ..
-            boundCommands.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
-            boundCommands.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.cfgFilePath);
+            boundCommands.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.bindingsXDocument));
+            boundCommands.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.bindingsFilepath);
 
             // return Datatable ..
             return boundCommands;
@@ -97,10 +97,10 @@
                 string eliteDangerousFile = Path.GetFileName(consolidatedBoundCommand[EDVArd.Column.EliteDangerousBinds.ToString()].ToString());
 
                 // Find associated Command String(s) using key-bound CommandString ActionId ...
-                var associatedCommandStrings = this.GetCommandStringsFromCommandActionContext(ref this.xCfg, this.ParseVoiceAttackProfileForKeyBoundCommandIdsFromCommandActionId(ref this.xCfg, voiceAttackActionId).Distinct().FirstOrDefault().ToString());
+                var associatedCommandStrings = this.GetCommandStringsFromCommandActionContext(ref this.bindingsXDocument, this.ParseVoiceAttackProfileForKeyBoundCommandIdsFromCommandActionId(ref this.bindingsXDocument, voiceAttackActionId).Distinct().FirstOrDefault().ToString());
 
                 // Find associated Command String(s) using key-bound CommandString Value ...
-                var associatedCommandStringsFromContext2 = this.GetCommandStringsFromCommandActionContext2(ref this.xCfg, voiceAttackCommandString);
+                var associatedCommandStringsFromContext2 = this.GetCommandStringsFromCommandActionContext2(ref this.bindingsXDocument, voiceAttackCommandString);
                 if (associatedCommandStrings.Count() > 0) { associatedCommandStrings.Concat(associatedCommandStringsFromContext2); }
                 else { associatedCommandStrings = associatedCommandStringsFromContext2; }
                 
@@ -133,7 +133,7 @@
             DataTable allVoiceCommands = TableShape.AllVoiceCommands();
 
             // Get anonymous type row data (as object types) ..
-            var commandStrings = this.GetCommandStringsForCommandCategory(ref this.xCfg, this.GetAllCommandCategories(ref this.xCfg));
+            var commandStrings = this.GetCommandStringsForCommandCategory(ref this.bindingsXDocument, this.GetAllCommandCategories(ref this.bindingsXDocument));
 
             // insert object's row data into DataTable being able to access its two fields as the anonymous type commandString is declared as a 'dynamic' type ..
             foreach (dynamic commandString in commandStrings)

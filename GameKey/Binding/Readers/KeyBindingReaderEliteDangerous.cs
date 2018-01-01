@@ -26,8 +26,8 @@
         /// Initializes a new instance of the <see cref="KeyBindingReaderEliteDangerous" /> class.
         /// Base class constructor loads config.file as XDocument (this.xCfg)
         /// </summary>
-        /// <param name="cfgFilePath"></param>
-        public KeyBindingReaderEliteDangerous(string cfgFilePath) : base(cfgFilePath) 
+        /// <param name="bindingsFilepath"></param>
+        public KeyBindingReaderEliteDangerous(string bindingsFilepath) : base(bindingsFilepath) 
         { 
         }
         
@@ -38,11 +38,11 @@
         public DataTable GetBindableCommands()
         {
             // Read bindings and tabulate ..
-            DataTable bindable = this.GetBindableActions(ref xCfg);
+            DataTable bindable = this.GetBindableActions(ref bindingsXDocument);
 
             // modify table ..
-            bindable.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
-            bindable.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.cfgFilePath);
+            bindable.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.bindingsXDocument));
+            bindable.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.bindingsFilepath);
 
             return bindable;
         }
@@ -54,15 +54,15 @@
         public DataTable GetBoundCommands()
         {
             // Read bindings and tabulate ..
-            DataTable primary = this.GetKeyBindings(ref xCfg, Application.EliteDangerousDevicePriority.Primary);
-            DataTable secondary = this.GetKeyBindings(ref xCfg, Application.EliteDangerousDevicePriority.Secondary);
+            DataTable primary = this.GetKeyBindings(ref bindingsXDocument, Application.EliteDangerousDevicePriority.Primary);
+            DataTable secondary = this.GetKeyBindings(ref bindingsXDocument, Application.EliteDangerousDevicePriority.Secondary);
 
             // Merge ..
             primary.Merge(secondary);
 
             // modify table ..
-            primary.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.xCfg));
-            primary.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.cfgFilePath);
+            primary.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.bindingsXDocument));
+            primary.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.bindingsFilepath);
 
             // Return merged DataTable contents ..
             return primary;
