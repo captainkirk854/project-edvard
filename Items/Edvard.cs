@@ -11,12 +11,12 @@
         public enum Column
         {
             BindingSynchronisationStatus,
-            Context,
+            ApplicationContext,
             DevicePriority,
             DeviceType,
             FilePath,
             Internal,
-            KeyEnumeration,
+            KeyEnumerationType,
             KeyAction,
             KeyActionType,
             KeyGameValue,

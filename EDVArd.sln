@@ -17,11 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{A6168245-0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Downloads", "Downloads", "{7B75CA78-3478-4178-B565-46D8F24519CF}"
-	ProjectSection(SolutionItems) = preProject
-		Data\Downloads\EDVard.exe = Data\Downloads\EDVard.exe
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoiceAttack", "VoiceAttack", "{9137BA1C-B06D-4677-A243-76B1E44D636F}"
 	ProjectSection(SolutionItems) = preProject
 		Data\Samples\VoiceAttack\1.6.5 Full House Profile HOTAS.vap = Data\Samples\VoiceAttack\1.6.5 Full House Profile HOTAS.vap
@@ -82,7 +77,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645} = {A6168245-04D4-44B7-B079-254F580A0E60}
-		{7B75CA78-3478-4178-B565-46D8F24519CF} = {A6168245-04D4-44B7-B079-254F580A0E60}
 		{9137BA1C-B06D-4677-A243-76B1E44D636F} = {87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}
 		{A7E44E31-3AF7-4E2A-859A-D9C0E0152874} = {87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}
 	EndGlobalSection

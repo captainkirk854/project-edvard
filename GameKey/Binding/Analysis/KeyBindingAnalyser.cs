@@ -34,7 +34,7 @@
                                     select
                                        new
                                          {
-                                            KeyEnumeration = va.Field<string>(EDVArd.Column.KeyEnumeration.ToString()),
+                                            KeyEnumeration = va.Field<string>(EDVArd.Column.KeyEnumerationType.ToString()),
                                             EliteDangerousAction = bindingsAdapter.GetEliteDangerousBinding(va.Field<string>(EDVArd.Column.KeyAction.ToString())),
                                             Action = va.Field<string>(EDVArd.Column.KeyAction.ToString()),
                                             KeyValue = va.Field<string>(EDVArd.Column.KeyEnumerationValue.ToString()),
@@ -245,7 +245,7 @@
                                              select
                                                 new
                                                  {
-                                                     KeyEnumeration = vac.Field<string>(EDVArd.Column.KeyEnumeration.ToString()),
+                                                     KeyEnumeration = vac.Field<string>(EDVArd.Column.KeyEnumerationType.ToString()),
                                                      EliteDangerousAction = vac.Field<string>(EDVArd.Column.EliteDangerousAction.ToString()),
                                                      VoiceAttackAction = vac.Field<string>(EDVArd.Column.VoiceAttackAction.ToString()),
                                                      VoiceAttackKeyValue = vac.Field<string>(EDVArd.Column.VoiceAttackKeyValue.ToString()),

@@ -54,47 +54,28 @@
   </Choose>
   <ItemGroup>
     <Compile Include="GameKey\Binding\Readers\KeyBindingReaderEliteDangerousTests\GetBindableActions.cs" />
+    <Compile Include="GameKey\Binding\Readers\KeyBindingReaderEliteDangerousTests\GetKeyBindings.cs" />
+    <Compile Include="GameKey\Binding\Readers\KeyBindingReaderVoiceAttackTests\GetCommandStringsWithKeyPressAction.cs" />
+    <Compile Include="GameKey\Binding\Readers\KeyBindingReaderVoiceAttackTests\GetKeyBindings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestData\Integration\Set01\in\GoodKeys.binds" />
     <None Include="TestData\Integration\Set01\in\Orion 2.0 Full House.vap" />
-    <None Include="TestData\Integration\Set01\out\Edvard-ConsolidatedKeyBoundActions.csv" />
-    <None Include="TestData\Integration\Set01\out\EliteDangerous-KeyBindableActions.csv" />
-    <None Include="TestData\Integration\Set01\out\EliteDangerous-KeyBoundActions.csv" />
     <None Include="TestData\Integration\Set01\out\Goodkeys.binds" />
     <None Include="TestData\Integration\Set01\out\Orion 2.0 Full House.vap" />
-    <None Include="TestData\Integration\Set01\out\VoiceAttack-AllCommands.csv" />
-    <None Include="TestData\Integration\Set01\out\VoiceAttack-KeyBindableActions.csv" />
-    <None Include="TestData\Integration\Set01\out\VoiceAttack-KeyBoundActions.csv" />
-    <None Include="TestData\Integration\Set01\out\VoiceAttack-RelatedCommands.csv" />
     <None Include="TestData\Integration\Set02\in\HOTAS and Wireless Gamepad.binds" />
     <None Include="TestData\Integration\Set02\in\Orion 2.0 Guardians Full House with UTF16.vap" />
-    <None Include="TestData\Integration\Set02\out\Edvard-ConsolidatedKeyBoundActions.csv" />
-    <None Include="TestData\Integration\Set02\out\EliteDangerous-KeyBindableActions.csv" />
-    <None Include="TestData\Integration\Set02\out\EliteDangerous-KeyBoundActions.csv" />
     <None Include="TestData\Integration\Set02\out\HOTAS and Wireless Gamepad.binds" />
     <None Include="TestData\Integration\Set02\out\Orion 2.0 Guardians Full House with UTF16.vap" />
-    <None Include="TestData\Integration\Set02\out\VoiceAttack-AllCommands.csv" />
-    <None Include="TestData\Integration\Set02\out\VoiceAttack-KeyBindableActions.csv" />
-    <None Include="TestData\Integration\Set02\out\VoiceAttack-KeyBoundActions.csv" />
-    <None Include="TestData\Integration\Set02\out\VoiceAttack-RelatedCommands.csv" />
     <None Include="TestData\Integration\Set03\in\Astra profile - Full House.vap" />
     <None Include="TestData\Integration\Set03\in\HOTAS and Wireless Gamepad.binds" />
     <None Include="TestData\Integration\Set03\out\Astra profile - Full House.vap" />
-    <None Include="TestData\Integration\Set03\out\Edvard-ConsolidatedKeyBoundActions.csv" />
-    <None Include="TestData\Integration\Set03\out\EliteDangerous-KeyBindableActions.csv" />
-    <None Include="TestData\Integration\Set03\out\EliteDangerous-KeyBoundActions.csv" />
     <None Include="TestData\Integration\Set03\out\HOTAS and Wireless Gamepad.binds" />
-    <None Include="TestData\Integration\Set03\out\VoiceAttack-AllCommands.csv" />
-    <None Include="TestData\Integration\Set03\out\VoiceAttack-KeyBindableActions.csv" />
-    <None Include="TestData\Integration\Set03\out\VoiceAttack-KeyBoundActions.csv" />
-    <None Include="TestData\Integration\Set03\out\VoiceAttack-RelatedCommands.csv" />
+    <None Include="TestData\Unit\EliteDangerous\1.8.Selection01.binds" />
+    <None Include="TestData\Unit\VoiceAttack\Orion 2.0 Full House.vap" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TestData\Unit\EliteDangerous\" />
-    <Folder Include="TestData\Unit\VoiceAttack\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\GameKey\GameKey.csproj">
       <Project>{08f8cc4b-45c2-4661-9f10-07094dcae843}</Project>

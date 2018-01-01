@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Root PresetName="selection01" MajorVersion="1" MinorVersion="8">
+	<KeyboardLayout>en-GB</KeyboardLayout>
+	<LockedDevice>{NoDevice}</LockedDevice>
+	<MouseXMode Value="" />
+	<MouseXDecay Value="0" />
+	<MouseYMode Value="" />
+	<MouseYDecay Value="0" />
+	<MouseReset>
+		<Primary Device="{NoDevice}" Key="" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</MouseReset>
+	<MouseSensitivity Value="1.00000000" />
+	<MouseDecayRate Value="4.00000000" />
+	<MouseDeadzone Value="0.05000000" />
+	<MouseLinearity Value="1.00000000" />
+	<MouseGUI Value="0" />
+	<YawAxisRaw>
+		<Binding Device="{NoDevice}" Key="" />
+		<Inverted Value="0" />
+		<Deadzone Value="0.00000000" />
+	</YawAxisRaw>
+	<YawLeftButton>
+		<Primary Device="Keyboard" Key="Key_A" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</YawLeftButton>
+	<LateralThrustRaw>
+		<Binding Device="{NoDevice}" Key="" />
+		<Inverted Value="0" />
+		<Deadzone Value="0.00000000" />
+	</LateralThrustRaw>
+	<LeftThrustButton>
+		<Primary Device="Keyboard" Key="Key_Q" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</LeftThrustButton>
+	<RightThrustButton>
+		<Primary Device="Keyboard" Key="Key_E" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</RightThrustButton>
+	<VerticalThrustRaw>
+		<Binding Device="{NoDevice}" Key="" />
+		<Inverted Value="0" />
+		<Deadzone Value="0.00000000" />
+	</VerticalThrustRaw>
+	<UpThrustButton>
+		<Primary Device="Keyboard" Key="Key_R" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</UpThrustButton>
+	<DownThrustButton>
+		<Primary Device="Keyboard" Key="Key_F" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</DownThrustButton>
+	<ThrottleIncrement Value="0.00000000" />
+	<SetSpeedMinus100>
+		<Primary Device="Keyboard" Key="Key_F1" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</SetSpeedMinus100>
+	<SetSpeedMinus75>
+		<Primary Device="Keyboard" Key="Key_Grave" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</SetSpeedMinus75>
+	<SetSpeedMinus50>
+		<Primary Device="Keyboard" Key="Key_LeftBracket" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</SetSpeedMinus50>
+	<SetSpeedMinus25>
+		<Primary Device="Keyboard" Key="Key_RightBracket" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</SetSpeedMinus25>
+	<SetSpeedZero>
+		<Primary Device="Keyboard" Key="Key_0">
+			<Modifier Device="Keyboard" Key="Key_RightShift" />
+		</Primary>
+		<Secondary Device="{NoDevice}" Key="" />
+	</SetSpeedZero>
+	<SetSpeed25>
+		<Primary Device="Keyboard" Key="Key_9">
+			<Modifier Device="Keyboard" Key="Key_RightShift" />
+		</Primary>
+		<Secondary Device="{NoDevice}" Key="" />
+	</SetSpeed25>
+	<SetSpeed100>
+		<Primary Device="Keyboard" Key="Key_LeftControl" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</SetSpeed100>
+	<UseBoostJuice>
+		<Primary Device="Keyboard" Key="Key_Tab" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</UseBoostJuice>
+	<Supercruise>
+		<Primary Device="Keyboard" Key="Key_Numpad_7" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</Supercruise>
+	<Hyperspace>
+		<Primary Device="Keyboard" Key="Key_NumLock" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</Hyperspace>
+	<DisableRotationCorrectToggle>
+		<Primary Device="{NoDevice}" Key="" />
+		<Secondary Device="{NoDevice}" Key="" />
+		<ToggleOn Value="1" />
+	</DisableRotationCorrectToggle>
+	<CycleNextTarget>
+		<Primary Device="Keyboard" Key="Key_Numpad_Enter" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</CycleNextTarget>
+	<CyclePreviousTarget>
+		<Primary Device="Keyboard" Key="Key_Enter" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</CyclePreviousTarget>
+	<DeployHardpointToggle>
+		<Primary Device="Keyboard" Key="Key_Numpad_Divide" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</DeployHardpointToggle>
+	<DeployHardpointsOnFire Value="1" />
+	<ToggleButtonUpInput>
+		<Primary Device="Keyboard" Key="Key_Delete" />
+		<Secondary Device="{NoDevice}" Key="" />
+		<ToggleOn Value="1" />
+	</ToggleButtonUpInput>
+	<ShipSpotLightToggle>
+		<Primary Device="Keyboard" Key="Key_L" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</ShipSpotLightToggle>
+	<RadarRangeAxis>
+		<Binding Device="{NoDevice}" Key="" />
+		<Inverted Value="0" />
+		<Deadzone Value="0.00000000" />
+	</RadarRangeAxis>
+	<RadarIncreaseRange>
+		<Primary Device="Keyboard" Key="Key_PageUp" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</RadarIncreaseRange>
+	<RadarDecreaseRange>
+		<Primary Device="Keyboard" Key="Key_PageDown" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</RadarDecreaseRange>
+	<IncreaseEnginesPower>
+		<Primary Device="Keyboard" Key="Key_UpArrow" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</IncreaseEnginesPower>
+	<IncreaseWeaponsPower>
+		<Primary Device="Keyboard" Key="Key_RightArrow" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</IncreaseWeaponsPower>
+	<IncreaseSystemsPower>
+		<Primary Device="Keyboard" Key="Key_LeftArrow" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</IncreaseSystemsPower>
+	<ResetPowerDistribution>
+		<Primary Device="Keyboard" Key="Key_DownArrow" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</ResetPowerDistribution>
+	<ToggleCargoScoop>
+		<Primary Device="Keyboard" Key="Key_Home" />
+		<Secondary Device="{NoDevice}" Key="" />
+		<ToggleOn Value="1" />
+	</ToggleCargoScoop>
+	<EjectAllCargo>
+		<Primary Device="Keyboard" Key="Key_End" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</EjectAllCargo>
+	<LandingGearToggle>
+		<Primary Device="Keyboard" Key="Key_G" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</LandingGearToggle>
+	<PhotoCameraToggle>
+		<Primary Device="Keyboard" Key="Key_Space">
+			<Modifier Device="Keyboard" Key="Key_LeftControl" />
+			<Modifier Device="Keyboard" Key="Key_LeftAlt" />
+		</Primary>
+		<Secondary Device="{NoDevice}" Key="" />
+	</PhotoCameraToggle>
+	<UIFocus>
+		<Primary Device="Keyboard" Key="Key_LeftShift" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</UIFocus>
+	<UIFocusMode Value="Bindings_FocusModeHold" />
+	<CommsPanelFocusOptions Value="FocusOption_Show" />
+	<FocusCommsPanel_Buggy>
+		<Primary Device="Keyboard" Key="Key_RightBracket" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</FocusCommsPanel_Buggy>
+	<QuickCommsPanel_Buggy>
+		<Primary Device="{NoDevice}" Key="" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</QuickCommsPanel_Buggy>
+	<FocusRadarPanel_Buggy>
+		<Primary Device="Keyboard" Key="Key_LeftBracket" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</FocusRadarPanel_Buggy>
+	<FocusRightPanel_Buggy>
+		<Primary Device="Keyboard" Key="Key_Equals" />
+		<Secondary Device="{NoDevice}" Key="" />
+	</FocusRightPanel_Buggy>
+	<HeadLookToggle_Buggy>
+		<Primary Device="{NoDevice}" Key="" />
+		<Secondary Device="Keyboard" Key="Key_LeftAlt" />
+		<ToggleOn Value="0" />
+	</HeadLookToggle_Buggy>
+</Root>

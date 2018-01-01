@@ -35,7 +35,7 @@
                                        select
                                           new
                                           {
-                                              KeyEnumeration = vb.Field<string>(EDVArd.Column.KeyEnumeration.ToString()),
+                                              KeyEnumeration = vb.Field<string>(EDVArd.Column.KeyEnumerationType.ToString()),
                                               EliteDangerousAction = vb.Field<string>(EDVArd.Column.EliteDangerousAction.ToString()),
                                               VoiceAttackAction = vb.Field<string>(EDVArd.Column.VoiceAttackAction.ToString()),
                                               VoiceAttackKeyValue = vb.Field<string>(EDVArd.Column.VoiceAttackKeyValue.ToString()),

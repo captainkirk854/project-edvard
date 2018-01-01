@@ -16,7 +16,7 @@
             table.TableName = "KeyMap";
 
             // Define its structure ..
-            table.Columns.Add(EDVArd.Column.KeyEnumeration.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationType.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.KeyEnumerationValue.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.KeyEnumerationCode.ToString(), typeof(int));
 
@@ -34,7 +34,7 @@
             table.TableName = "BindableActions";
 
             // Define its structure ..
-            table.Columns.Add(EDVArd.Column.Context.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.ApplicationContext.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.KeyAction.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.KeyActionType.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.DevicePriority.ToString(), typeof(string));
@@ -54,8 +54,8 @@
             table.TableName = "KeyActionDefinition";
 
             // Define its structure ..
-            table.Columns.Add(EDVArd.Column.Context.ToString(), typeof(string));
-            table.Columns.Add(EDVArd.Column.KeyEnumeration.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.ApplicationContext.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationType.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.KeyAction.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.DevicePriority.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.KeyGameValue.ToString(), typeof(string));
@@ -83,7 +83,7 @@
 
             // Define its structure ..
             ////--------------------------------------------------------------------------
-            table.Columns.Add(EDVArd.Column.KeyEnumeration.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationType.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
             table.Columns.Add(EDVArd.Column.KeyUpdateRequired.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.Rationale.ToString(), typeof(string));
@@ -127,7 +127,7 @@
 
             // Define its structure ..
             ////--------------------------------------------------------------------------
-            table.Columns.Add(EDVArd.Column.KeyEnumeration.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationType.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
             table.Columns.Add(EDVArd.Column.EliteDangerousAction.ToString(), typeof(string));
             table.Columns.Add(EDVArd.Column.VoiceAttackAction.ToString(), typeof(string));
