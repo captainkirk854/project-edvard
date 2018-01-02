@@ -101,13 +101,23 @@
 
                 // Find associated Command String(s) using key-bound CommandString Value ...
                 var associatedCommandStringsFromContext2 = this.GetCommandStringsFromCommandActionContext2(ref this.bindingsXDocument, voiceAttackCommandString);
-                if (associatedCommandStrings.Count() > 0) { associatedCommandStrings.Concat(associatedCommandStringsFromContext2); }
-                else { associatedCommandStrings = associatedCommandStringsFromContext2; }
-                
+
+                // Consolidate Command String(s) ...
+                if (associatedCommandStrings.Count() > 0) 
+                { 
+                    associatedCommandStrings.Concat(associatedCommandStringsFromContext2); 
+                }
+                else 
+                { 
+                    associatedCommandStrings = associatedCommandStringsFromContext2; 
+                }
+
                 // Add to DataTable ..
-                foreach (var associatedCommandString in associatedCommandStrings.Distinct())
+                if (associatedCommandStrings.Count() > 0)
                 {
-                    associatedCommands.LoadDataRow(new object[] 
+                    foreach (var associatedCommandString in associatedCommandStrings.Distinct())
+                    {
+                        associatedCommands.LoadDataRow(new object[] 
                                                                 {
                                                                     voiceAttackCommandString,
                                                                     eliteDangerousAction,
@@ -116,7 +126,8 @@
                                                                     voiceAttackFile,
                                                                     eliteDangerousFile
                                                                 },
-                                                    false);
+                                                       false);
+                    }
                 }
             }
 
@@ -316,11 +327,21 @@
         {
             // Find Command String(s) where descendant Context = key-bound CommandString ..
             var xmlExtracts = from item in xdoc.Descendants(XMLContext2)
-                              where
-                                    !item.Parent.Parent.Parent.Element(XMLCategory).Value.Contains(XMLCategoryKeybindings) &&
-                                    item.SafeElementValue().ToUpper() == keyBoundCommandString.ToUpper()
-                              select
-                                    item.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue();
+                             where
+                                   !item.Parent.Parent.Parent.Element(XMLCategory).Value.Contains(XMLCategoryKeybindings) &&
+                                   item.SafeElementValue().ToUpper() == keyBoundCommandString.ToUpper()
+                            select
+                                   item.Parent.Parent.Parent.Element(XMLCommandString).SafeElementValue();
+
+            // Crude test for "Object reference not set to an instance" whilst not being null by attempting to enumerate using .Count() ..
+            try
+            {
+                xmlExtracts.Count();
+            }
+            catch
+            {
+                return Enumerable.Empty<string>();
+            }
 
             return xmlExtracts;
         }
