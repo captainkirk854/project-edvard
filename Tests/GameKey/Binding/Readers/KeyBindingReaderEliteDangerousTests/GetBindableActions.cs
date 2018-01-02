@@ -24,7 +24,7 @@ namespace UnitTests.GameKey.Binding.Readers.KeyBindingReaderEliteDangerousTests
         }
 
         [TestMethod]
-        public void KeyBindingReaderEliteDangerousTests_ConvertBindsToBindableActionsDataTable()
+        public void KeyBindingReaderEliteDangerousTests_GetBindableActions()
         {
             var bindableActions = UsePrivateMethod_Object_GetBindableActions();
 

@@ -57,21 +57,26 @@
     <Compile Include="GameKey\Binding\Readers\KeyBindingReaderEliteDangerousTests\GetKeyBindings.cs" />
     <Compile Include="GameKey\Binding\Readers\KeyBindingReaderVoiceAttackTests\GetCommandStringsWithKeyPressAction.cs" />
     <Compile Include="GameKey\Binding\Readers\KeyBindingReaderVoiceAttackTests\GetKeyBindings.cs" />
+    <Compile Include="GameKey\Binding\Readers\KeyBindingReaderVoiceAttackTests\GetCommandStringsForCommandCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\Integration\Set01\in\GoodKeys.binds" />
+    <None Include="TestData\Integration\Set01\in\1.8.GoodKeys.binds" />
     <None Include="TestData\Integration\Set01\in\Orion 2.0 Full House.vap" />
-    <None Include="TestData\Integration\Set01\out\Goodkeys.binds" />
+    <None Include="TestData\Integration\Set01\out\1.8.GoodKeys.binds" />
     <None Include="TestData\Integration\Set01\out\Orion 2.0 Full House.vap" />
-    <None Include="TestData\Integration\Set02\in\HOTAS and Wireless Gamepad.binds" />
+    <None Include="TestData\Integration\Set02\in\1.8.HOTAS and Wireless Gamepad.binds" />
     <None Include="TestData\Integration\Set02\in\Orion 2.0 Guardians Full House with UTF16.vap" />
-    <None Include="TestData\Integration\Set02\out\HOTAS and Wireless Gamepad.binds" />
+    <None Include="TestData\Integration\Set02\out\1.8.HOTAS and Wireless Gamepad.binds" />
     <None Include="TestData\Integration\Set02\out\Orion 2.0 Guardians Full House with UTF16.vap" />
     <None Include="TestData\Integration\Set03\in\Astra profile - Full House.vap" />
-    <None Include="TestData\Integration\Set03\in\HOTAS and Wireless Gamepad.binds" />
+    <None Include="TestData\Integration\Set03\in\1.8.HOTAS and Wireless Gamepad.binds" />
     <None Include="TestData\Integration\Set03\out\Astra profile - Full House.vap" />
-    <None Include="TestData\Integration\Set03\out\HOTAS and Wireless Gamepad.binds" />
+    <None Include="TestData\Integration\Set03\out\1.8.HOTAS and Wireless Gamepad.binds" />
+    <None Include="TestData\Integration\Set04\in\Orion Profile Full House.vap" />
+    <None Include="TestData\Integration\Set04\in\2.0.X52 Pro Ultimate [Rift].binds" />
+    <None Include="TestData\Integration\Set04\out\Orion Profile Full House.vap" />
+    <None Include="TestData\Integration\Set04\out\2.0.X52 Pro Ultimate [Rift].binds" />
     <None Include="TestData\Unit\EliteDangerous\1.8.Selection01.binds" />
     <None Include="TestData\Unit\VoiceAttack\Orion 2.0 Full House.vap" />
   </ItemGroup>

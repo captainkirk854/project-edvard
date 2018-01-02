@@ -144,7 +144,7 @@
                                                     commandString.CommandString,
                                                     commandString.ActionType
                                                 },
-                                            false);
+                                             false);
             }
 
             return allVoiceCommands;

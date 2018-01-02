@@ -1,11 +1,7 @@
-﻿using GameKey.Adapter;
-using GameKey.Binding.Readers;
-using Helper;
+﻿using GameKey.Binding.Readers;
 using Items;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Data;
-using System.Linq;
 using System.Xml.Linq;
 using Utility;
 
@@ -25,7 +21,7 @@ namespace UnitTests.GameKey.Binding.Readers.KeyBindingReaderVoiceAttackTests
         }
 
         [TestMethod]
-        public void KeyBindingReaderVoiceAttackTests_ConvertPressKeyActionsToBindableActionsDataTable()
+        public void KeyBindingReaderVoiceAttackTests_GetCommandStringsWithKeyPressAction()
         {
             var bindableActions = UsePrivateMethod_Object_GetCommandStringsWithKeyPressAction();
 

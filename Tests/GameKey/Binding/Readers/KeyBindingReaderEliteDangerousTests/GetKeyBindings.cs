@@ -21,7 +21,7 @@ namespace UnitTests.GameKey.Binding.Readers.KeyBindingReaderEliteDangerousTests
         }
 
         [TestMethod]
-        public void KeyBindingReaderEliteDangerousTests_ConvertBindsToPrimaryKeyActionDefinitionDataTable()
+        public void KeyBindingReaderEliteDangerousTests_GetPrimaryKeyBindings()
         {
             var keyActionDefinitions = UsePrivateMethod_Object_GetPrimaryKeyBindings();
 
@@ -47,7 +47,7 @@ namespace UnitTests.GameKey.Binding.Readers.KeyBindingReaderEliteDangerousTests
         }
 
         [TestMethod]
-        public void KeyBindingReaderEliteDangerousTests_ConvertBindsToSecondaryKeyActionDefinitionDataTable()
+        public void KeyBindingReaderEliteDangerousTests_GetSecondaryKeyBindings()
         {
             var keyActionDefinitions = UsePrivateMethod_Object_GetSecondaryKeyBindings();
 

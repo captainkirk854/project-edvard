@@ -38,13 +38,13 @@
         public DataTable GetBindableCommands()
         {
             // Read bindings and tabulate ..
-            DataTable bindable = this.GetBindableActions(ref bindingsXDocument);
+            DataTable bindableActions = this.GetBindableActions(ref bindingsXDocument);
 
             // modify table ..
-            bindable.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.bindingsXDocument));
-            bindable.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.bindingsFilepath);
+            bindableActions.AddDefaultColumn(EDVArd.Column.Internal.ToString(), this.GetInternalReference(ref this.bindingsXDocument));
+            bindableActions.AddDefaultColumn(EDVArd.Column.FilePath.ToString(), this.bindingsFilepath);
 
-            return bindable;
+            return bindableActions;
         }
 
         /// <summary>
