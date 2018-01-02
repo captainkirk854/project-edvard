@@ -58,6 +58,7 @@
             this.relationship.Add("((Decrease Sensor Range Max))", "RadarDecreaseRange");
             this.relationship.Add("((Decrease Sensor Range))", "RadarDecreaseRange");
             this.relationship.Add("((Departure 30m))", "VerticalThrustersButton");
+            this.relationship.Add("((Drive Assist))", "ToggleDriveAssist");
             this.relationship.Add("((External Camera))", "PhotoCameraToggle");
             this.relationship.Add("((Fighter Attack Posture))", "OrderAggressiveBehaviour");
             this.relationship.Add("((Fighter Defence Posture))", "OrderDefensiveBehaviour");
@@ -68,6 +69,7 @@
             this.relationship.Add("((Fighter Recall))", "OrderRequestDock");
             this.relationship.Add("((Fighter Recovery))", "OrderRequestDock");
             this.relationship.Add("((Flight Assist))", "ToggleFlightAssist");
+            this.relationship.Add("((FreeCamToggleHUD))", "FreeCamToggleHUD");
             this.relationship.Add("((Galaxy Map))", "GalaxyMapOpen");
             this.relationship.Add("((Handbrake Off))", "AutoBreakBuggyButton");
             this.relationship.Add("((Handbrake On))", "AutoBreakBuggyButton");
@@ -88,6 +90,7 @@
             this.relationship.Add("((Power To Systems))", "IncreaseSystemsPower");
             this.relationship.Add("((Power To Weapons))", "IncreaseWeaponsPower");
             this.relationship.Add("((Previous Fire Group))", "CycleFireGroupPrevious");
+            this.relationship.Add("((Quick Comms))", "QuickCommsPanel");
             this.relationship.Add("((Right Panel))", "FocusRightPanel");
             this.relationship.Add("((Role Panel))", "FocusRadarPanel");
             this.relationship.Add("((Select Highest Threat))", "SelectHighestThreat");
@@ -97,9 +100,13 @@
             this.relationship.Add("((SRV Dismiss/Recall))", "RecallDismissShip");
             this.relationship.Add("((SRV Panel))", "UIFocus_Buggy");
             this.relationship.Add("((Supercruise))", "Supercruise");
+            this.relationship.Add("((SwitchCamera))", "QuitCamera");
             this.relationship.Add("((System Map))", "SystemMapOpen");
             this.relationship.Add("((Take Off))", "VerticalThrustersButton");
             this.relationship.Add("((Thrust UP))", "VerticalThrustersButton");
+            this.relationship.Add("((ToggleFreeCam))", "ToggleFreeCam");
+            this.relationship.Add("((ToggleVehicleCam))", "PhotoCameraToggle_Buggy");
+            this.relationship.Add("((ToggleworldCam))", "FixCameraWorldToggle");
             this.relationship.Add("((UI Escape))", "UI_Back");
             this.relationship.Add("((UI Accept))", "UI_Select");
             this.relationship.Add("((UI Cancel))", "UI_Back");
@@ -109,6 +116,8 @@
             this.relationship.Add("((UI Previous))", "UI_Left");
             this.relationship.Add("((UI Right))", "UI_Right");
             this.relationship.Add("((UI Up))", "UI_Up");
+            this.relationship.Add("((VanityCameraScrollLeft))", "VanityCameraScrollLeft");
+            this.relationship.Add("((VanityCameraScrollRight))", "VanityCameraScrollRight");
             this.relationship.Add("((Wingman 1))", "TargetWingman0");
             this.relationship.Add("((Wingman 2))", "TargetWingman1");
             this.relationship.Add("((Wingman 3))", "TargetWingman2");

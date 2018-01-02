@@ -682,7 +682,7 @@
     <ToggleOn Value="1" />
   </CamTranslateZHold>
   <ToggleDriveAssist>
-    <Primary Device="{NoDevice}" Key="" />
+    <Primary Device="Keyboard" Key="Key_Z" />
     <Secondary Device="{NoDevice}" Key="" />
     <ToggleOn Value="0" />
   </ToggleDriveAssist>
@@ -1013,19 +1013,27 @@
     <Secondary Device="Keyboard" Key="Key_F1" />
   </PhotoCameraToggle>
   <PhotoCameraToggle_Buggy>
-    <Primary Device="{NoDevice}" Key="" />
+    <Primary Device="Keyboard" Key="Key_W">
+      <Modifier Device="Keyboard" Key="Key_LeftControl" />
+    </Primary>
     <Secondary Device="{NoDevice}" Key="" />
   </PhotoCameraToggle_Buggy>
   <VanityCameraScrollLeft>
-    <Primary Device="{NoDevice}" Key="" />
+    <Primary Device="Keyboard" Key="Key_P">
+      <Modifier Device="Keyboard" Key="Key_LeftControl" />
+    </Primary>
     <Secondary Device="{NoDevice}" Key="" />
   </VanityCameraScrollLeft>
   <VanityCameraScrollRight>
-    <Primary Device="{NoDevice}" Key="" />
+    <Primary Device="Keyboard" Key="Key_N">
+      <Modifier Device="Keyboard" Key="Key_LeftControl" />
+    </Primary>
     <Secondary Device="{NoDevice}" Key="" />
   </VanityCameraScrollRight>
   <ToggleFreeCam>
-    <Primary Device="{NoDevice}" Key="" />
+    <Primary Device="Keyboard" Key="Key_M">
+      <Modifier Device="Keyboard" Key="Key_LeftControl" />
+    </Primary>
     <Secondary Device="{NoDevice}" Key="" />
   </ToggleFreeCam>
   <VanityCameraOne>
@@ -1065,7 +1073,9 @@
     <Secondary Device="{NoDevice}" Key="" />
   </VanityCameraNine>
   <FreeCamToggleHUD>
-    <Primary Device="{NoDevice}" Key="" />
+    <Primary Device="Keyboard" Key="Key_G">
+      <Modifier Device="Keyboard" Key="Key_LeftControl" />
+    </Primary>
     <Secondary Device="{NoDevice}" Key="" />
   </FreeCamToggleHUD>
   <FreeCamSpeedInc>
@@ -1184,11 +1194,15 @@
     <Secondary Device="{NoDevice}" Key="" />
   </FixCameraRelativeToggle>
   <FixCameraWorldToggle>
-    <Primary Device="{NoDevice}" Key="" />
+    <Primary Device="Keyboard" Key="Key_P">
+      <Modifier Device="Keyboard" Key="Key_LeftControl" />
+    </Primary>
     <Secondary Device="{NoDevice}" Key="" />
   </FixCameraWorldToggle>
   <QuitCamera>
-    <Primary Device="{NoDevice}" Key="" />
+    <Primary Device="Keyboard" Key="Key_1">
+      <Modifier Device="Keyboard" Key="Key_LeftControl" />
+    </Primary>
     <Secondary Device="{NoDevice}" Key="" />
   </QuitCamera>
   <ToggleAdvanceMode>
