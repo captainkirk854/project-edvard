@@ -13,7 +13,7 @@
     public static class KeyBindingAnalyser
     {
         /// <summary>
-        /// Adjust VoiceAttack Command key codes to match those in Elite Dangerous using Elite Dangerous command bindings as master ..
+        /// Adjust VoiceAttack Command Key Codes to match Keys in Elite Dangerous using Elite Dangerous Command Bindings as Master
         /// </summary>
         /// <param name="filepathEliteDangerousBinds"></param>
         /// <param name="filepathVoiceAttackProfile"></param>
@@ -222,7 +222,7 @@
         }
 
         /// <summary>
-        /// Search for undefined actions in Elite Dangerous Bindings that have been defined in VoiceAttack ..
+        /// Search for undefined Action(s) in Elite Dangerous Binding(s) that have been defined in VoiceAttack ..
         /// </summary>
         /// <param name="filepathEliteDangerousBinds"></param>
         /// <param name="filepathVoiceAttackProfile"></param>
@@ -231,20 +231,20 @@
         public static DataTable EliteDangerous(string filepathEliteDangerousBinds, string filepathVoiceAttackProfile, GameKeyAndCommandBindingsAdapter bindingsAdapter)
         {
             // Datatable to hold tabulated contents ..
-            DataTable reverseBindableVacantActions = TableShape.ReverseBindableVacantEliteDangerousActions();
+            DataTable bindableVacantEliteDangerousActions = TableShape.ReverseBindableVacantEliteDangerousActions();
 
             // Analyse binding differences ..
             var analysedGameActions = KeyBindingAnalyser.VoiceAttack(filepathEliteDangerousBinds, filepathVoiceAttackProfile, bindingsAdapter);
 
-            // Initialise lookup dictionary for game binding to action references ..
+            // Initialise system-key lookup dictionary ..
             var keys = new GameAndSystemKeyAdapter(KeyEnum.Type.WindowsForms);
 
-            // Find defined Voice Attack commands with potential for update in Elite Dangerous binds ..
+            // Find Voice Attack Commands with potential to be defined as new Elite Dangerous key-binds ..
             var vacantBindingsEliteDangerous = from vac in analysedGameActions.AsEnumerable()
                                               where vac.Field<string>(EDVArd.Column.KeyUpdateRequired.ToString()) == EDVArd.KeyUpdateRequired.YES_VoiceAttack_TO_Elite.ToString()
                                              select
                                                 new
-                                                 {
+                                                  {
                                                      KeyEnumeration = vac.Field<string>(EDVArd.Column.KeyEnumerationType.ToString()),
                                                      EliteDangerousAction = vac.Field<string>(EDVArd.Column.EliteDangerousAction.ToString()),
                                                      VoiceAttackAction = vac.Field<string>(EDVArd.Column.VoiceAttackAction.ToString()),
@@ -256,33 +256,33 @@
                                                      VoiceAttackProfile = vac.Field<string>(EDVArd.Column.VoiceAttackProfile.ToString()),
                                                      EliteDangerousInternal = vac.Field<string>(EDVArd.Column.EliteDangerousInternal.ToString()),
                                                      EliteDangerousBinds = vac.Field<string>(EDVArd.Column.EliteDangerousBinds.ToString())
-                                                 };
+                                                  };
 
             foreach (var vacantBindingEliteDangerous in vacantBindingsEliteDangerous)
             {
-                reverseBindableVacantActions.LoadDataRow(new object[] 
-                                                {
-                                                 ////--------------------------------------------------------------------------
-                                                 vacantBindingEliteDangerous.KeyEnumeration, //KeyEnumeration
-                                                 vacantBindingEliteDangerous.EliteDangerousAction, //EliteDangerousAction
-                                                 vacantBindingEliteDangerous.VoiceAttackAction, //VoiceAttackAction
-                                                 ////--------------------------------------------------------------------------
-                                                 vacantBindingEliteDangerous.VoiceAttackKeyValue, //VoiceAttackKeyValue
-                                                 vacantBindingEliteDangerous.VoiceAttackKeyCode, //VoiceAttackKeyCode
-                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vacantBindingEliteDangerous.VoiceAttackKeyCode)), //EliteDangerousKeyValue
-                                                 vacantBindingEliteDangerous.VoiceAttackModifierKeyValue, //VoiceAttackModifierKeyValue
-                                                 vacantBindingEliteDangerous.VoiceAttackModifierKeyCode, //VoiceAttackModifierKeyCode
-                                                 keys.GetEliteDangerousKeyBinding(int.Parse(vacantBindingEliteDangerous.VoiceAttackModifierKeyCode)), //EliteDangerousModifierKeyValue
-                                                 ////--------------------------------------------------------------------------
-                                                 vacantBindingEliteDangerous.VoiceAttackInternal, //VoiceAttackInternal
-                                                 vacantBindingEliteDangerous.VoiceAttackProfile, //VoiceAttackProfile
-                                                 vacantBindingEliteDangerous.EliteDangerousInternal, //EliteDangerousInternal
-                                                 vacantBindingEliteDangerous.EliteDangerousBinds //EliteDangerousBinds
-                                                },
-                                                false);
+                bindableVacantEliteDangerousActions.LoadDataRow(new object[] 
+                                                    {
+                                                        ////--------------------------------------------------------------------------
+                                                        vacantBindingEliteDangerous.KeyEnumeration, //KeyEnumeration
+                                                        vacantBindingEliteDangerous.EliteDangerousAction, //EliteDangerousAction
+                                                        vacantBindingEliteDangerous.VoiceAttackAction, //VoiceAttackAction
+                                                        ////--------------------------------------------------------------------------
+                                                        vacantBindingEliteDangerous.VoiceAttackKeyValue, //VoiceAttackKeyValue
+                                                        vacantBindingEliteDangerous.VoiceAttackKeyCode, //VoiceAttackKeyCode
+                                                        keys.GetEliteDangerousKeyBinding(int.Parse(vacantBindingEliteDangerous.VoiceAttackKeyCode)), //EliteDangerousKeyValue
+                                                        vacantBindingEliteDangerous.VoiceAttackModifierKeyValue, //VoiceAttackModifierKeyValue
+                                                        vacantBindingEliteDangerous.VoiceAttackModifierKeyCode, //VoiceAttackModifierKeyCode
+                                                        keys.GetEliteDangerousKeyBinding(int.Parse(vacantBindingEliteDangerous.VoiceAttackModifierKeyCode)), //EliteDangerousModifierKeyValue
+                                                        ////--------------------------------------------------------------------------
+                                                        vacantBindingEliteDangerous.VoiceAttackInternal, //VoiceAttackInternal
+                                                        vacantBindingEliteDangerous.VoiceAttackProfile, //VoiceAttackProfile
+                                                        vacantBindingEliteDangerous.EliteDangerousInternal, //EliteDangerousInternal
+                                                        vacantBindingEliteDangerous.EliteDangerousBinds //EliteDangerousBinds
+                                                    },
+                                                    false);
             }
 
-            return reverseBindableVacantActions;
+            return bindableVacantEliteDangerousActions;
         }
     }
 }
