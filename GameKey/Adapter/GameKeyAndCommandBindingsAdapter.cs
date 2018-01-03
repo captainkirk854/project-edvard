@@ -107,13 +107,13 @@
             this.relationship.Add("((ToggleFreeCam))", "ToggleFreeCam");
             this.relationship.Add("((ToggleVehicleCam))", "PhotoCameraToggle_Buggy");
             this.relationship.Add("((ToggleworldCam))", "FixCameraWorldToggle");
-            this.relationship.Add("((UI Escape))", "UI_Back");
+            this.relationship.Add("((UI Escape))", "UI_Toggle");
             this.relationship.Add("((UI Accept))", "UI_Select");
             this.relationship.Add("((UI Cancel))", "UI_Back");
             this.relationship.Add("((UI Down))", "UI_Down");
             this.relationship.Add("((UI Left))", "UI_Left");
-            this.relationship.Add("((UI Next))", "UI_Right");
-            this.relationship.Add("((UI Previous))", "UI_Left");
+            this.relationship.Add("((UI Next))", "CycleNextPanel");
+            this.relationship.Add("((UI Previous))", "CyclePreviousPanel");
             this.relationship.Add("((UI Right))", "UI_Right");
             this.relationship.Add("((UI Up))", "UI_Up");
             this.relationship.Add("((VanityCameraScrollLeft))", "VanityCameraScrollLeft");

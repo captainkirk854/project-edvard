@@ -548,11 +548,11 @@
   </UI_Toggle>
   <CycleNextPanel>
     <Primary Device="SaitekX52Pro" Key="Joy_25" />
-    <Secondary Device="{NoDevice}" Key="" />
+    <Secondary Device="Keyboard" Key="Key_E" />
   </CycleNextPanel>
   <CyclePreviousPanel>
     <Primary Device="SaitekX52Pro" Key="Joy_27" />
-    <Secondary Device="{NoDevice}" Key="" />
+    <Secondary Device="Keyboard" Key="Key_Q" />
   </CyclePreviousPanel>
   <MouseHeadlook Value="1" />
   <MouseHeadlookInvert Value="0" />
