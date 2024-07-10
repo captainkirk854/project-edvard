@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0CC39E09-9315-48A4-A128-B8753A622C81}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitTests</RootNamespace>
+    <AssemblyName>UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="GameKey\Binding\Readers\KeyBindingReaderEliteDangerousTests\GetBindableActions.cs" />
+    <Compile Include="GameKey\Binding\Readers\KeyBindingReaderEliteDangerousTests\GetKeyBindings.cs" />
+    <Compile Include="GameKey\Binding\Readers\KeyBindingReaderVoiceAttackTests\GetCommandStringsWithKeyPressAction.cs" />
+    <Compile Include="GameKey\Binding\Readers\KeyBindingReaderVoiceAttackTests\GetKeyBindings.cs" />
+    <Compile Include="GameKey\Binding\Readers\KeyBindingReaderVoiceAttackTests\GetCommandStringsForCommandCategory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestData\Integration\Set01\in\1.8.GoodKeys.binds" />
+    <None Include="TestData\Integration\Set01\in\Orion 2.0 Full House.vap" />
+    <None Include="TestData\Integration\Set01\out\1.8.GoodKeys.binds" />
+    <None Include="TestData\Integration\Set01\out\Orion 2.0 Full House.vap" />
+    <None Include="TestData\Integration\Set02\in\1.8.HOTAS and Wireless Gamepad.binds" />
+    <None Include="TestData\Integration\Set02\in\Orion 2.0 Guardians Full House with UTF16.vap" />
+    <None Include="TestData\Integration\Set02\out\1.8.HOTAS and Wireless Gamepad.binds" />
+    <None Include="TestData\Integration\Set02\out\Orion 2.0 Guardians Full House with UTF16.vap" />
+    <None Include="TestData\Integration\Set03\in\Astra profile - Full House.vap" />
+    <None Include="TestData\Integration\Set03\in\1.8.HOTAS and Wireless Gamepad.binds" />
+    <None Include="TestData\Integration\Set03\out\Astra profile - Full House.vap" />
+    <None Include="TestData\Integration\Set03\out\1.8.HOTAS and Wireless Gamepad.binds" />
+    <None Include="TestData\Integration\Set04\in\Orion Profile Full House.vap" />
+    <None Include="TestData\Integration\Set04\in\2.0.X52 Pro Ultimate [Rift].binds" />
+    <None Include="TestData\Integration\Set04\out\Orion Profile Full House.vap" />
+    <None Include="TestData\Integration\Set04\out\2.0.X52 Pro Ultimate [Rift].binds" />
+    <None Include="TestData\Unit\EliteDangerous\1.8.Selection01.binds" />
+    <None Include="TestData\Unit\VoiceAttack\Orion 2.0 Full House.vap" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\GameKey\GameKey.csproj">
+      <Project>{08f8cc4b-45c2-4661-9f10-07094dcae843}</Project>
+      <Name>GameKey</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Helper\Helper.csproj">
+      <Project>{fdeb46dc-d20a-4634-a3db-ee3f2fcf4733}</Project>
+      <Name>Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Items\Items.csproj">
+      <Project>{a55e8323-766a-41f5-88fa-bde0a4f53f73}</Project>
+      <Name>Items</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{696e228d-a175-4c0a-afab-7ad2e30e1965}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

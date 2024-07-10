@@ -3,7 +3,7 @@
     /// <summary>
     /// Edvard related Enumerations
     /// </summary>
-    public partial class Edvard
+    public partial class EDVArd
     {
         /// <summary>
         /// Enumeration of Table Columns
@@ -11,12 +11,12 @@
         public enum Column
         {
             BindingSynchronisationStatus,
-            Context,
+            ApplicationContext,
             DevicePriority,
             DeviceType,
             FilePath,
             Internal,
-            KeyEnumeration,
+            KeyEnumerationType,
             KeyAction,
             KeyActionType,
             KeyGameValue,

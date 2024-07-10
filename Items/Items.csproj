@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Edvard.cs" />
+    <Compile Include="EDVArd.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="KeyEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

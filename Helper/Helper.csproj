@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{696E228D-A175-4C0A-AFAB-7AD2E30E1965}</ProjectGuid>
+    <ProjectGuid>{FDEB46DC-D20A-4634-A3DB-EE3F2FCF4733}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Helper</RootNamespace>
@@ -29,11 +29,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,15 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandLine.cs" />
-    <Compile Include="StatusCode.cs" />
-    <Compile Include="HandleData.cs" />
+    <Compile Include="Dialog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HandleStrings.cs" />
+    <Compile Include="StatusCode.cs" />
     <Compile Include="TableShape.cs" />
-    <Compile Include="HandleIO.cs" />
-    <Compile Include="HandleXml.cs" />
-    <Compile Include="AppRuntime.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Items\Items.csproj">

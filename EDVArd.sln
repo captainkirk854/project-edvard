@@ -3,28 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UX", "UX\UX.csproj", "{588089AA-1533-40D9-8D7A-13695300B091}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDVArd", "Edvard\EDVArd.csproj", "{588089AA-1533-40D9-8D7A-13695300B091}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{696E228D-A175-4C0A-AFAB-7AD2E30E1965}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility\Utility.csproj", "{696E228D-A175-4C0A-AFAB-7AD2E30E1965}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UXConsole", "UXConsole\UXConsole.csproj", "{79546902-CFBA-4C14-A119-0FC3E72DAF11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDVArdConsole", "EdvardConsole\EDVArdConsole.csproj", "{79546902-CFBA-4C14-A119-0FC3E72DAF11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binding", "Binding\Binding.csproj", "{08F8CC4B-45C2-4661-9F10-07094DCAE843}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyHelper", "KeyHelper\KeyHelper.csproj", "{6ED8BCED-F737-4FD7-B8BD-B7AEF7592EF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameKey", "GameKey\GameKey.csproj", "{08F8CC4B-45C2-4661-9F10-07094DCAE843}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Items", "Items\Items.csproj", "{A55E8323-766A-41F5-88FA-BDE0A4F53F73}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{A6168245-04D4-44B7-B079-254F580A0E60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Downloads", "Downloads", "{7B75CA78-3478-4178-B565-46D8F24519CF}"
-	ProjectSection(SolutionItems) = preProject
-		Data\Downloads\EDVard.exe = Data\Downloads\EDVard.exe
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VoiceAttack", "VoiceAttack", "{9137BA1C-B06D-4677-A243-76B1E44D636F}"
 	ProjectSection(SolutionItems) = preProject
@@ -42,62 +33,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EliteDangerous", "EliteDang
 		Data\Samples\EliteDangerous\HOTAS and Wireless Gamepad.binds = Data\Samples\EliteDangerous\HOTAS and Wireless Gamepad.binds
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set01", "Set01", "{B49C3CC2-281F-424B-AE26-8EB15F656DEA}"
-	ProjectSection(SolutionItems) = preProject
-		Data\Test\Set01\Goodkeys.binds = Data\Test\Set01\Goodkeys.binds
-		Data\Test\Set01\Orion 2.0 Full House.vap = Data\Test\Set01\Orion 2.0 Full House.vap
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{0CC39E09-9315-48A4-A128-B8753A622C81}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "results", "results", "{E5A60F9D-EA45-47A0-BB83-2A3ADFB429AD}"
-	ProjectSection(SolutionItems) = preProject
-		Data\Test\Set01\results\Edvard-ConsolidatedKeyBoundActions.csv = Data\Test\Set01\results\Edvard-ConsolidatedKeyBoundActions.csv
-		Data\Test\Set01\results\EliteDangerous-KeyBindableActions.csv = Data\Test\Set01\results\EliteDangerous-KeyBindableActions.csv
-		Data\Test\Set01\results\EliteDangerous-KeyBoundActions.csv = Data\Test\Set01\results\EliteDangerous-KeyBoundActions.csv
-		Data\Test\Set01\results\Goodkeys.binds = Data\Test\Set01\results\Goodkeys.binds
-		Data\Test\Set01\results\Orion 2.0 Full House.vap = Data\Test\Set01\results\Orion 2.0 Full House.vap
-		Data\Test\Set01\results\VoiceAttack-AllCommands.csv = Data\Test\Set01\results\VoiceAttack-AllCommands.csv
-		Data\Test\Set01\results\VoiceAttack-KeyBindableActions.csv = Data\Test\Set01\results\VoiceAttack-KeyBindableActions.csv
-		Data\Test\Set01\results\VoiceAttack-KeyBoundActions.csv = Data\Test\Set01\results\VoiceAttack-KeyBoundActions.csv
-		Data\Test\Set01\results\VoiceAttack-RelatedCommands.csv = Data\Test\Set01\results\VoiceAttack-RelatedCommands.csv
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set02", "Set02", "{4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1}"
-	ProjectSection(SolutionItems) = preProject
-		Data\Test\Set02\HOTAS and Wireless Gamepad.binds = Data\Test\Set02\HOTAS and Wireless Gamepad.binds
-		Data\Test\Set02\Orion 2.0 Guardians Full House with UTF16.vap = Data\Test\Set02\Orion 2.0 Guardians Full House with UTF16.vap
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "results", "results", "{FD4293FD-3024-4BF6-B261-D2F06DEC30FB}"
-	ProjectSection(SolutionItems) = preProject
-		Data\Test\Set02\results\Edvard-ConsolidatedKeyBoundActions.csv = Data\Test\Set02\results\Edvard-ConsolidatedKeyBoundActions.csv
-		Data\Test\Set02\results\EliteDangerous-KeyBindableActions.csv = Data\Test\Set02\results\EliteDangerous-KeyBindableActions.csv
-		Data\Test\Set02\results\EliteDangerous-KeyBoundActions.csv = Data\Test\Set02\results\EliteDangerous-KeyBoundActions.csv
-		Data\Test\Set02\results\HOTAS and Wireless Gamepad.binds = Data\Test\Set02\results\HOTAS and Wireless Gamepad.binds
-		Data\Test\Set02\results\Orion 2.0 Guardians Full House with UTF16.vap = Data\Test\Set02\results\Orion 2.0 Guardians Full House with UTF16.vap
-		Data\Test\Set02\results\VoiceAttack-AllCommands.csv = Data\Test\Set02\results\VoiceAttack-AllCommands.csv
-		Data\Test\Set02\results\VoiceAttack-KeyBindableActions.csv = Data\Test\Set02\results\VoiceAttack-KeyBindableActions.csv
-		Data\Test\Set02\results\VoiceAttack-KeyBoundActions.csv = Data\Test\Set02\results\VoiceAttack-KeyBoundActions.csv
-		Data\Test\Set02\results\VoiceAttack-RelatedCommands.csv = Data\Test\Set02\results\VoiceAttack-RelatedCommands.csv
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Set03", "Set03", "{C6193C9B-2424-46F3-993C-8AF8882F6814}"
-	ProjectSection(SolutionItems) = preProject
-		Data\Test\Set03\Astra profile - Full House.vap = Data\Test\Set03\Astra profile - Full House.vap
-		Data\Test\Set03\HOTAS and Wireless Gamepad.binds = Data\Test\Set03\HOTAS and Wireless Gamepad.binds
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "results", "results", "{FE202BD7-AA31-4E0A-8D64-2FFEBA351959}"
-	ProjectSection(SolutionItems) = preProject
-		Data\Test\Set03\results\Astra profile - Full House.vap = Data\Test\Set03\results\Astra profile - Full House.vap
-		Data\Test\Set03\results\Edvard-ConsolidatedKeyBoundActions.csv = Data\Test\Set03\results\Edvard-ConsolidatedKeyBoundActions.csv
-		Data\Test\Set03\results\EliteDangerous-KeyBindableActions.csv = Data\Test\Set03\results\EliteDangerous-KeyBindableActions.csv
-		Data\Test\Set03\results\EliteDangerous-KeyBoundActions.csv = Data\Test\Set03\results\EliteDangerous-KeyBoundActions.csv
-		Data\Test\Set03\results\HOTAS and Wireless Gamepad.binds = Data\Test\Set03\results\HOTAS and Wireless Gamepad.binds
-		Data\Test\Set03\results\VoiceAttack-AllCommands.csv = Data\Test\Set03\results\VoiceAttack-AllCommands.csv
-		Data\Test\Set03\results\VoiceAttack-KeyBindableActions.csv = Data\Test\Set03\results\VoiceAttack-KeyBindableActions.csv
-		Data\Test\Set03\results\VoiceAttack-KeyBoundActions.csv = Data\Test\Set03\results\VoiceAttack-KeyBoundActions.csv
-		Data\Test\Set03\results\VoiceAttack-RelatedCommands.csv = Data\Test\Set03\results\VoiceAttack-RelatedCommands.csv
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{FDEB46DC-D20A-4634-A3DB-EE3F2FCF4733}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,29 +59,25 @@ Global
 		{08F8CC4B-45C2-4661-9F10-07094DCAE843}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08F8CC4B-45C2-4661-9F10-07094DCAE843}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08F8CC4B-45C2-4661-9F10-07094DCAE843}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6ED8BCED-F737-4FD7-B8BD-B7AEF7592EF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6ED8BCED-F737-4FD7-B8BD-B7AEF7592EF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6ED8BCED-F737-4FD7-B8BD-B7AEF7592EF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6ED8BCED-F737-4FD7-B8BD-B7AEF7592EF3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A55E8323-766A-41F5-88FA-BDE0A4F53F73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A55E8323-766A-41F5-88FA-BDE0A4F53F73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A55E8323-766A-41F5-88FA-BDE0A4F53F73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A55E8323-766A-41F5-88FA-BDE0A4F53F73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CC39E09-9315-48A4-A128-B8753A622C81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CC39E09-9315-48A4-A128-B8753A622C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CC39E09-9315-48A4-A128-B8753A622C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CC39E09-9315-48A4-A128-B8753A622C81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDEB46DC-D20A-4634-A3DB-EE3F2FCF4733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDEB46DC-D20A-4634-A3DB-EE3F2FCF4733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDEB46DC-D20A-4634-A3DB-EE3F2FCF4733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDEB46DC-D20A-4634-A3DB-EE3F2FCF4733}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645} = {A6168245-04D4-44B7-B079-254F580A0E60}
-		{BB227830-CAA3-4A8F-BCCB-BA00C69D2B81} = {A6168245-04D4-44B7-B079-254F580A0E60}
-		{7B75CA78-3478-4178-B565-46D8F24519CF} = {A6168245-04D4-44B7-B079-254F580A0E60}
 		{9137BA1C-B06D-4677-A243-76B1E44D636F} = {87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}
 		{A7E44E31-3AF7-4E2A-859A-D9C0E0152874} = {87F3CD76-1ED4-443C-A3D1-0A0D7D2DD645}
-		{B49C3CC2-281F-424B-AE26-8EB15F656DEA} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
-		{E5A60F9D-EA45-47A0-BB83-2A3ADFB429AD} = {B49C3CC2-281F-424B-AE26-8EB15F656DEA}
-		{4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
-		{FD4293FD-3024-4BF6-B261-D2F06DEC30FB} = {4A08BC0B-5EDB-4B32-8E92-ACE499CB33F1}
-		{C6193C9B-2424-46F3-993C-8AF8882F6814} = {BB227830-CAA3-4A8F-BCCB-BA00C69D2B81}
-		{FE202BD7-AA31-4E0A-8D64-2FFEBA351959} = {C6193C9B-2424-46F3-993C-8AF8882F6814}
 	EndGlobalSection
 EndGlobal

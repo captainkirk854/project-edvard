@@ -16,9 +16,9 @@
             table.TableName = "KeyMap";
 
             // Define its structure ..
-            table.Columns.Add(Edvard.Column.KeyEnumeration.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyEnumerationValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyEnumerationCode.ToString(), typeof(int));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationType.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationCode.ToString(), typeof(int));
 
             return table;
         }
@@ -34,11 +34,11 @@
             table.TableName = "BindableActions";
 
             // Define its structure ..
-            table.Columns.Add(Edvard.Column.Context.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyAction.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyActionType.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.DevicePriority.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.DeviceType.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.ApplicationContext.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyAction.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyActionType.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.DevicePriority.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.DeviceType.ToString(), typeof(string));
 
             return table;
         }
@@ -54,19 +54,19 @@
             table.TableName = "KeyActionDefinition";
 
             // Define its structure ..
-            table.Columns.Add(Edvard.Column.Context.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyEnumeration.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyAction.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.DevicePriority.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyGameValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyEnumerationValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyEnumerationCode.ToString(), typeof(int));
-            table.Columns.Add(Edvard.Column.KeyActionType.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.KeyId.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.ModifierKeyGameValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.ModifierKeyEnumerationValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.ModifierKeyEnumerationCode.ToString(), typeof(int));
-            table.Columns.Add(Edvard.Column.ModifierKeyId.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.ApplicationContext.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationType.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyAction.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.DevicePriority.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyGameValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationCode.ToString(), typeof(int));
+            table.Columns.Add(EDVArd.Column.KeyActionType.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyId.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.ModifierKeyGameValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.ModifierKeyEnumerationValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.ModifierKeyEnumerationCode.ToString(), typeof(int));
+            table.Columns.Add(EDVArd.Column.ModifierKeyId.ToString(), typeof(string));
 
             return table;
         }
@@ -83,33 +83,33 @@
 
             // Define its structure ..
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.KeyEnumeration.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationType.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.KeyUpdateRequired.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.Rationale.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyUpdateRequired.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.Rationale.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.VoiceAttackAction.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousAction.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackAction.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousAction.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.VoiceAttackKeyValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackKeyCode.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackKeyId.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackModifierKeyValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackModifierKeyCode.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackModifierKeyId.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackKeyValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackKeyCode.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackKeyId.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackModifierKeyValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackModifierKeyCode.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackModifierKeyId.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.EliteDangerousDevicePriority.ToString(), typeof(string)); 
-            table.Columns.Add(Edvard.Column.EliteDangerousKeyValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousKeyCode.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousKeyId.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousModifierKeyValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousModifierKeyCode.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousModifierKeyId.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousDevicePriority.ToString(), typeof(string)); 
+            table.Columns.Add(EDVArd.Column.EliteDangerousKeyValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousKeyCode.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousKeyId.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousModifierKeyValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousModifierKeyCode.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousModifierKeyId.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.VoiceAttackInternal.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackProfile.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousInternal.ToString(), typeof(string));           
-            table.Columns.Add(Edvard.Column.EliteDangerousBinds.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackInternal.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackProfile.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousInternal.ToString(), typeof(string));           
+            table.Columns.Add(EDVArd.Column.EliteDangerousBinds.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
 
             return table;
@@ -127,23 +127,23 @@
 
             // Define its structure ..
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.KeyEnumeration.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.KeyEnumerationType.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.EliteDangerousAction.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackAction.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousAction.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackAction.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.VoiceAttackKeyValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackKeyCode.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousKeyValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackKeyValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackKeyCode.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousKeyValue.ToString(), typeof(string));
 
-            table.Columns.Add(Edvard.Column.VoiceAttackModifierKeyValue.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackModifierKeyCode.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousModifierKeyValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackModifierKeyValue.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackModifierKeyCode.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousModifierKeyValue.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
-            table.Columns.Add(Edvard.Column.VoiceAttackInternal.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackProfile.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousInternal.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousBinds.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackInternal.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackProfile.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousInternal.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousBinds.ToString(), typeof(string));
             ////--------------------------------------------------------------------------
 
             return table;
@@ -160,12 +160,12 @@
             table.TableName = "AssociatedCommands";
 
             // Define its structure ..
-            table.Columns.Add(Edvard.Column.VoiceAttackAction.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousAction.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackCommand.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.BindingSynchronisationStatus.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackProfile.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.EliteDangerousBinds.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackAction.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousAction.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackCommand.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.BindingSynchronisationStatus.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackProfile.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.EliteDangerousBinds.ToString(), typeof(string));
 
             return table;
         }
@@ -176,9 +176,9 @@
             DataTable table = new DataTable();
             table.TableName = "AllVoiceCommands";
 
-            table.Columns.Add(Edvard.Column.VoiceAttackCategory.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackCommand.ToString(), typeof(string));
-            table.Columns.Add(Edvard.Column.VoiceAttackActionType.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackCategory.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackCommand.ToString(), typeof(string));
+            table.Columns.Add(EDVArd.Column.VoiceAttackActionType.ToString(), typeof(string));
 
             return table;
         }
