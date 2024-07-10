@@ -64,7 +64,7 @@
                 Width="20"
                 Stroke="Black"
                 Margin="715,-15,0,0"
-                Fill="{Binding Path=VoiceAttackProfileSync, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StatusColours}}" RenderTransformOrigin="0.733,3.067"/>
+                Fill="{Binding Path=VoiceAttackProfileSync, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StatusColours}}" RenderTransformOrigin="0.733,3.067"/>
 
             <Ellipse
                 Name="BindsSyncStatus"
@@ -72,7 +72,7 @@
                 Width="20"
                 Stroke="Black"
                 Margin="755,-15,0,0"
-                Fill="{Binding Path=EliteDangerousBindsSync, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StatusColours}}"/>
+                Fill="{Binding Path=EliteDangerousBindsSync, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StatusColours}}"/>
 
             
             <!--
